@@ -1,0 +1,65 @@
+import { Request, Response } from 'express'
+import { ParamsDictionary } from 'express-serve-static-core'
+import { userMessages } from '~/constants/messages/user/user.messages'
+import {
+  LoginRequestBody,
+  RegisterRequestBody,
+  ChangePasswordRequestBody,
+  UpdateMyProfileRequestBody
+} from '~/interfaces/user/users.interface'
+import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
+import usersService from '~/services/user/user.service'
+
+export const registerController = async (req: Request<ParamsDictionary, any, RegisterRequestBody>, res: Response) => {
+  const result = await usersService.register(req.body)
+  ResponseSuccess({
+    message: userMessages.REGISTER_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const loginController = async (req: Request<ParamsDictionary, any, LoginRequestBody>, res: Response) => {
+  const result = await usersService.login(req.body)
+  ResponseSuccess({
+    message: userMessages.LOGIN_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const getProfileController = async (req: Request, res: Response) => {
+  const user_id = req.decode_authorization?.user_id as string
+  const result = await usersService.getUserProfile(user_id)
+  ResponseSuccess({
+    message: userMessages.GET_PROFILE_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const updateMyProfileController = async (
+  req: Request<ParamsDictionary, any, UpdateMyProfileRequestBody>,
+  res: Response
+) => {
+  const user_id = req.decode_authorization?.user_id as string
+  const result = await usersService.updateProfile(user_id, req.body)
+  ResponseSuccess({
+    message: userMessages.UPDATE_PROFILE_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const changePasswordController = async (
+  req: Request<ParamsDictionary, any, ChangePasswordRequestBody>,
+  res: Response
+) => {
+  const user_id = req.decode_authorization?.user_id as string
+  const result = await usersService.changePassword(user_id, req.body)
+  ResponseSuccess({
+    message: userMessages.CHANGE_PASSWORD_SUCCESS,
+    res,
+    result
+  })
+}

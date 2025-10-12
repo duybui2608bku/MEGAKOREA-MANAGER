@@ -1,0 +1,144 @@
+---
+alwaysApply: true
+---
+
+---
+
+description: Node.js & Express.js Backend Best Practices – Internal Project Standards  
+globs: **/\*.ts, src/**/\*.ts
+
+---
+
+# Node.js & Express.js – Backend Best Practices
+
+## 📁 Project Structure
+
+- Use a clear and scalable folder structure
+- Organize modules by feature or domain
+- Group middlewares by purpose (auth, logging, security, etc.)
+- Separate routes based on domain (e.g., auth, user, pool, pick)
+- Centralize error handling using a dedicated middleware
+- Separate configuration into `config` files and `.env`
+
+---
+
+## ⚙️ Express Setup
+
+- Apply middleware in the correct order (security → logger → routes → error handler)
+- Structure routes into separate domain-based files
+- Properly serve static files (e.g., frontend, images)
+- Use validation libraries like `express-validator`, `zod`, or `joi`
+- Implement security middleware: `helmet`, `cors`, `rate-limiter`
+- Use centralized error handler to catch and format errors
+
+---
+
+## 🌐 API Design
+
+- Follow RESTful API principles
+- Use API versioning (`/api/v1/...`)
+- Validate input data at controller level
+- Structure: Routes → Controllers → Services → Repositories
+- Standardize API responses:
+
+```ts
+export const ResponseSuccess = ({
+  res,
+  message,
+  result,
+}: {
+  res: Response;
+  message: string;
+  result?: any;
+}) => {
+  return res.status(200).json({ success: true, message, result });
+};
+
+export const ResponseError = ({
+  res,
+  message,
+  statusCode = 400,
+}: {
+  res: Response;
+  message: string;
+  statusCode?: number;
+}) => {
+  return res.status(statusCode).json({ success: false, message });
+};
+```
+
+- Provide clear and interactive API documentation using Swagger/OpenAPI
+
+---
+
+## 🧩 Database Integration (MongoDB + Mongoose)
+
+- Follow Mongoose schema best practices
+- Create migration logic when schema changes
+- Use connection pooling for performance
+- Apply transactions with `mongoose.startSession()`
+- Optimize NoSQL queries with indexing and lean queries
+- Catch and log database-related errors properly
+
+---
+
+## 🔐 Authentication & Authorization
+
+- Implement JWT-based authentication
+- Use `bcrypt` for password hashing
+- Handle session securely (if applicable)
+- Implement Role-Based Access Control (RBAC)
+- Return appropriate status codes for auth failures (401, 403)
+
+---
+
+## 🛡️ Security
+
+- Setup strict CORS rules
+- Limit rate of requests using `express-rate-limit`
+- Add HTTP security headers using `helmet`
+- Sanitize input to prevent XSS and injection attacks
+- Encrypt sensitive data
+- Monitor and patch vulnerabilities
+
+---
+
+## 🚀 Performance
+
+- Use `async/await` properly
+- Use `Promise.all` for parallel tasks
+- Apply caching where appropriate
+- Use connection pooling for database
+- Log and analyze performance metrics
+
+---
+
+## 🧪 Testing
+
+- Write unit tests for isolated functions
+- Add integration tests for end-to-end logic
+- Use test runners like Jest or Mocha
+- Mock external services or data sources
+- Cover edge cases and failure scenarios
+- Aim for reasonable test coverage (70%+)
+
+---
+
+## 📦 Deployment
+
+- Use `.env` for environment-specific configurations
+- Implement CI/CD pipelines
+- Centralize and persist logs
+- Monitor system health (uptime, logs, alerts)
+- Handle deployment rollbacks and restarts
+
+---
+
+## ✅ General Practices
+
+- Follow Node.js ecosystem best practices
+- Use `async/await`, avoid long promise chains
+- Always handle async errors
+- Log successes, warnings, and errors
+- Catch system signals (`SIGINT`, `SIGTERM`) to shut down gracefully
+- Write internal documentation and meaningful code comments

@@ -1,0 +1,75 @@
+---
+alwaysApply: true
+---
+
+---
+
+description: Database best practices focusing on MongoDB and Mongoose integration  
+globs: mongoose/**/\*, models/**/_, src/db/\*\*/_, **/\*.schema.ts, mongo/**/\*
+
+---
+
+# Database Best Practices (MongoDB + Mongoose)
+
+## Mongoose Setup
+
+- Design schemas with clear structure and validation
+- Use accurate `SchemaType` (String, Number, Date, etc.)
+- Define relationships properly using `ref` and `populate`
+- Configure secure MongoDB connections
+- Set up middleware (pre/post hooks) when needed
+- Separate connection logic from schema definitions
+
+## Mongoose Models
+
+- Use clear, consistent model names in `PascalCase`
+- Enable `timestamps` for created and updated tracking
+- Define indexes properly for query optimization
+- Apply constraints like `required`, `unique`, `enum`
+- Use `virtuals` for derived or logical relationships
+- Modularize schema definitions for reuse
+
+## Mongoose Queries
+
+- Use `.lean()` for read-only queries to improve performance
+- Use `populate()` to fetch related documents
+- Implement `limit`, `skip`, and `sort` for pagination
+- Use `mongoose.startSession()` for transactions
+- Avoid N+1 query issues with proper populates
+- Optimize filters using `$in`, `$or`, `$and` conditions
+
+## Database Design
+
+- Normalize where necessary, but avoid over-normalization
+- Use `ObjectId` to define relations between collections
+- Embed documents when appropriate for faster reads
+- Create indexes on frequently queried fields
+- Use consistent and descriptive collection names
+- Choose appropriate data types (ObjectId, Date, Boolean, etc.)
+
+## Performance
+
+- Use connection pooling via `mongoose.connect()`
+- Add caching (e.g., Redis) for heavy queries
+- Use projections to fetch only necessary fields
+- Avoid repetitive queries (N+1)
+- Perform batch inserts/updates for large operations
+- Monitor performance using tools like MongoDB Atlas
+
+## Security
+
+- Configure `authSource`, SSL, and secure credentials
+- Apply database roles and permissions
+- Hide sensitive data in schemas (e.g., password, tokens)
+- Encrypt critical data at rest or in transit
+- Set up regular backups and test recovery procedures
+- Monitor access logs and security alerts
+
+## Best Practices
+
+- Follow naming conventions for schemas, models, and collections
+- Separate `model`, `controller`, `service`, and `repository` layers
+- Write migration scripts for major schema changes
+- Log query errors clearly and consistently
+- Document each schema with field descriptions and constraints
+- Continuously monitor database health and optimize regularly
