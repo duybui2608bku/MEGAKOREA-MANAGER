@@ -64,7 +64,7 @@ export const DEFAULT_PREFERENCES = {
   fixedFooter: true,
   companyName: 'Condor Hero',
   companyWebsite: 'http://github.com/condorheroblog/',
-  copyrightDate: '2023',
+  copyrightDate: '2025',
   ICPNumber: '',
   ICPLink: ''
 } satisfies PreferencesState

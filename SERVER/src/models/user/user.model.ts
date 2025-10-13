@@ -44,11 +44,13 @@ const userSchema = new mongoose.Schema(
       enum: UserStatus,
       default: UserStatus.WORKING
     },
-    role: {
-      type: Number,
-      enum: UserRole,
-      default: UserRole.USER
-    },
+    roles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: COLLECTION_NAME.ROLE,
+        required: true
+      }
+    ],
     derpartment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: COLLECTION_NAME.DERPARTMENT,

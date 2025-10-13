@@ -39,3 +39,7 @@ export interface UpdateMyProfileRequestBody {
   avatar?: string
   gender?: number
 }
+
+export interface RefreshTokenRequestBody {
+  refresh_token: string
+}

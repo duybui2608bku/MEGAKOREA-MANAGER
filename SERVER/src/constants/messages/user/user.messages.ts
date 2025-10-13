@@ -1,4 +1,5 @@
 export const userMessages = {
+  ROLES_MUST_BE_ARRAY: 'Roles must be an array',
   EMAIL_EXISTS: 'Email already exists',
   NAME_REQUIRED: 'Name is required',
   NAME_MUST_BE_STRING: 'Name must be a string',
@@ -25,6 +26,7 @@ export const userMessages = {
   ACCESS_TOKEN_INVALID: 'Access token is invalid',
   REFRESH_TOKEN_REQUIRED: 'Refresh token is required',
   REFRESH_TOKEN_INVALID: 'Refresh token is invalid',
+  REFRESH_TOKEN_SUCCESS: 'Token refreshed successfully',
   LOGIN_SUCCESS: 'Login success',
   USER_NOT_FOUND: 'User not found',
   OLD_PASSWORD_REQUIRED: 'Old password is required',
@@ -43,5 +45,6 @@ export const userMessages = {
   AVATAR_MUST_BE_STRING: 'Avatar must be a string',
   DERPARTMENT_MUST_BE_STRING: 'Derpartment must be a string',
   TITLES_MUST_BE_INT: 'Titles must be a valid number (1, 2, 3, or 4)',
-  STATUS_INVALID: 'Status must be a valid number (1, 2, or 3)'
+  STATUS_INVALID: 'Status must be a valid number (1, 2, or 3)',
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required'
 }

@@ -1,5 +1,5 @@
 import { TokenType, UserRole } from '~/constants/enum/user/user.enum'
-import { signToken } from '~/jwt/jwt'
+import { signToken, verifyToken } from '~/jwt/jwt'
 
 import { config } from 'dotenv'
 import { hashPassword } from '~/jwt/crypro'
@@ -7,19 +7,19 @@ import {
   LoginRequestBody,
   RegisterRequestBody,
   ChangePasswordRequestBody,
-  UpdateMyProfileRequestBody
+  UpdateMyProfileRequestBody,
+  RefreshTokenRequestBody
 } from '~/interfaces/user/users.interface'
 import userRepository from '~/repository/user/user.repository'
 import { ErrorWithStatusCode } from '~/middlewares/error/error-response.middleware'
 import { userMessages } from '~/constants/messages/user/user.messages'
 import { HttpStatusCode } from '~/constants/enum/http/http-status-code.enum'
 import _ from 'lodash'
+import { algorithm } from '~/constants/global/global.contants'
 config()
 
-const algorithm = 'HS256'
-
 class UsersService {
-  private signAccessToken(user_id: string, role: UserRole) {
+  private signAccessToken(user_id: string, role: UserRole = UserRole.USER) {
     return signToken({
       payload: { user_id, token_type: TokenType.AccessToken, role },
       priveKey: process.env.JWT_SECRET_ACCESSTOKEN as string,
@@ -27,28 +27,29 @@ class UsersService {
     })
   }
 
-  private signRefreshToken(user_id: string, role: UserRole) {
+  private signRefreshToken(user_id: string, role: UserRole = UserRole.USER) {
     return signToken({
-      payload: { user_id, token_type: TokenType.AccessToken, role },
+      payload: { user_id, token_type: TokenType.RefreshToken, role },
       priveKey: process.env.JWT_SECRET_REFRESHTOKEN as string,
       options: { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as any, algorithm }
     })
   }
 
+  private async checkUserExists(user_id: string) {
+    const user = await userRepository.getUserById(user_id)
+    if (!user) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.USER_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+    return user
+  }
+
   async register(user: RegisterRequestBody) {
     const { password, ...rest } = user
     const hashedPassword = hashPassword(password)
-    const newUser = await userRepository.createUser({ ...rest, password: hashedPassword })
-
-    const user_id = newUser._id.toString()
-    const role = newUser.role
-
-    const [access_token, refresh_token] = await Promise.all([
-      this.signAccessToken(user_id, role),
-      this.signRefreshToken(user_id, role)
-    ])
-
-    return { access_token, refresh_token }
+    await userRepository.createUser({ ...rest, password: hashedPassword })
   }
 
   async checkPhone(phone: string) {
@@ -62,7 +63,7 @@ class UsersService {
   }
 
   async getUserById(user_id: string) {
-    const user = await userRepository.getUserById(user_id)
+    const user = await this.checkUserExists(user_id)
     return user
   }
 
@@ -74,15 +75,28 @@ class UsersService {
         statusCode: HttpStatusCode.NotFound
       })
     }
-    return user
+
+    const userProfile = {
+      ...user.toObject(),
+      roles: [] as string[]
+    }
+
+    if (user.roles && user.roles.length > 0) {
+      user.roles.forEach((role: any) => {
+        if (role.code) {
+          userProfile.roles.push(role.code)
+        }
+      })
+    }
+
+    return userProfile
   }
 
   async login(loginData: LoginRequestBody) {
     const { email, password } = loginData
+    const user = await userRepository.checkUserByEmailAndPassword(email, password)
 
-    const User = await userRepository.checkUserByEmailAndPassword(email, password)
-
-    if (!User) {
+    if (!user) {
       throw new ErrorWithStatusCode({
         message: userMessages.USER_NOT_FOUND,
         statusCode: HttpStatusCode.BadRequest
@@ -90,11 +104,11 @@ class UsersService {
     }
 
     const [access_token, refresh_token] = await Promise.all([
-      this.signAccessToken(User._id.toString(), User.role),
-      this.signRefreshToken(User._id.toString(), User.role)
+      this.signAccessToken(user._id.toString()),
+      this.signRefreshToken(user._id.toString())
     ])
 
-    return { access_token, refresh_token, user: User }
+    return { access_token, refresh_token, user: user }
   }
 
   async changePassword(user_id: string, changePasswordData: ChangePasswordRequestBody) {
@@ -130,6 +144,41 @@ class UsersService {
     const newDataUpdate = _.omit(updateData, forbiddenFields)
     const updatedUser = await userRepository.updateUserProfile(user_id, newDataUpdate)
     return updatedUser
+  }
+
+  async refreshToken(refreshTokenData: RefreshTokenRequestBody) {
+    const { refresh_token } = refreshTokenData
+
+    const decoded_refresh_token = await verifyToken({
+      token: refresh_token,
+      secretOrPublicKey: process.env.JWT_SECRET_REFRESHTOKEN as string
+    })
+
+    if (decoded_refresh_token.token_type !== TokenType.RefreshToken) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.REFRESH_TOKEN_INVALID,
+        statusCode: HttpStatusCode.Unauthorized
+      })
+    }
+
+    const user = await userRepository.getUserById(decoded_refresh_token.user_id)
+
+    if (!user) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.USER_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken(user._id.toString()),
+      this.signRefreshToken(user._id.toString())
+    ])
+
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
   }
 }
 

@@ -23,6 +23,12 @@ export enum UserRole {
   USER = 3
 }
 
+export const UserRoleString: Record<UserRole, string> = {
+  [UserRole.ADMIN]: 'admin',
+  [UserRole.MANAGER]: 'manager',
+  [UserRole.USER]: 'common'
+}
+
 export enum UserPosition {
   HUMAN_RESOURCE = 1,
   DEVELOPER = 2,
@@ -39,8 +45,9 @@ export enum UserPosition {
 }
 
 export enum UserTitles {
-  LEADER = 1,
-  EMPLOYEE = 2,
-  INTERN = 3,
-  OTHER = 4
+  DIRECTOR = 1,
+  LEADER = 2,
+  EMPLOYEE = 3,
+  INTERN = 4,
+  OTHER = 5
 }

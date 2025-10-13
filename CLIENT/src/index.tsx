@@ -1,7 +1,5 @@
 import { TanstackQuery } from '#src/components'
 import { setupLoading } from '#src/plugins'
-
-// import { StrictMode } from "react";
 import { createRoot } from 'react-dom/client'
 
 import App from './app'
@@ -13,7 +11,6 @@ async function setupApp() {
    * @en Initialize internationalization, must be placed first. Loading refer to internationalization
    */
 
-  // App Loading
   setupLoading()
 
   const rootElement = document.getElementById('root')
@@ -21,11 +18,9 @@ async function setupApp() {
   const root = createRoot(rootElement)
 
   root.render(
-    // <StrictMode>
     <TanstackQuery>
       <App />
     </TanstackQuery>
-    // </StrictMode>,
   )
 }
 

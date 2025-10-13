@@ -2,6 +2,7 @@ import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
 import { RegisterRequestBody, UpdateMyProfileRequestBody } from '~/interfaces/user/users.interface'
 import { hashPassword } from '~/jwt/crypro'
 import User from '~/models/user/user.model'
+import { protectedRoles } from '~/utils/protected/permission.protected.util'
 import { protectedDerpartment, protectedUser } from '~/utils/protected/user.protected.util'
 
 const protectedPassword = protectedUser.password
@@ -33,6 +34,10 @@ class UserRepository {
       .populate({
         path: COLLECTION_NAME.DERPARTMENT as string,
         select: protectedDerpartment
+      })
+      .populate({
+        path: 'roles',
+        select: protectedRoles
       })
     return user
   }

@@ -5,13 +5,15 @@ import morgan from 'morgan'
 import instanceMongodb from './db/init.mongodb'
 import './models'
 import { checkOverload } from './helpers/check.connect'
+import { initializePermissionsAndRoles } from './db/init-permissions'
 import { config } from 'dotenv'
 import configMongodb from './config/congif.mongodb'
 import { defaultErrorHandler } from './middlewares/error/error-middleware'
 import userRouters from './routes/user/user.routes'
 import { USER_PATH_ROUTES } from './constants/path-routes/user/user.path-routes'
 import adminActionsUserRouters from './routes/admin/admin-actions-userr.routes'
-
+import { ADMIN_PATH_ROUTES } from './constants/path-routes/admin/admin.path-routes'
+import cors from 'cors'
 config()
 
 const PORT = configMongodb.app.port
@@ -21,6 +23,14 @@ const app = express()
 instanceMongodb.connect()
 checkOverload()
 
+setTimeout(async () => {
+  try {
+    await initializePermissionsAndRoles()
+  } catch (error) {
+    console.error('Failed to initialize permissions and roles:', error)
+  }
+}, 2000)
+app.use(cors())
 app.use(compression())
 app.use(helmet())
 app.use(morgan('dev'))
@@ -28,7 +38,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(USER_PATH_ROUTES.ROOT, userRouters)
-app.use(USER_PATH_ROUTES.ROOT, adminActionsUserRouters)
+app.use(ADMIN_PATH_ROUTES.ROOT, adminActionsUserRouters)
 
 app.use(defaultErrorHandler)
 

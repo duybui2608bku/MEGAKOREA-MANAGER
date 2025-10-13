@@ -1,26 +1,29 @@
 import { Router } from 'express'
-
 import { USER_PATH_ROUTES } from '~/constants/path-routes/user/user.path-routes'
+
 import {
   loginController,
-  registerController,
   getProfileController,
   updateMyProfileController,
-  changePasswordController
+  changePasswordController,
+  refreshTokenController
 } from '~/controllers/user/user.controller'
+import routeController from '~/controllers/user/route.controller'
 import { wrapRequestHandler } from '~/middlewares/handler/handler.middlewares'
 import {
   loginValidator,
-  registerValidator,
   accessTokenValidator,
   changePasswordValidator,
-  updateMyProfileValidator
+  updateMyProfileValidator,
+  refreshTokenValidator
 } from '~/middlewares/user/user.middleware'
-import { isAdminValidator, isExistUserValidator } from '~/middlewares/utils/utils.middlewares'
+import { isExistUserValidator } from '~/middlewares/utils/utils.middlewares'
 
 const userRouters = Router()
 
 userRouters.post(USER_PATH_ROUTES.LOGIN, loginValidator, wrapRequestHandler(loginController))
+
+userRouters.post(USER_PATH_ROUTES.REFRESH_TOKEN, refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
 userRouters.get(USER_PATH_ROUTES.PROFILE, accessTokenValidator, wrapRequestHandler(getProfileController))
 
@@ -37,6 +40,12 @@ userRouters.put(
   accessTokenValidator,
   changePasswordValidator,
   wrapRequestHandler(changePasswordController)
+)
+
+userRouters.get(
+  USER_PATH_ROUTES.GET_ASYNC_ROUTES,
+  accessTokenValidator,
+  wrapRequestHandler(routeController.getAsyncRoutes)
 )
 
 export default userRouters

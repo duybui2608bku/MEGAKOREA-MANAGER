@@ -1,47 +1,48 @@
-import { useGlobalStore } from "#src/store";
+import { useGlobalStore } from '#src/store'
 
-// 定义一个全局变量用于追踪当前有多少请求正在进行中
-let requestCount = 0;
+// Define a global variable to track how many requests are currently in progress
+let requestCount = 0
 
 export const globalProgress = {
-	/**
-	 * 启动请求
-	 *
-	 * 如果请求计数为 0，则显示全局加载动画，并将请求计数加 1。
-	 */
-	start() {
-		if (requestCount === 0) {
-			// 显示全局加载动画
-			useGlobalStore.getState().openGlobalSpin();
-		}
-		// 请求计数加 1
-		requestCount++;
-	},
+  /**
+   * Start a request
+   *
+   * If the request count is 0, show the global loading spinner
+   * and then increment the request count by 1.
+   */
+  start() {
+    if (requestCount === 0) {
+      // Show the global loading spinner
+      useGlobalStore.getState().openGlobalSpin()
+    }
+    // Increment the request count
+    requestCount++
+  },
 
-	/**
-	 * 请求完成后的回调函数
-	 *
-	 * @description 将请求计数减 1，并保证请求计数不会小于 0；
-	 *              如果请求计数为 0，则隐藏全局加载动画
-	 */
-	done() {
-		// 请求计数减 1，但保证请求计数不会小于 0
-		requestCount = Math.max(requestCount - 1, 0);
-		if (requestCount === 0) {
-			// 隐藏全局加载动画
-			useGlobalStore.getState().closeGlobalSpin();
-		}
-	},
+  /**
+   * Callback after a request completes
+   *
+   * @description Decrease the request count by 1 (ensuring it never goes below 0);
+   *              If the count reaches 0, hide the global loading spinner.
+   */
+  done() {
+    // Decrease the request count, ensuring it doesn't go below 0
+    requestCount = Math.max(requestCount - 1, 0)
+    if (requestCount === 0) {
+      // Hide the global loading spinner
+      useGlobalStore.getState().closeGlobalSpin()
+    }
+  },
 
-	/**
-	 * 强制完成请求
-	 *
-	 * 将请求计数直接设置为0，并隐藏全局加载动画
-	 */
-	forceFinish() {
-		// 直接将请求计数设置为 0
-		requestCount = 0;
-		// 隐藏全局加载动画
-		useGlobalStore.getState().closeGlobalSpin();
-	},
-};
+  /**
+   * Forcefully finish all requests
+   *
+   * Directly set the request count to 0 and hide the global loading spinner.
+   */
+  forceFinish() {
+    // Reset the request count to 0
+    requestCount = 0
+    // Hide the global loading spinner
+    useGlobalStore.getState().closeGlobalSpin()
+  }
+}

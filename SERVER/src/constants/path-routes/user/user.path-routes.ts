@@ -13,5 +13,6 @@ export const USER_PATH_ROUTES = {
   CHANGE_PASSWORD: '/change-password',
   PROFILE: '/profile',
   UPDATE_MY_PROFILE: '/update-my-profile',
-  UPDATE_PROFILE_BY_ADMIN: '/update-profile-by-admin'
+  UPDATE_PROFILE_BY_ADMIN: '/update-profile-by-admin',
+  GET_ASYNC_ROUTES: '/get-async-routes'
 }

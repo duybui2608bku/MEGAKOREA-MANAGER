@@ -1,4 +1,6 @@
 import User from './user/user.model'
 import Derpartment from './derpartment/derpartment.model'
+import Permission from './permission/permission.model'
+import Role from './role/role.model'
 
-export { User, Derpartment }
+export { User, Derpartment, Permission, Role }

@@ -1,14 +1,18 @@
-import { useAuthStore } from "#src/store";
-import { rememberRoute } from "#src/utils";
+import { useAuthStore } from '#src/store'
+import { rememberRoute } from '#src/utils'
 
 /**
- * 跳转到登录页面
+ * Điều hướng (chuyển hướng) người dùng đến trang đăng nhập
  *
- * @returns 无返回值
+ * @returns Không trả về giá trị
  */
+
 export function goLogin() {
-	// 重置登录状态
-	useAuthStore.getState().reset();
-	// 跳转到登录页面，并带上需要记住的路由信息
-	window.location.href = `${import.meta.env.BASE_URL}login${rememberRoute()}`;
+  console.log('🚪 goLogin() called - Redirecting to login page')
+  console.log('📍 Called from:', new Error().stack)
+
+  // Đặt lại (reset) trạng thái đăng nhập
+  useAuthStore.getState().reset()
+  // Chuyển hướng đến trang đăng nhập, đồng thời ghi nhớ đường dẫn mà người dùng đang ở
+  window.location.href = `${import.meta.env.BASE_URL}login${rememberRoute()}`
 }

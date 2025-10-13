@@ -5,17 +5,17 @@ import {
   LoginRequestBody,
   RegisterRequestBody,
   ChangePasswordRequestBody,
-  UpdateMyProfileRequestBody
+  UpdateMyProfileRequestBody,
+  RefreshTokenRequestBody
 } from '~/interfaces/user/users.interface'
 import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
 import usersService from '~/services/user/user.service'
 
 export const registerController = async (req: Request<ParamsDictionary, any, RegisterRequestBody>, res: Response) => {
-  const result = await usersService.register(req.body)
+  await usersService.register(req.body)
   ResponseSuccess({
     message: userMessages.REGISTER_SUCCESS,
-    res,
-    result
+    res
   })
 }
 
@@ -59,6 +59,18 @@ export const changePasswordController = async (
   const result = await usersService.changePassword(user_id, req.body)
   ResponseSuccess({
     message: userMessages.CHANGE_PASSWORD_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenRequestBody>,
+  res: Response
+) => {
+  const result = await usersService.refreshToken(req.body)
+  ResponseSuccess({
+    message: userMessages.REFRESH_TOKEN_SUCCESS,
     res,
     result
   })

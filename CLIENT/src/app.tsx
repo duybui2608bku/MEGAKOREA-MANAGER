@@ -13,7 +13,6 @@ import { customAntdDarkTheme, customAntdLightTheme } from './styles/theme/antd/a
 
 export default function App() {
   const {
-    language,
     isDark,
     theme,
     themeColorPrimary,
@@ -32,6 +31,7 @@ export default function App() {
   /**
    * day.js internationalization
    */
+
   useEffect(() => {
     dayjs.locale('vi')
   }, [])
@@ -52,13 +52,10 @@ export default function App() {
    */
   useEffect(() => {
     if (theme === 'auto') {
-      // https://developer.chrome.com/docs/devtools/rendering/emulate-css/
       const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
       function matchMode(e: MediaQueryListEvent) {
         setEmulateTheme(e.matches)
       }
-
       setEmulateTheme(darkModeMediaQuery.matches)
       darkModeMediaQuery.addEventListener('change', matchMode)
       return () => {
@@ -67,9 +64,6 @@ export default function App() {
     }
   }, [theme, setEmulateTheme])
 
-  /**
-   * 更新页面颜色模式（灰色、色弱）
-   */
   const updateColorMode = () => {
     const dom = document.documentElement
     const COLOR_BLIND = 'color-blind-mode'

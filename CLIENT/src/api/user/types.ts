@@ -1,24 +1,29 @@
-import type { AppRouteRecordRaw } from "#src/router/types";
+import { AppRouteRecordRaw } from '#src/router/types.js'
 
 export interface AuthType {
-	token: string
-	refreshToken: string
+  access_token: string
+  refresh_token: string
+  user: UserInfoType | null
 }
 
 export interface UserInfoType {
-	id: string
-	avatar: string
-	username: string
-	email: string
-	phoneNumber: string
-	description: string
-	roles: Array<string>
-	// 路由可以在此处动态添加
-	menus?: AppRouteRecordRaw[]
+  _id: string
+  email: string
+  name: string
+  phone: string
+  gender: number
+  avatar: string
+  date_of_birth: Date
+  address: string
+  status: number
+  roles: any[]
+  derpartment: string
+  titles: number
+  menus?: AppRouteRecordRaw[]
 }
 
 export interface AuthListProps {
-	label: string
-	name: string
-	auth: string[]
+  label: string
+  name: string
+  auth: string[]
 }

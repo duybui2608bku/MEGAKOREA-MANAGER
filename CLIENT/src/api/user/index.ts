@@ -1,34 +1,32 @@
-import type { PasswordLoginFormType } from "#src/pages/login/components/password-login";
-import type { AppRouteRecordRaw } from "#src/router/types";
-import type { AuthType, UserInfoType } from "./types";
-import { request } from "#src/utils";
+import type { PasswordLoginFormType } from '#src/pages/login/components/password-login'
+import type { AppRouteRecordRaw } from '#src/router/types'
+import type { AuthType, UserInfoType } from './types'
+import { request } from '#src/utils'
+import { USER_PATH } from './path'
 
-export * from "./types";
+export * from './types'
 
 export function fetchLogin(data: PasswordLoginFormType) {
-	return request
-		.post("login", { json: data })
-		.json<ApiResponse<AuthType>>();
+  return request.post(USER_PATH.LOGIN, { json: data }).json<ApiResponse<AuthType>>()
 }
 
 export function fetchLogout() {
-	return request.post("logout").json();
+  return request.post(USER_PATH.LOGOUT).json()
 }
 
 export function fetchAsyncRoutes() {
-	return request.get("get-async-routes").json<ApiResponse<AppRouteRecordRaw[]>>();
+  return request.get(USER_PATH.GET_ASYNC_ROUTES).json<ApiResponse<AppRouteRecordRaw[]>>()
 }
 
 export function fetchUserInfo() {
-	return request.get("user-info").json<ApiResponse<UserInfoType>>();
+  return request.get(USER_PATH.USER_INFO).json<ApiResponse<UserInfoType>>()
 }
 
 export interface RefreshTokenResult {
-	token: string
-	refreshToken: string
+  token: string
+  refreshToken: string
 }
 
-export const refreshTokenPath = "refresh-token";
 export function fetchRefreshToken(data: { readonly refreshToken: string }) {
-	return request.post(refreshTokenPath, { json: data }).json<ApiResponse<RefreshTokenResult>>();
+  return request.post(USER_PATH.REFRESH_TOKEN, { json: data }).json<ApiResponse<RefreshTokenResult>>()
 }

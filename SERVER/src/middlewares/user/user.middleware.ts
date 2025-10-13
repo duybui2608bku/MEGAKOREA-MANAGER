@@ -136,6 +136,11 @@ export const registerValidator = validate(
           errorMessage: userMessages.AVATAR_MUST_BE_STRING
         },
         trim: true
+      },
+      roles: {
+        isArray: {
+          errorMessage: userMessages.ROLES_MUST_BE_ARRAY
+        }
       }
     },
     ['body']
@@ -460,5 +465,45 @@ export const accessTokenValidator = validate(
       }
     },
     ['headers']
+  )
+)
+
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        notEmpty: {
+          errorMessage: userMessages.REFRESH_TOKEN_REQUIRED
+        },
+        isString: {
+          errorMessage: userMessages.REFRESH_TOKEN_INVALID
+        },
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatusCode({
+                message: userMessages.REFRESH_TOKEN_REQUIRED,
+                statusCode: HttpStatusCode.Unauthorized
+              })
+            }
+            try {
+              const decoded_refresh_token = await verifyToken({
+                token: value,
+                secretOrPublicKey: process.env.JWT_SECRET_REFRESHTOKEN as string
+              })
+              req.decoded_refresh_token = decoded_refresh_token
+            } catch (error) {
+              throw new ErrorWithStatusCode({
+                message: capitalize((error as JsonWebTokenError).message),
+                statusCode: HttpStatusCode.Unauthorized
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
   )
 )

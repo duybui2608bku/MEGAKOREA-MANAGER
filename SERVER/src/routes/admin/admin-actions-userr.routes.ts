@@ -12,7 +12,7 @@ import { isAdminValidator, isExistUserValidator } from '~/middlewares/utils/util
 
 const adminActionsUserRouters = Router()
 
-adminActionsUserRouters.use(accessTokenValidator, isAdminValidator)
+// adminActionsUserRouters.use(accessTokenValidator, isAdminValidator)
 
 adminActionsUserRouters.post(ADMIN_PATH_ROUTES.REGISTER, registerValidator, wrapRequestHandler(registerController))
 
