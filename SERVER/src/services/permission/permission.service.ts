@@ -1,115 +1,88 @@
-import { Permission, Role } from '~/models'
 import {
-  PermissionAction,
-  PermissionCodes,
-  PermissionModule,
-  PermissionRoles
-} from '~/constants/enum/permision/permission.enum'
+  CreatePermissionRequestBody,
+  UpdatePermissionRequestBody,
+  GetPermissionsQuery
+} from '~/interfaces/permission/permission.interface'
+
+import { ErrorWithStatusCode } from '~/middlewares/error/error-response.middleware'
+import { HttpStatusCode } from '~/constants/enum/http/http-status-code.enum'
+import permissionRepository from '~/repository/permission/permission.repository'
+import { PERMISSION_MESSAGES } from '~/constants/messages/permission/permission.messages'
 
 class PermissionService {
-  async initializePermissions() {
-    const defaultPermissions = [
-      {
-        code: PermissionCodes.GET,
-        name: 'View/Get Data',
-        description: 'Permission to view and retrieve data',
-        module: PermissionModule.SYSTEM,
-        action: PermissionAction.GET
-      },
-      {
-        code: PermissionCodes.ADD,
-        name: 'Add/Create Data',
-        description: 'Permission to create new data',
-        module: PermissionModule.SYSTEM,
-        action: PermissionAction.ADD
-      },
-      {
-        code: PermissionCodes.UPDATE,
-        name: 'Update/Edit Data',
-        description: 'Permission to update existing data',
-        module: PermissionModule.SYSTEM,
-        action: PermissionAction.UPDATE
-      },
-      {
-        code: PermissionCodes.DELETE,
-        name: 'Delete Data',
-        description: 'Permission to delete data',
-        module: PermissionModule.SYSTEM,
-        action: PermissionAction.DELETE
-      }
-    ]
-
-    for (const permData of defaultPermissions) {
-      const existingPerm = await Permission.findOne({ code: permData.code })
-      if (!existingPerm) {
-        await Permission.create(permData)
-      }
-    }
-  }
-
-  async initializeRoles() {
-    const allPermissions = await Permission.find()
-    const getPermission = await Permission.findOne({ code: PermissionCodes.GET })
-
-    const defaultRoles = [
-      {
-        name: 'Administrator',
-        code: PermissionRoles.ADMIN,
-        description: 'Full system access',
-        permissions: allPermissions.map((p) => p._id)
-      },
-      {
-        name: 'Common User',
-        code: PermissionRoles.USER,
-        description: 'Basic user access',
-        permissions: getPermission ? [getPermission._id] : []
-      },
-      {
-        name: 'Manager',
-        code: PermissionRoles.MANAGER,
-        description: 'Manager access',
-        permissions: getPermission ? [getPermission._id] : []
-      }
-    ]
-
-    for (const roleData of defaultRoles) {
-      const existingRole = await Role.findOne({ code: roleData.code })
-      if (!existingRole) {
-        await Role.create(roleData)
-      }
-    }
-  }
-
-  async getUserPermissions(roleIds: string[]) {
-    const roles = await Role.find({ _id: { $in: roleIds } }).populate('permissions')
-    const permissions = new Set()
-
-    roles.forEach((role) => {
-      role.permissions.forEach((perm: any) => {
-        permissions.add(perm.code)
+  private async checkPermissionExists(permissionId: string) {
+    const existingPermission = await permissionRepository.getPermissionById(permissionId)
+    if (!existingPermission) {
+      throw new ErrorWithStatusCode({
+        message: PERMISSION_MESSAGES.PERMISSION_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
       })
-    })
-    return Array.from(permissions)
+    }
+    return existingPermission
   }
 
-  async hasPermission(roleIds: string[], permissionCode: string): Promise<boolean> {
-    const userPermissions = await this.getUserPermissions(roleIds)
-    return userPermissions.includes(permissionCode)
+  async createPermission(permissionData: CreatePermissionRequestBody) {
+    const existingPermission = await permissionRepository.getPermissionByCode(permissionData.code)
+    if (existingPermission) {
+      throw new ErrorWithStatusCode({
+        message: PERMISSION_MESSAGES.PERMISSION_CODE_ALREADY_EXISTS,
+        statusCode: HttpStatusCode.BadRequest
+      })
+    }
+
+    const permission = await permissionRepository.createPermission(permissionData)
+    return permission
   }
 
-  async getRoleByCode(code: string) {
-    return await Role.findOne({ code }).populate('permissions')
+  async getAllPermissions(query: GetPermissionsQuery) {
+    const permissions = await permissionRepository.getAllPermissions(query)
+    return permissions
   }
 
-  async getAllPermissions() {
-    return await Permission.find()
+  async getPermissionById(permissionId: string) {
+    const permission = await this.checkPermissionExists(permissionId)
+    return permission
   }
 
-  async getAllRoles() {
-    return await Role.find().populate('permissions')
+  async updatePermission(permissionId: string, updateData: UpdatePermissionRequestBody) {
+    const existingPermission = await this.checkPermissionExists(permissionId)
+    if (updateData.code && updateData.code !== existingPermission.code) {
+      const codeConflict = await permissionRepository.getPermissionByCode(updateData.code)
+      if (codeConflict) {
+        throw new ErrorWithStatusCode({
+          message: PERMISSION_MESSAGES.PERMISSION_CODE_ALREADY_EXISTS,
+          statusCode: HttpStatusCode.BadRequest
+        })
+      }
+    }
+
+    const updatedPermission = await permissionRepository.updatePermission(permissionId, updateData)
+    return updatedPermission
+  }
+
+  async deletePermission(permissionId: string) {
+    await this.checkPermissionExists(permissionId)
+    const rolesWithPermission = await permissionRepository.getRolesWithPermission(permissionId)
+    if (rolesWithPermission.length > 0) {
+      throw new ErrorWithStatusCode({
+        message: PERMISSION_MESSAGES.CANNOT_DELETE_PERMISSION_ASSIGNED_TO_ROLES,
+        statusCode: HttpStatusCode.BadRequest
+      })
+    }
+
+    await permissionRepository.deletePermission(permissionId)
+    return { message: PERMISSION_MESSAGES.DELETE_SUCCESS }
+  }
+
+  async getUserPermissions(roleIds: string[]): Promise<string[]> {
+    if (!roleIds || roleIds.length === 0) {
+      return []
+    }
+
+    const permissions = await permissionRepository.getPermissionsByRoleIds(roleIds)
+    return permissions.map((permission: any) => permission.code)
   }
 }
 
 const permissionService = new PermissionService()
-
 export default permissionService

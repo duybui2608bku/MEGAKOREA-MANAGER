@@ -43,3 +43,23 @@ export interface UpdateMyProfileRequestBody {
 export interface RefreshTokenRequestBody {
   refresh_token: string
 }
+
+export interface ForgotPasswordRequestBody {
+  email: string
+}
+
+export interface ResetPasswordRequestBody {
+  token: string
+  new_password: string
+  confirm_password: string
+}
+
+export interface VerifyEmailRequestBody {
+  email: string
+  verification_code: string
+}
+
+export interface VerifyOtpRequestBody {
+  phone: string
+  otp_code: string
+}

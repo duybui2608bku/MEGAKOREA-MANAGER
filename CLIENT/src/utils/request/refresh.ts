@@ -16,16 +16,16 @@ let isRefreshing = false
  * @returns Response mới từ server
  * @throws Nếu làm mới token thất bại thì ném lỗi
  */
-export async function refreshTokenAndRetry(request: Request, options: Options, refreshToken: string) {
+export async function refreshTokenAndRetry(request: Request, options: Options, refresh_token: string) {
   if (!isRefreshing) {
     isRefreshing = true
     try {
       // Gọi API làm mới token, gửi refreshToken lên server
-      const freshResponse = await fetchRefreshToken({ refreshToken })
+      const freshResponse = await fetchRefreshToken({ refresh_token })
       // Lấy token mới từ phản hồi
-      const newToken = freshResponse.result.token
+      const newToken = freshResponse.result.access_token
       // Lấy refreshToken mới
-      const newRefreshToken = freshResponse.result.refreshToken
+      const newRefreshToken = freshResponse.result.refresh_token
       // Lưu token và refreshToken mới vào store
       useAuthStore.setState({ access_token: newToken, refresh_token: newRefreshToken })
       // Gọi hàm thông báo cho tất cả request đang chờ rằng token đã được làm mới

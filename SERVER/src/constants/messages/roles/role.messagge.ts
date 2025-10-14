@@ -1,0 +1,21 @@
+export const ROLE_MESSAGES = {
+  NAME_OR_CODE_REQUIRED: 'Name or code is required',
+  CREATE_SUCCESS: 'Role created successfully',
+  GET_ALL_SUCCESS: 'Roles fetched successfully',
+  GET_BY_ID_SUCCESS: 'Role fetched successfully',
+  UPDATE_SUCCESS: 'Role updated successfully',
+  DELETE_SUCCESS: 'Role deleted successfully',
+  ASSIGN_PERMISSIONS_SUCCESS: 'Permissions assigned to role successfully',
+  NAME_OR_CODE_ALREADY_EXISTS: 'Role name or code already exists',
+  ROLE_NOT_FOUND: 'Role not found',
+  CANNOT_DELETE_ROLE_ASSIGNED_TO_USERS: 'Cannot delete role that is assigned to users. Please reassign users first.',
+  NAME_MUST_BE_STRING: 'Role name must be a string',
+  NAME_MUST_BE_BETWEEN_1_AND_255_CHARACTERS: 'Role name must be between 1 and 255 characters',
+  CODE_MUST_BE_STRING: 'Role code must be a string',
+  CODE_MUST_BE_BETWEEN_1_AND_100_CHARACTERS: 'Role code must be between 1 and 100 characters',
+  DESCRIPTION_MUST_BE_STRING: 'Role description must be a string',
+  PERMISSION_IDS_MUST_BE_ARRAY: 'Permission IDs must be an array',
+  STATUS_MUST_BE_1_OR_2: 'Status must be 1 (active) or 2 (inactive)',
+  AT_LEAST_ONE_PERMISSION_ID_IS_REQUIRED: 'At least one permission ID is required',
+  EACH_PERMISSION_ID_MUST_BE_VALID_MONGODB_OBJECT_ID: 'Each permission ID must be a valid MongoDB ObjectId'
+}

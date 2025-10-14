@@ -1,4 +1,4 @@
-import { TokenType, UserRole } from '~/constants/enum/user/user.enum'
+import { TokenType } from '~/constants/enum/user/user.enum'
 import { signToken, verifyToken } from '~/jwt/jwt'
 
 import { config } from 'dotenv'
@@ -8,7 +8,11 @@ import {
   RegisterRequestBody,
   ChangePasswordRequestBody,
   UpdateMyProfileRequestBody,
-  RefreshTokenRequestBody
+  RefreshTokenRequestBody,
+  ForgotPasswordRequestBody,
+  ResetPasswordRequestBody,
+  VerifyEmailRequestBody,
+  VerifyOtpRequestBody
 } from '~/interfaces/user/users.interface'
 import userRepository from '~/repository/user/user.repository'
 import { ErrorWithStatusCode } from '~/middlewares/error/error-response.middleware'
@@ -19,17 +23,17 @@ import { algorithm } from '~/constants/global/global.contants'
 config()
 
 class UsersService {
-  private signAccessToken(user_id: string, role: UserRole = UserRole.USER) {
+  private signAccessToken(user_id: string) {
     return signToken({
-      payload: { user_id, token_type: TokenType.AccessToken, role },
+      payload: { user_id, token_type: TokenType.AccessToken },
       priveKey: process.env.JWT_SECRET_ACCESSTOKEN as string,
       options: { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN as any, algorithm }
     })
   }
 
-  private signRefreshToken(user_id: string, role: UserRole = UserRole.USER) {
+  private signRefreshToken(user_id: string) {
     return signToken({
-      payload: { user_id, token_type: TokenType.RefreshToken, role },
+      payload: { user_id, token_type: TokenType.RefreshToken },
       priveKey: process.env.JWT_SECRET_REFRESHTOKEN as string,
       options: { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as any, algorithm }
     })
@@ -178,6 +182,102 @@ class UsersService {
     return {
       access_token: new_access_token,
       refresh_token: new_refresh_token
+    }
+  }
+
+  async logout(user_id: string) {
+    return null
+  }
+
+  async forgotPassword(forgotPasswordData: ForgotPasswordRequestBody) {
+    const { email } = forgotPasswordData
+    const user = await userRepository.checkUserByEmail(email)
+
+    if (!user) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.USER_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+
+    // Generate reset token (in real implementation, you'd send this via email)
+    const resetToken = signToken({
+      payload: { user_id: (user as any)._id.toString(), token_type: TokenType.AccessToken },
+      priveKey: process.env.JWT_SECRET_ACCESSTOKEN as string,
+      options: { expiresIn: '15m', algorithm }
+    })
+
+    return {
+      message: 'Password reset token generated',
+      reset_token: resetToken // In production, this would be sent via email
+    }
+  }
+
+  async resetPassword(resetPasswordData: ResetPasswordRequestBody) {
+    const { token, new_password } = resetPasswordData
+
+    const decoded_token = await verifyToken({
+      token,
+      secretOrPublicKey: process.env.JWT_SECRET_ACCESSTOKEN as string
+    })
+
+    const user = await userRepository.getUserById(decoded_token.user_id)
+    if (!user) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.USER_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+
+    await userRepository.updateUserPassword(decoded_token.user_id, new_password)
+    return { message: 'Password reset successfully' }
+  }
+
+  async verifyEmail(verifyEmailData: VerifyEmailRequestBody) {
+    const { email, verification_code } = verifyEmailData
+
+    // In a real implementation, you'd verify the code against stored verification codes
+    const user = await userRepository.checkUserByEmail(email)
+    if (!user) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.USER_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+
+    // Mock verification - in production, verify against stored codes
+    if (verification_code !== '123456') {
+      throw new ErrorWithStatusCode({
+        message: 'Invalid verification code',
+        statusCode: HttpStatusCode.BadRequest
+      })
+    }
+
+    return { message: 'Email verified successfully' }
+  }
+
+  async verifyOtp(verifyOtpData: VerifyOtpRequestBody) {
+    const { phone, otp_code } = verifyOtpData
+
+    const user = await userRepository.checkUserByPhone(phone)
+    if (!user) {
+      throw new ErrorWithStatusCode({
+        message: userMessages.USER_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+
+    // Mock OTP verification - in production, verify against stored OTP codes
+    if (otp_code !== '123456') {
+      throw new ErrorWithStatusCode({
+        message: 'Invalid OTP code',
+        statusCode: HttpStatusCode.BadRequest
+      })
+    }
+
+    return {
+      message: 'OTP verified successfully',
+      verified: true
     }
   }
 }

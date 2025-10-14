@@ -23,10 +23,10 @@ export function fetchUserInfo() {
 }
 
 export interface RefreshTokenResult {
-  token: string
-  refreshToken: string
+  access_token: string
+  refresh_token: string
 }
 
-export function fetchRefreshToken(data: { readonly refreshToken: string }) {
+export function fetchRefreshToken(data: { readonly refresh_token: string }) {
   return request.post(USER_PATH.REFRESH_TOKEN, { json: data }).json<ApiResponse<RefreshTokenResult>>()
 }

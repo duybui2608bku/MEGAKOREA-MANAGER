@@ -30,6 +30,7 @@ interface AuthGuardProps {
  * AuthGuard component — handles permission verification.
  * ⚠️ The order of operations inside is important; do not rearrange.
  */
+
 export function AuthGuard({ children }: AuthGuardProps) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()

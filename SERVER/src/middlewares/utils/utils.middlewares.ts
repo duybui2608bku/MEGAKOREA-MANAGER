@@ -5,6 +5,8 @@ import { userMessages } from '~/constants/messages/user/user.messages'
 import { ErrorWithStatusCode } from '../error/error-response.middleware'
 import { adminMessages } from '~/constants/messages/admin/admin.messages'
 
+const adminRolesId = '68eb6a1bd651578e103a1c20'
+
 export const isAdminValidator = (req: Request, res: Response, next: NextFunction) => {
   const user = req.user
 
@@ -15,7 +17,7 @@ export const isAdminValidator = (req: Request, res: Response, next: NextFunction
     })
   }
 
-  if (user.role !== UserRole.ADMIN) {
+  if (!user.roles.includes(adminRolesId)) {
     throw new ErrorWithStatusCode({
       message: adminMessages.ACCESS_DENIED,
       statusCode: HttpStatusCode.Forbidden

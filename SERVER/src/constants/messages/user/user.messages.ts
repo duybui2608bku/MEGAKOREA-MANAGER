@@ -46,5 +46,10 @@ export const userMessages = {
   DERPARTMENT_MUST_BE_STRING: 'Derpartment must be a string',
   TITLES_MUST_BE_INT: 'Titles must be a valid number (1, 2, 3, or 4)',
   STATUS_INVALID: 'Status must be a valid number (1, 2, or 3)',
-  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required'
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
+  LOGOUT_SUCCESS: 'Logged out successfully',
+  FORGOT_PASSWORD_SUCCESS: 'Password reset instructions sent',
+  RESET_PASSWORD_SUCCESS: 'Password reset successfully',
+  VERIFY_EMAIL_SUCCESS: 'Email verified successfully',
+  VERIFY_OTP_SUCCESS: 'OTP verified successfully'
 }

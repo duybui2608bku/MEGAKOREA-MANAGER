@@ -1,0 +1,5 @@
+export * from './permission/permission.interface'
+export * from './role/role.interface'
+export * from './department/department.interface'
+export * from './user/users.interface'
+// export * from './route/route.interface'

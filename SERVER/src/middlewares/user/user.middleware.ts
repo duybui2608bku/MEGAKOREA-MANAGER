@@ -8,6 +8,9 @@ import { capitalize } from 'lodash'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { verifyToken } from '~/jwt/jwt'
 
+import { config } from 'dotenv'
+config()
+
 export const registerValidator = validate(
   checkSchema(
     {
@@ -449,7 +452,6 @@ export const accessTokenValidator = validate(
               req.decode_authorization = decode_authorization
               const { user_id } = decode_authorization
               const user = await usersService.getUserById(user_id)
-
               if (user) {
                 req.user = user
               }
@@ -501,6 +503,152 @@ export const refreshTokenValidator = validate(
             }
             return true
           }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const forgotPasswordValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: userMessages.EMAIL_REQUIRED
+        },
+        isEmail: {
+          errorMessage: userMessages.EMAIL_INVALID
+        },
+        trim: true
+      }
+    },
+    ['body']
+  )
+)
+
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      token: {
+        notEmpty: {
+          errorMessage: 'Reset token is required'
+        },
+        isString: {
+          errorMessage: 'Reset token must be a string'
+        },
+        trim: true
+      },
+      new_password: {
+        notEmpty: {
+          errorMessage: userMessages.NEW_PASSWORD_REQUIRED
+        },
+        isString: {
+          errorMessage: userMessages.NEW_PASSWORD_MUST_BE_STRING
+        },
+        trim: true,
+        isLength: {
+          options: {
+            min: 6,
+            max: 50
+          },
+          errorMessage: userMessages.NEW_PASSWORD_MUST_BE_STRONG
+        },
+        isStrongPassword: {
+          options: {
+            minLowercase: 1,
+            minNumbers: 1,
+            minLength: 1,
+            minUppercase: 1,
+            minSymbols: 1
+          },
+          errorMessage: userMessages.NEW_PASSWORD_MUST_BE_STRONG
+        }
+      },
+      confirm_password: {
+        notEmpty: {
+          errorMessage: userMessages.CONFIRM_PASSWORD_REQUIRED
+        },
+        isString: {
+          errorMessage: userMessages.CONFIRM_PASSWORD_MUST_BE_STRING
+        },
+        trim: true,
+        custom: {
+          options: (value, { req }) => {
+            if (value !== req.body.new_password) {
+              throw new ErrorWithStatusCode({
+                message: userMessages.PASSWORDS_NOT_MATCH,
+                statusCode: HttpStatusCode.BadRequest
+              })
+            }
+            return value
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const verifyEmailValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: userMessages.EMAIL_REQUIRED
+        },
+        isEmail: {
+          errorMessage: userMessages.EMAIL_INVALID
+        },
+        trim: true
+      },
+      verification_code: {
+        notEmpty: {
+          errorMessage: 'Verification code is required'
+        },
+        isString: {
+          errorMessage: 'Verification code must be a string'
+        },
+        trim: true,
+        isLength: {
+          options: {
+            min: 6,
+            max: 6
+          },
+          errorMessage: 'Verification code must be 6 characters'
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const verifyOtpValidator = validate(
+  checkSchema(
+    {
+      phone: {
+        notEmpty: {
+          errorMessage: userMessages.PHONE_REQUIRED
+        },
+        isMobilePhone: {
+          errorMessage: userMessages.PHONE_MUST_BE_STRING
+        },
+        trim: true
+      },
+      otp_code: {
+        notEmpty: {
+          errorMessage: 'OTP code is required'
+        },
+        isString: {
+          errorMessage: 'OTP code must be a string'
+        },
+        trim: true,
+        isLength: {
+          options: {
+            min: 6,
+            max: 6
+          },
+          errorMessage: 'OTP code must be 6 characters'
         }
       }
     },

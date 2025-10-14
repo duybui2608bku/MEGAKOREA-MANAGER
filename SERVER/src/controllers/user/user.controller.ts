@@ -6,7 +6,11 @@ import {
   RegisterRequestBody,
   ChangePasswordRequestBody,
   UpdateMyProfileRequestBody,
-  RefreshTokenRequestBody
+  RefreshTokenRequestBody,
+  ForgotPasswordRequestBody,
+  ResetPasswordRequestBody,
+  VerifyEmailRequestBody,
+  VerifyOtpRequestBody
 } from '~/interfaces/user/users.interface'
 import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
 import usersService from '~/services/user/user.service'
@@ -71,6 +75,58 @@ export const refreshTokenController = async (
   const result = await usersService.refreshToken(req.body)
   ResponseSuccess({
     message: userMessages.REFRESH_TOKEN_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const logoutController = async (req: Request, res: Response) => {
+  const user_id = req.decoded_authorization?.user_id as string
+  await usersService.logout(user_id)
+  ResponseSuccess({
+    message: userMessages.LOGOUT_SUCCESS,
+    res
+  })
+}
+
+export const forgotPasswordController = async (
+  req: Request<ParamsDictionary, any, ForgotPasswordRequestBody>,
+  res: Response
+) => {
+  const result = await usersService.forgotPassword(req.body)
+  ResponseSuccess({
+    message: userMessages.FORGOT_PASSWORD_SUCCESS,
+    res,
+    result
+  })
+}
+
+export const resetPasswordController = async (
+  req: Request<ParamsDictionary, any, ResetPasswordRequestBody>,
+  res: Response
+) => {
+  await usersService.resetPassword(req.body)
+  ResponseSuccess({
+    message: userMessages.RESET_PASSWORD_SUCCESS,
+    res
+  })
+}
+
+export const verifyEmailController = async (
+  req: Request<ParamsDictionary, any, VerifyEmailRequestBody>,
+  res: Response
+) => {
+  await usersService.verifyEmail(req.body)
+  ResponseSuccess({
+    message: userMessages.VERIFY_EMAIL_SUCCESS,
+    res
+  })
+}
+
+export const verifyOtpController = async (req: Request<ParamsDictionary, any, VerifyOtpRequestBody>, res: Response) => {
+  const result = await usersService.verifyOtp(req.body)
+  ResponseSuccess({
+    message: userMessages.VERIFY_OTP_SUCCESS,
     res,
     result
   })
