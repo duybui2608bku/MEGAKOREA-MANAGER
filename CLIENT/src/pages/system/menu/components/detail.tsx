@@ -10,10 +10,13 @@ import {
   ProFormRadio,
   ProFormText
 } from '@ant-design/pro-components'
+
 import { Form } from 'antd'
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 
 import { getMenuTypeOptions } from '../constants'
+import { GlobalEnum, LayoutEnum } from '#src/enum/global.js'
+import { MenuStatus } from '#src/enum/menu/enum.menu.js'
 
 interface DetailProps {
   title: React.ReactNode
@@ -28,7 +31,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
   const [form] = Form.useForm<MenuItemType>()
 
   const onFinish = async (values: MenuItemType) => {
-    if (detailData.id) {
+    if (detailData._id) {
       await fetchUpdateMenuItem(values)
       window.$message?.success('Cập nhật thành công')
     } else {
@@ -55,8 +58,8 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         }
       }}
       labelCol={{ md: 5, xl: 3 }}
-      // wrapperCol={{ span: 24 }}
-      layout='horizontal'
+      wrapperCol={{ span: 24 }}
+      layout={LayoutEnum.HORIZONTAL}
       form={form}
       autoFocusFirstInput
       modalProps={{
@@ -64,7 +67,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
       }}
       grid
       width={{
-        xl: 800,
+        xl: 1150,
         md: 500
       }}
       onFinish={onFinish}
@@ -92,7 +95,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
           autoClearSearchValue: true,
           fieldNames: {
             label: 'name',
-            value: 'id',
+            value: GlobalEnum.MAIN_KEY as string,
             children: 'children'
           }
         }}
@@ -105,7 +108,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         {({ menuType }) => {
           if (Number(menuType) === 0) {
             return (
-              <>
+              <Fragment>
                 <ProFormText
                   allowClear
                   rules={[
@@ -169,7 +172,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
                   labelCol={{ md: 5, xl: 6 }}
                   colProps={{ md: 24, xl: 12 }}
                   name='component'
-                  label='Đường dẫn component'
+                  label='Component'
                 />
 
                 <ProFormRadio.Group
@@ -181,11 +184,11 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
                   options={[
                     {
                       label: 'Kích hoạt',
-                      value: 1
+                      value: MenuStatus.ENABLE
                     },
                     {
                       label: 'Ngưng',
-                      value: 0
+                      value: MenuStatus.DISABLE
                     }
                   ]}
                 />
@@ -199,11 +202,11 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
                   options={[
                     {
                       label: 'Kích hoạt',
-                      value: 1
+                      value: MenuStatus.ENABLE
                     },
                     {
                       label: 'Ngưng',
-                      value: 0
+                      value: MenuStatus.DISABLE
                     }
                   ]}
                 />
@@ -217,11 +220,11 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
                   options={[
                     {
                       label: 'Kích hoạt',
-                      value: 1
+                      value: MenuStatus.ENABLE
                     },
                     {
                       label: 'Ngưng',
-                      value: 0
+                      value: MenuStatus.DISABLE
                     }
                   ]}
                 />
@@ -231,25 +234,10 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
                   labelCol={{ md: 5, xl: 6 }}
                   colProps={{ md: 24, xl: 12 }}
                   name='currentActiveMenu'
-                  label='Menu active'
+                  label='Menu hiển thị'
+                  tooltip='Trường này dùng để làm nổi bật menu ở sidebar'
                 />
-
-                <ProFormText
-                  allowClear
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='iframeLink'
-                  label='Iframe'
-                />
-
-                <ProFormText
-                  allowClear
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='externalLink'
-                  label='External'
-                />
-              </>
+              </Fragment>
             )
           }
         }}

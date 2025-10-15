@@ -11,6 +11,7 @@ import { useRef, useState } from 'react'
 
 import { Detail } from './components/detail'
 import { getConstantColumns } from './constants'
+import { ButtonEnumType, GlobalEnum } from '#src/enum/global.js'
 
 export default function Menu() {
   const { hasAccessByCodes } = useAccess()
@@ -22,7 +23,7 @@ export default function Menu() {
 
   const actionRef = useRef<ActionType>(null)
 
-  const handleDeleteRow = async (id: number, action?: ProCoreActionType<object>) => {
+  const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
     const responseData = await fetchDeleteMenuItem(id)
     await action?.reload?.()
     window.$message?.success(`${'Xóa thành công'} id = ${responseData.result}`)
@@ -34,7 +35,7 @@ export default function Menu() {
       title: 'Thao tác',
       valueType: 'option',
       key: 'option',
-      width: 120,
+      width: 100,
       fixed: 'right',
       render: (text, record, _, action) => {
         return [
@@ -54,7 +55,7 @@ export default function Menu() {
           <Popconfirm
             key='delete'
             title={'Xác nhận xóa'}
-            onConfirm={() => handleDeleteRow(record.id, action)}
+            onConfirm={() => handleDeleteRow(record._id, action)}
             okText={'Xác nhận'}
             cancelText={'Hủy'}
           >
@@ -82,10 +83,12 @@ export default function Menu() {
         adaptive
         columns={columns}
         actionRef={actionRef}
+        rowKey={GlobalEnum.MAIN_KEY as string}
+        pagination={false}
         request={async (params) => {
           // console.log(sort, filter);
           const responseData = await fetchMenuList(params)
-          const menuTree = handleTree(responseData.result.list)
+          const menuTree = handleTree(responseData.result.list, GlobalEnum.MAIN_KEY, 'parentId')
 
           setFlatParentMenus(
             responseData.result.list
@@ -104,7 +107,7 @@ export default function Menu() {
           <Button
             key='add-role'
             icon={<PlusCircleOutlined />}
-            type='primary'
+            type={ButtonEnumType.PRIMARY}
             disabled={!hasAccessByCodes(accessControlCodes.add)}
             onClick={() => {
               setIsOpen(true)

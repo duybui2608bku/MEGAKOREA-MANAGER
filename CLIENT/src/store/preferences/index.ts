@@ -12,12 +12,12 @@ import { persist } from 'zustand/middleware'
 export const DEFAULT_PREFERENCES = {
   /* ================== General ================== */
   watermark: false,
-  watermarkContent: 'react-antd-admin',
+  watermarkContent: 'megakorea',
   enableBackTopButton: true,
   pageLayout: 'layout-right',
   enableBackendAccess: true,
   enableFrontendAceess: false,
-  language: 'zh-CN',
+  language: 'vi-VN',
   enableDynamicTitle: true,
   enableCheckUpdates: true,
   checkUpdatesInterval: 1,
@@ -50,7 +50,7 @@ export const DEFAULT_PREFERENCES = {
 
   /* ================== Sidebar ================== */
   sidebarEnable: true,
-  sidebarWidth: 210,
+  sidebarWidth: 250,
   sideCollapsedWidth: 56,
   sidebarCollapsed: false,
   sidebarCollapseShowTitle: true,
@@ -60,10 +60,10 @@ export const DEFAULT_PREFERENCES = {
   accordion: true,
 
   /* ================== Footer ================== */
-  enableFooter: true,
-  fixedFooter: true,
-  companyName: 'Condor Hero',
-  companyWebsite: 'http://github.com/condorheroblog/',
+  enableFooter: false,
+  fixedFooter: false,
+  companyName: 'Megakorea',
+  companyWebsite: 'http://github.com/megakorea/',
   copyrightDate: '2025',
   ICPNumber: '',
   ICPLink: ''

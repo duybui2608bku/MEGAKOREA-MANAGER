@@ -21,7 +21,7 @@ export function handleTree(data: any[], id?: string, parentId?: string, children
     return []
   }
   const config = {
-    id: id || 'id',
+    id: id || '_id',
     parentId: parentId || 'parentId',
     childrenList: children || 'children'
   }

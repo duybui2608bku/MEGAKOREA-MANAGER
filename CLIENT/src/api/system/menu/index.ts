@@ -11,13 +11,13 @@ export function fetchMenuList(data: any) {
 }
 
 export function fetchAddMenuItem(data: MenuItemType) {
-  return request.post<ApiResponse<string>>('menu-item', { json: data, ignoreLoading: true }).json()
+  return request.post<ApiResponse<string>>(MENU_PATH.CREATE_MENU, { json: data, ignoreLoading: true }).json()
 }
 
 export function fetchUpdateMenuItem(data: MenuItemType) {
   return request.put<ApiResponse<string>>('menu-item', { json: data, ignoreLoading: true }).json()
 }
 
-export function fetchDeleteMenuItem(id: number) {
-  return request.delete<ApiResponse<string>>('menu-item', { json: id, ignoreLoading: true }).json()
+export function fetchDeleteMenuItem(id: string) {
+  return request.delete<ApiResponse<string>>('menu-item', { json: { id }, ignoreLoading: true }).json()
 }

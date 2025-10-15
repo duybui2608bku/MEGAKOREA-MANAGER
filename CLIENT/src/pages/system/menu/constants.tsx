@@ -3,25 +3,20 @@ import type { ProColumns } from '@ant-design/pro-components'
 
 import { getYesNoOptions } from '#src/constants'
 
-import { Tag } from 'antd'
+import { MenuStatus, MenuType } from '#src/enum/menu/enum.menu.js'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { GradientTag } from '#src/components/tag/index.js'
+import { ColorStatusEnum } from '#src/enum/global.js'
 
 export function getMenuTypeOptions() {
   return [
     {
-      label: 'system.menu.menu',
-      value: 0
+      label: 'Menu',
+      value: MenuType.MENU
     },
     {
-      label: 'system.menu.iframe',
-      value: 1
-    },
-    {
-      label: 'system.menu.externalLink',
-      value: 2
-    },
-    {
-      label: 'system.menu.button',
-      value: 3
+      label: 'Button',
+      value: MenuType.BUTTON
     }
   ]
 }
@@ -32,7 +27,8 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       dataIndex: 'index',
       title: 'STT',
       valueType: 'indexBorder',
-      width: 80
+      width: 80,
+      align: 'center'
     },
     {
       title: 'Tên menu',
@@ -54,7 +50,7 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
     {
       title: 'Đường dẫn',
       dataIndex: 'path',
-      width: 120,
+      width: 150,
       filters: true,
       onFilter: true,
       ellipsis: true
@@ -75,9 +71,10 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       title: 'Trạng thái',
       dataIndex: 'status',
       valueType: 'select',
+      align: 'center',
       width: 150,
       render: (text, record) => {
-        return <Tag color={record.status === 1 ? 'success' : 'default'}>{text}</Tag>
+        return <GradientTag type={record.status === MenuStatus.ENABLE ? 'success' : 'default'}>{text}</GradientTag>
       },
       valueEnum: {
         1: {
@@ -92,10 +89,14 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       title: 'Loại menu',
       dataIndex: 'menuType',
       width: 100,
-      valueEnum: getMenuTypeOptions().reduce((acc, curr) => {
-        acc[curr.value] = curr.label
-        return acc
-      }, {} as Record<number, string>)
+      align: 'center',
+      render: (_, record) => {
+        return record.menuType === MenuType.MENU ? (
+          <GradientTag type='info'>Menu</GradientTag>
+        ) : (
+          <GradientTag type='danger'>Button</GradientTag>
+        )
+      }
     },
     {
       title: 'Đường dẫn component',
@@ -108,8 +109,13 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       dataIndex: 'keepAlive',
       valueType: 'select',
       width: 80,
+      align: 'center',
       render: (_, record) => {
-        return record.keepAlive ? 'Có' : 'Không'
+        return record.keepAlive ? (
+          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
+        ) : (
+          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
+        )
       },
       valueEnum: getYesNoOptions().reduce((acc, curr) => {
         acc.set(curr.value, curr.label)
@@ -121,8 +127,13 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       dataIndex: 'hideInMenu',
       valueType: 'select',
       width: 180,
+      align: 'center',
       render: (_, record) => {
-        return record.hideInMenu ? 'Có' : 'Không'
+        return record.hideInMenu ? (
+          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
+        ) : (
+          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
+        )
       },
       valueEnum: getYesNoOptions().reduce((acc, curr) => {
         acc.set(curr.value, curr.label)
@@ -130,33 +141,43 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       }, new Map())
     },
     {
-      title: 'Menu active',
+      title: 'Hiển thị',
       dataIndex: 'currentActiveMenu',
-      width: 150
+      align: 'center',
+      width: 150,
+      render: (currentActiveMenu) => {
+        return currentActiveMenu ? (
+          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
+        ) : (
+          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
+        )
+      }
     },
+    // {
+    //   title: 'Iframe',
+    //   dataIndex: 'iframeLink',
+    //   width: 120
+    // },
+    // {
+    //   title: 'External',
+    //   dataIndex: 'externalLink',
+    //   width: 120
+    // },
     {
-      title: 'Iframe',
-      dataIndex: 'iframeLink',
-      width: 120
-    },
-    {
-      title: 'External',
-      dataIndex: 'externalLink',
-      width: 120
-    },
-    {
-      title: 'Tạo',
-      dataIndex: 'createTime',
+      title: 'Ngày tạo',
+      dataIndex: 'created_at',
       valueType: 'date',
       width: 150,
-      search: false
+      search: false,
+      align: 'center'
     },
     {
-      title: 'Cập nhật',
-      dataIndex: 'updateTime',
+      title: 'Ngày cập nhật',
+      dataIndex: 'updated_at',
       valueType: 'dateTime',
-      width: 170,
-      search: false
+      width: 250,
+      search: false,
+      align: 'center'
     }
   ]
 }
