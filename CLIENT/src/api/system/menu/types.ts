@@ -1,7 +1,7 @@
 import { MenuStatus, MenuType } from '#src/enum/menu/enum.menu.js'
 
 export interface MenuItemType {
-  parentId: string
+  parentId: string | string[]
   _id: string
   menuType: MenuType
   name: string
@@ -10,12 +10,10 @@ export interface MenuItemType {
   order: number
   icon: string
   currentActiveMenu: string
-  iframeLink: string
   keepAlive: number
-  externalLink: string
   hideInMenu: number
   ignoreAccess: number
   status: MenuStatus
-  createTime: number
-  updateTime: number
+  created_at: Date
+  updated_at: Date
 }

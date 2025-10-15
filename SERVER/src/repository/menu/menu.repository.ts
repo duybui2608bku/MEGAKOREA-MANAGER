@@ -63,7 +63,6 @@ class MenuRepository {
 
   async getActiveMenusForUser(userRoles: string[], userPermissions: string[]) {
     const filter: any = { status: 1 }
-
     const menus = await Menu.find(filter).sort({ order: 1, created_at: 1 })
 
     return menus.filter((menu) => {

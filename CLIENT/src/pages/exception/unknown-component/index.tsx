@@ -1,38 +1,34 @@
-import { AppstoreOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { Button, Result, Typography } from 'antd'
+import { useNavigate } from 'react-router'
 
-import { Button, Result, Typography } from "antd";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-
-const { Paragraph } = Typography;
+const { Paragraph } = Typography
 
 export default function UnknownComponent() {
-	const { t } = useTranslation();
-	const navigate = useNavigate();
+  const navigate = useNavigate()
 
-	return (
-		<Result
-			status="warning"
-			icon={<AppstoreOutlined />}
-			title={t("common.menu.exceptionUnknownComponent")}
-			subTitle={t("exception.unknownComponentSubTitle")}
-			extra={(
-				<div>
-					<Paragraph code copyable={{ text: location.href }}>
-						{location.href}
-					</Paragraph>
-					<Button
-						icon={<ArrowLeftOutlined />}
-						type="primary"
-						onClick={() => {
-							navigate(import.meta.env.VITE_BASE_HOME_PATH);
-						}}
-					>
-						{t("common.backHome")}
-					</Button>
-				</div>
-
-			)}
-		/>
-	);
+  return (
+    <Result
+      status='warning'
+      icon={<AppstoreOutlined />}
+      title={'Thành phần không xác định'}
+      subTitle={'Không tìm thấy trang'}
+      extra={
+        <div>
+          <Paragraph code copyable={{ text: location.href }}>
+            {location.href}
+          </Paragraph>
+          <Button
+            icon={<ArrowLeftOutlined />}
+            type='primary'
+            onClick={() => {
+              navigate(import.meta.env.VITE_BASE_HOME_PATH)
+            }}
+          >
+            {'Quay về trang chủ'}
+          </Button>
+        </div>
+      }
+    />
+  )
 }

@@ -8,12 +8,9 @@ import { ResponseError, ResponseSuccess } from '~/middlewares/handler/handler.mi
 import { PERMISSION_MESSAGES } from '~/constants/messages/permission/permission.messages'
 
 class RouteController {
-  // Old hard-coded method removed - now using database-driven menu generation
-
   async getAsyncRoutes(req: Request, res: Response) {
     const user_id = req.user?._id as string
     const user = await User.findById(user_id).populate('roles')
-
     if (!user) {
       return ResponseError({
         res,
@@ -21,9 +18,7 @@ class RouteController {
         statusCode: HttpStatusCode.NotFound
       })
     }
-
     const userRoles: string[] = []
-
     if (user.roles && user.roles.length > 0) {
       user.roles.forEach((role: any) => {
         if (role.code) {
@@ -36,7 +31,6 @@ class RouteController {
 
     const userPermissions = await permissionService.getUserPermissions(roleIds)
 
-    // Use database-driven menu generation
     const routes = await menuService.generateRoutesFromDB(userRoles, userPermissions as string[])
 
     return ResponseSuccess({

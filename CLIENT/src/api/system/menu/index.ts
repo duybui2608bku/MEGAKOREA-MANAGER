@@ -15,9 +15,11 @@ export function fetchAddMenuItem(data: MenuItemType) {
 }
 
 export function fetchUpdateMenuItem(data: MenuItemType) {
-  return request.put<ApiResponse<string>>('menu-item', { json: data, ignoreLoading: true }).json()
+  return request
+    .put<ApiResponse<string>>(`${MENU_PATH.UPDATE_MENU}/${data._id}`, { json: data, ignoreLoading: true })
+    .json()
 }
 
 export function fetchDeleteMenuItem(id: string) {
-  return request.delete<ApiResponse<string>>('menu-item', { json: { id }, ignoreLoading: true }).json()
+  return request.delete<ApiResponse<string>>(`${MENU_PATH.DELETE_MENU}/${id}`, { ignoreLoading: true }).json()
 }

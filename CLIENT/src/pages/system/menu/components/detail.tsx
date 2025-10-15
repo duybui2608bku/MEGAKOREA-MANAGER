@@ -16,7 +16,7 @@ import { Fragment, useEffect } from 'react'
 
 import { getMenuTypeOptions } from '../constants'
 import { GlobalEnum, LayoutEnum } from '#src/enum/global.js'
-import { MenuStatus } from '#src/enum/menu/enum.menu.js'
+import { MenuAction, MenuStatus, MenuType } from '#src/enum/menu/enum.menu.js'
 
 interface DetailProps {
   title: React.ReactNode
@@ -31,6 +31,10 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
   const [form] = Form.useForm<MenuItemType>()
 
   const onFinish = async (values: MenuItemType) => {
+    if (values.parentId && Array.isArray(values.parentId)) {
+      values.parentId = values.parentId[values.parentId.length - 1]
+    }
+
     if (detailData._id) {
       await fetchUpdateMenuItem(values)
       window.$message?.success('Cập nhật thành công')
@@ -42,11 +46,33 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
     return true
   }
 
+  const findPathToNode = (nodeId: string, flatMenus: MenuItemType[]): string[] => {
+    if (!nodeId) return []
+
+    const path: string[] = []
+    let currentId = nodeId
+
+    while (currentId) {
+      const menu = flatMenus.find((m) => m._id === currentId)
+      if (!menu) break
+
+      path.unshift(currentId)
+      currentId = menu.parentId as string
+    }
+
+    return path
+  }
+
   useEffect(() => {
     if (open) {
-      form.setFieldsValue(detailData)
+      const formData = { ...detailData }
+      if (formData.parentId && typeof formData.parentId === 'string') {
+        formData.parentId = findPathToNode(formData.parentId, flatParentMenus)
+      }
+
+      form.setFieldsValue(formData)
     }
-  }, [open])
+  }, [open, detailData, flatParentMenus])
 
   return (
     <ModalForm<MenuItemType>
@@ -87,6 +113,32 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         options={getMenuTypeOptions()}
       />
 
+      <ProFormRadio.Group
+        name='name'
+        label='Hành động'
+        radioType='button'
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        options={[
+          {
+            label: MenuAction.ADD,
+            value: MenuAction.ADD
+          },
+          {
+            label: MenuAction.EDIT,
+            value: MenuAction.EDIT
+          },
+          {
+            label: MenuAction.DELETE,
+            value: MenuAction.DELETE
+          },
+          {
+            label: MenuAction.VIEW,
+            value: MenuAction.VIEW
+          }
+        ]}
+      />
+
       <ProFormCascader
         name='parentId'
         label='Menu cha'
@@ -106,7 +158,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
 
       <ProFormDependency name={['menuType']}>
         {({ menuType }) => {
-          if (Number(menuType) === 0) {
+          if (Number(menuType) === MenuType.MENU) {
             return (
               <Fragment>
                 <ProFormText

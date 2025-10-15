@@ -26,7 +26,7 @@ const routes: AppRouteRecordRaw[] = [
     Component: ContainerLayout,
     handle: {
       order: exception,
-      // hideInMenu: true,
+      hideInMenu: true,
       title: 'Trang ngoại lệ',
       icon: createElement(IssuesCloseOutlined)
     },

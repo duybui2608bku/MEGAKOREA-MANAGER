@@ -1,13 +1,11 @@
 import mongoose from 'mongoose'
 import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
-import { MenuType } from '~/constants/enum/menu'
 import { MenuStatus } from '~/constants/enum/menu'
 
 const menuSchema = new mongoose.Schema(
   {
     path: {
       type: String,
-      required: true,
       index: true
     },
     component: {
@@ -18,6 +16,10 @@ const menuSchema = new mongoose.Schema(
       required: true,
       unique: true,
       index: true
+    },
+    title: {
+      type: String,
+      required: true
     },
     icon: {
       type: String
@@ -44,19 +46,11 @@ const menuSchema = new mongoose.Schema(
     status: {
       type: Number,
       enum: MenuStatus,
-      default: MenuStatus.ENABLE
-    },
-    currentActiveMenu: {
-      type: String
+      default: 1
     },
     keepAlive: {
       type: Boolean,
       default: true
-    },
-    menuType: {
-      type: Number,
-      enum: MenuType,
-      default: MenuType.MENU
     },
     hidden: {
       type: Boolean,

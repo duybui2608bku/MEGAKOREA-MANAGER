@@ -30,8 +30,15 @@ class DepartmentService {
   }
 
   async getAllDepartments() {
-    const departments = await departmentRepository.getAllDepartments()
-    return departments
+    const [departments, total] = await Promise.all([
+      departmentRepository.getAllDepartments(),
+      departmentRepository.getTotalDepartments()
+    ])
+    return {
+      list: departments,
+      total,
+      current: 0
+    }
   }
 
   async getDepartmentById(departmentId: string) {

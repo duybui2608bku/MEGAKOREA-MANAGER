@@ -11,6 +11,10 @@ class DepartmentRepository {
     return await department.save()
   }
 
+  async getTotalDepartments() {
+    return await Derpartment.countDocuments()
+  }
+
   async getAllDepartments() {
     return await Derpartment.find().sort({ created_at: -1 })
   }

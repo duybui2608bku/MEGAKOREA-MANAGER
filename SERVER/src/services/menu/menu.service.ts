@@ -93,7 +93,7 @@ class MenuService {
         component: menu.component,
         handle: {
           icon: menu.icon,
-          title: menu.title,
+          title: menu.name,
           order: menu.order,
           roles: menu.roles,
           permissions: menu.permissions,

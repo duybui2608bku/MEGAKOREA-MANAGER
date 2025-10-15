@@ -27,7 +27,6 @@
     "eslint-config-inspector": "eslint-config-inspector",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "husky",
     "pnpm:install": "pnpm install",
     "npm-check": "taze major -lrw",
     "test": "vitest"

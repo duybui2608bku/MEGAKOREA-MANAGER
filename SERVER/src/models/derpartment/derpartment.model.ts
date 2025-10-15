@@ -11,6 +11,12 @@ const derpartmentSchema = new mongoose.Schema(
     description: {
       type: String
     },
+    assigned_menus: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: COLLECTION_NAME.MENU
+      }
+    ],
     created_at: {
       type: Date,
       default: Date.now

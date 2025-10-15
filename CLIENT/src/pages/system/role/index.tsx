@@ -30,7 +30,7 @@ export default function Role() {
   const deleteRoleItemMutation = useMutation({
     mutationFn: fetchDeleteRoleItem
   })
-  /* Detail Data */
+
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [detailData, setDetailData] = useState<Partial<RoleItemType> & { menus?: string[] }>({})

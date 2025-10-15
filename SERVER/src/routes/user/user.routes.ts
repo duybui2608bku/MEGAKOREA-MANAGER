@@ -17,7 +17,6 @@ import {
 import routeController from '~/controllers/route/route.controller'
 import { wrapRequestHandler } from '~/middlewares/handler/handler.middlewares'
 import {
-  registerValidator,
   loginValidator,
   accessTokenValidator,
   changePasswordValidator,

@@ -6,6 +6,7 @@ export const createMenuValidator = validate(
   checkSchema(
     {
       path: {
+        optional: true,
         notEmpty: {
           errorMessage: MENU_MESSAGES.MENU_PATH_REQUIRED
         },
@@ -55,30 +56,6 @@ export const createMenuValidator = validate(
         optional: true,
         isMongoId: {
           errorMessage: MENU_MESSAGES.PARENT_ID_MUST_BE_A_VALID_MONGODB_OBJECT_ID
-        }
-      },
-      roles: {
-        optional: true,
-        isArray: {
-          errorMessage: MENU_MESSAGES.MENU_ROLES_MUST_BE_AN_ARRAY
-        }
-      },
-      'roles.*': {
-        optional: true,
-        isString: {
-          errorMessage: MENU_MESSAGES.MENU_EACH_ROLE_MUST_BE_A_STRING
-        }
-      },
-      permissions: {
-        optional: true,
-        isArray: {
-          errorMessage: MENU_MESSAGES.MENU_PERMISSIONS_MUST_BE_AN_ARRAY
-        }
-      },
-      'permissions.*': {
-        optional: true,
-        isString: {
-          errorMessage: MENU_MESSAGES.MENU_EACH_PERMISSION_MUST_BE_A_STRING
         }
       },
       status: {
