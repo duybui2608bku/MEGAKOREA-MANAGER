@@ -42,8 +42,6 @@ class MenuService {
   async getAllMenus(query: GetMenusQuery) {
     const result = await menuRepository.getAllMenus(query)
     return result
-    // For tree structure, you might want to build tree from result.list
-    // return { ...result, list: this.buildMenuTree(result.list) }
   }
 
   async getMenuById(menuId: string) {

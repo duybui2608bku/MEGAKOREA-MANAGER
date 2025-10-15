@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
+import { MenuType } from '~/constants/enum/menu'
+import { MenuStatus } from '~/constants/enum/menu'
 
 const menuSchema = new mongoose.Schema(
   {
@@ -16,10 +18,6 @@ const menuSchema = new mongoose.Schema(
       required: true,
       unique: true,
       index: true
-    },
-    title: {
-      type: String,
-      required: true
     },
     icon: {
       type: String
@@ -45,22 +43,20 @@ const menuSchema = new mongoose.Schema(
     ],
     status: {
       type: Number,
-      enum: [0, 1],
-      default: 1
+      enum: MenuStatus,
+      default: MenuStatus.ENABLE
     },
-    isExternal: {
-      type: Boolean,
-      default: false
-    },
-    externalLink: {
-      type: String
-    },
-    iframeLink: {
+    currentActiveMenu: {
       type: String
     },
     keepAlive: {
       type: Boolean,
       default: true
+    },
+    menuType: {
+      type: Number,
+      enum: MenuType,
+      default: MenuType.MENU
     },
     hidden: {
       type: Boolean,

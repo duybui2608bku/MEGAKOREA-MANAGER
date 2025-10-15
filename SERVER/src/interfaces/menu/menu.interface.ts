@@ -10,8 +10,6 @@ export interface CreateMenuRequestBody {
   permissions?: string[]
   status?: number
   isExternal?: boolean
-  externalLink?: string
-  iframeLink?: string
   keepAlive?: boolean
   hidden?: boolean
 }

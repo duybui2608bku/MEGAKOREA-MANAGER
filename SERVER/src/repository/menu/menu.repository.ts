@@ -27,20 +27,14 @@ class MenuRepository {
       filter.roles = { $in: [query.roles] }
     }
 
-    const { current, pageSize, skip } = generatePagination(query.current, query.pageSize)
-
     const total = await Menu.countDocuments(filter)
 
     const list = await Menu.find(filter)
-      // .populate('parentId', 'name title')
-      // .sort({ order: 1, created_at: 1 })
-      .skip(skip)
-      .limit(pageSize)
 
     return {
       list,
       total,
-      current
+      current: 0
     }
   }
 

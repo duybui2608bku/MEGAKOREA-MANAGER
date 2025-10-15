@@ -1,92 +1,84 @@
 import { checkSchema } from 'express-validator'
 import { validate } from '../handler/validation.middlewares'
+import { MENU_MESSAGES } from '~/constants/messages/menu/menu.message'
 
 export const createMenuValidator = validate(
   checkSchema(
     {
       path: {
         notEmpty: {
-          errorMessage: 'Menu path is required'
+          errorMessage: MENU_MESSAGES.MENU_PATH_REQUIRED
         },
         isString: {
-          errorMessage: 'Menu path must be a string'
+          errorMessage: MENU_MESSAGES.MENU_PATH_MUST_BE_A_STRING
         },
         trim: true
       },
       component: {
         optional: true,
         isString: {
-          errorMessage: 'Menu component must be a string'
+          errorMessage: MENU_MESSAGES.MENU_COMPONENT_MUST_BE_A_STRING
         },
         trim: true
       },
       name: {
         notEmpty: {
-          errorMessage: 'Menu name is required'
+          errorMessage: MENU_MESSAGES.MENU_NAME_REQUIRED
         },
         isString: {
-          errorMessage: 'Menu name must be a string'
+          errorMessage: MENU_MESSAGES.MENU_NAME_MUST_BE_A_STRING
         },
         isLength: {
           options: {
             min: 1,
             max: 100
           },
-          errorMessage: 'Menu name must be between 1 and 100 characters'
-        },
-        trim: true
-      },
-      title: {
-        notEmpty: {
-          errorMessage: 'Menu title is required'
-        },
-        isString: {
-          errorMessage: 'Menu title must be a string'
+          errorMessage: MENU_MESSAGES.MENU_NAME_MUST_BE_BETWEEN_1_AND_100_CHARACTERS
         },
         trim: true
       },
       icon: {
         optional: true,
         isString: {
-          errorMessage: 'Menu icon must be a string'
+          errorMessage: MENU_MESSAGES.MENU_ICON_MUST_BE_A_STRING
         },
         trim: true
       },
       order: {
         optional: true,
         isInt: {
-          errorMessage: 'Menu order must be an integer'
+          errorMessage: MENU_MESSAGES.MENU_ORDER_MUST_BE_AN_INTEGER
         },
         toInt: true
       },
       parentId: {
         optional: true,
         isMongoId: {
-          errorMessage: 'Parent ID must be a valid MongoDB ObjectId'
+          errorMessage: MENU_MESSAGES.PARENT_ID_MUST_BE_A_VALID_MONGODB_OBJECT_ID
         }
       },
       roles: {
         optional: true,
         isArray: {
-          errorMessage: 'Roles must be an array'
+          errorMessage: MENU_MESSAGES.MENU_ROLES_MUST_BE_AN_ARRAY
         }
       },
       'roles.*': {
         optional: true,
         isString: {
-          errorMessage: 'Each role must be a string'
+          errorMessage: MENU_MESSAGES.MENU_EACH_ROLE_MUST_BE_A_STRING
         }
       },
       permissions: {
         optional: true,
         isArray: {
-          errorMessage: 'Permissions must be an array'
+          errorMessage: MENU_MESSAGES.MENU_PERMISSIONS_MUST_BE_AN_ARRAY
         }
       },
       'permissions.*': {
         optional: true,
         isString: {
-          errorMessage: 'Each permission must be a string'
+          errorMessage: MENU_MESSAGES.MENU_EACH_PERMISSION_MUST_BE_A_STRING
         }
       },
       status: {
@@ -96,42 +88,21 @@ export const createMenuValidator = validate(
             min: 0,
             max: 1
           },
-          errorMessage: 'Status must be 0 (inactive) or 1 (active)'
+          errorMessage: MENU_MESSAGES.MENU_STATUS_MUST_BE_0_OR_1
         },
         toInt: true
-      },
-      isExternal: {
-        optional: true,
-        isBoolean: {
-          errorMessage: 'isExternal must be a boolean'
-        },
-        toBoolean: true
-      },
-      externalLink: {
-        optional: true,
-        isString: {
-          errorMessage: 'External link must be a string'
-        },
-        trim: true
-      },
-      iframeLink: {
-        optional: true,
-        isString: {
-          errorMessage: 'Iframe link must be a string'
-        },
-        trim: true
       },
       keepAlive: {
         optional: true,
         isBoolean: {
-          errorMessage: 'keepAlive must be a boolean'
+          errorMessage: MENU_MESSAGES.MENU_KEEP_ALIVE_MUST_BE_A_BOOLEAN
         },
         toBoolean: true
       },
       hidden: {
         optional: true,
         isBoolean: {
-          errorMessage: 'hidden must be a boolean'
+          errorMessage: MENU_MESSAGES.MENU_HIDDEN_MUST_BE_A_BOOLEAN
         },
         toBoolean: true
       }
@@ -146,80 +117,80 @@ export const updateMenuValidator = validate(
       path: {
         optional: true,
         isString: {
-          errorMessage: 'Menu path must be a string'
+          errorMessage: MENU_MESSAGES.MENU_PATH_MUST_BE_A_STRING
         },
         trim: true
       },
       component: {
         optional: true,
         isString: {
-          errorMessage: 'Menu component must be a string'
+          errorMessage: MENU_MESSAGES.MENU_COMPONENT_MUST_BE_A_STRING
         },
         trim: true
       },
       name: {
         optional: true,
         isString: {
-          errorMessage: 'Menu name must be a string'
+          errorMessage: MENU_MESSAGES.MENU_NAME_MUST_BE_A_STRING
         },
         isLength: {
           options: {
             min: 1,
             max: 100
           },
-          errorMessage: 'Menu name must be between 1 and 100 characters'
+          errorMessage: MENU_MESSAGES.MENU_NAME_MUST_BE_BETWEEN_1_AND_100_CHARACTERS
         },
         trim: true
       },
       title: {
         optional: true,
         isString: {
-          errorMessage: 'Menu title must be a string'
+          errorMessage: MENU_MESSAGES.MENU_TITLE_MUST_BE_A_STRING
         },
         trim: true
       },
       icon: {
         optional: true,
         isString: {
-          errorMessage: 'Menu icon must be a string'
+          errorMessage: MENU_MESSAGES.MENU_ICON_MUST_BE_A_STRING
         },
         trim: true
       },
       order: {
         optional: true,
         isInt: {
-          errorMessage: 'Menu order must be an integer'
+          errorMessage: MENU_MESSAGES.MENU_ORDER_MUST_BE_AN_INTEGER
         },
         toInt: true
       },
       parentId: {
         optional: true,
         isMongoId: {
-          errorMessage: 'Parent ID must be a valid MongoDB ObjectId'
+          errorMessage: MENU_MESSAGES.PARENT_ID_MUST_BE_A_VALID_MONGODB_OBJECT_ID
         }
       },
       roles: {
         optional: true,
         isArray: {
-          errorMessage: 'Roles must be an array'
+          errorMessage: MENU_MESSAGES.MENU_ROLES_MUST_BE_AN_ARRAY
         }
       },
       'roles.*': {
         optional: true,
         isString: {
-          errorMessage: 'Each role must be a string'
+          errorMessage: MENU_MESSAGES.MENU_EACH_ROLE_MUST_BE_A_STRING
         }
       },
       permissions: {
         optional: true,
         isArray: {
-          errorMessage: 'Permissions must be an array'
+          errorMessage: MENU_MESSAGES.MENU_PERMISSIONS_MUST_BE_AN_ARRAY
         }
       },
       'permissions.*': {
         optional: true,
         isString: {
-          errorMessage: 'Each permission must be a string'
+          errorMessage: MENU_MESSAGES.MENU_EACH_PERMISSION_MUST_BE_A_STRING
         }
       },
       status: {
@@ -229,42 +200,21 @@ export const updateMenuValidator = validate(
             min: 0,
             max: 1
           },
-          errorMessage: 'Status must be 0 (inactive) or 1 (active)'
+          errorMessage: MENU_MESSAGES.MENU_STATUS_MUST_BE_0_OR_1
         },
         toInt: true
-      },
-      isExternal: {
-        optional: true,
-        isBoolean: {
-          errorMessage: 'isExternal must be a boolean'
-        },
-        toBoolean: true
-      },
-      externalLink: {
-        optional: true,
-        isString: {
-          errorMessage: 'External link must be a string'
-        },
-        trim: true
-      },
-      iframeLink: {
-        optional: true,
-        isString: {
-          errorMessage: 'Iframe link must be a string'
-        },
-        trim: true
       },
       keepAlive: {
         optional: true,
         isBoolean: {
-          errorMessage: 'keepAlive must be a boolean'
+          errorMessage: MENU_MESSAGES.MENU_KEEP_ALIVE_MUST_BE_A_BOOLEAN
         },
         toBoolean: true
       },
       hidden: {
         optional: true,
         isBoolean: {
-          errorMessage: 'hidden must be a boolean'
+          errorMessage: MENU_MESSAGES.MENU_HIDDEN_MUST_BE_A_BOOLEAN
         },
         toBoolean: true
       }

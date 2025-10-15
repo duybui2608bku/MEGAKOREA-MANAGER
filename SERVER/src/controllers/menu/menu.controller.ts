@@ -18,14 +18,12 @@ export const createMenuController = async (
 }
 
 export const getMenusController = async (req: Request, res: Response) => {
-  const { status = '', parentId = '', roles = '', current, pageSize } = req.query
+  const { status = '', parentId = '', roles = '' } = req.query
 
   const result = await menuService.getAllMenus({
     status: status as string,
     parentId: parentId as string,
-    roles: roles as string,
-    current: current as string,
-    pageSize: pageSize as string
+    roles: roles as string
   })
 
   ResponseSuccess({
