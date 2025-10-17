@@ -1,21 +1,20 @@
-import type { RoleItemType } from '#src/api/system'
 import type { ProColumns } from '@ant-design/pro-components'
-
 import { DerpartmentStatus } from './enum'
-import { GradientTag } from '#src/components/tag/index.js'
+import { DepartmentItemType } from '#src/api/derpartment/types.js'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { ColorStatusEnum } from '#src/enum/global.js'
 
-export function getConstantColumns(): ProColumns<RoleItemType>[] {
+export function getConstantColumns(): ProColumns<DepartmentItemType>[] {
   return [
     {
-      dataIndex: 'STT',
-      title: 'Index',
+      dataIndex: '_id',
+      title: 'STT',
       valueType: 'indexBorder',
       width: 80
     },
     {
       title: 'Tên phòng ban',
       dataIndex: 'name',
-      disable: true,
       ellipsis: true,
       width: 120,
       formItemProps: {
@@ -28,7 +27,6 @@ export function getConstantColumns(): ProColumns<RoleItemType>[] {
       }
     },
     {
-      disable: true,
       title: 'Mã phòng ban',
       dataIndex: 'code',
       width: 120,
@@ -37,16 +35,16 @@ export function getConstantColumns(): ProColumns<RoleItemType>[] {
       ellipsis: true
     },
     {
-      disable: true,
       title: 'Trạng thái',
       dataIndex: 'status',
       valueType: 'select',
-      width: 80,
+      align: 'center',
+      width: 120,
       render: (status) => {
-        return (
-          <GradientTag type={status === DerpartmentStatus.ACTIVE ? 'success' : 'default'}>
-            {status === DerpartmentStatus.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
-          </GradientTag>
+        return status ? (
+          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
+        ) : (
+          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
         )
       },
       valueEnum: {
@@ -67,14 +65,14 @@ export function getConstantColumns(): ProColumns<RoleItemType>[] {
       title: 'Ngày tạo',
       dataIndex: 'created_at',
       valueType: 'date',
-      width: 100,
+      width: 120,
       search: false
     },
     {
       title: 'Ngày cập nhật',
       dataIndex: 'updated_at',
       valueType: 'dateTime',
-      width: 170,
+      width: 200,
       search: false
     }
   ]

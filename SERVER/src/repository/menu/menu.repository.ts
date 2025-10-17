@@ -1,6 +1,5 @@
 import { Menu } from '~/models'
 import { CreateMenuRequestBody, UpdateMenuRequestBody, GetMenusQuery } from '~/interfaces/menu/menu.interface'
-import { generatePagination } from '~/utils/pagination/pagination.util'
 
 class MenuRepository {
   async createMenu(menuData: CreateMenuRequestBody) {
@@ -19,12 +18,12 @@ class MenuRepository {
       filter.status = parseInt(query.status)
     }
 
-    if (query.parentId) {
-      filter.parentId = query.parentId
+    if (query.name) {
+      filter.name = { $regex: query.name, $options: 'i' }
     }
 
-    if (query.roles) {
-      filter.roles = { $in: [query.roles] }
+    if (query.hideInMenu) {
+      filter.hideInMenu = Boolean(Number(query.hideInMenu))
     }
 
     const total = await Menu.countDocuments(filter)

@@ -34,8 +34,8 @@ export interface UpdateMenuRequestBody {
 
 export interface GetMenusQuery {
   status?: string
-  parentId?: string
-  roles?: string
+  name?: string
+  hideInMenu?: string
   current?: string
   pageSize?: string
 }

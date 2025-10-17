@@ -96,14 +96,13 @@ class MenuService {
           title: menu.name,
           order: menu.order,
           roles: menu.roles,
-          permissions: menu.permissions,
+          status: menu.status,
+          hideInMenu: menu.hidden,
           keepAlive: menu.keepAlive,
-          externalLink: menu.externalLink,
-          iframeLink: menu.iframeLink
+          ignoreAccess: menu.ignoreAccess
         },
         children: []
       }
-
       menuMap.set(menu._id.toString(), menuItem)
     })
 

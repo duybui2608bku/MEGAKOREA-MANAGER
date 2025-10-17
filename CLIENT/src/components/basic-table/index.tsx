@@ -6,13 +6,14 @@ import { footerHeight as layoutFooterHeight } from '#src/layout/constants'
 import { usePreferencesStore } from '#src/store'
 import { cn, isObject, isUndefined } from '#src/utils'
 
-import { LoadingOutlined } from '@ant-design/icons'
+import { DownOutlined, LoadingOutlined, UpOutlined } from '@ant-design/icons'
 import { ProTable } from '@ant-design/pro-components'
 import { useSize } from 'ahooks'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { BASIC_TABLE_ROOT_CLASS_NAME } from './constants'
 import { useStyles } from './styles'
+import { GlobalEnum } from '#src/enum/global.js'
 
 export interface BasicTableProps<D, U, V> extends ProTableProps<D, U, V> {
   /**
@@ -38,10 +39,12 @@ export function BasicTable<
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const size = useSize(tableWrapperRef)
   const { enableFooter, fixedFooter } = usePreferencesStore()
+
   /**
    * @description 动态表格中为什么设置 scrollY 为 initial
    * @see https://gist.github.com/condorheroblog/557c18c61084a1296b716bcb1203315e
    */
+
   const [scrollY, setScrollY] = useState<number | string | undefined>(adaptive ? 'initial' : undefined)
 
   /**
@@ -156,7 +159,22 @@ export function BasicTable<
     <div className='h-full' ref={tableWrapperRef}>
       <ProTable
         cardBordered
-        rowKey='id'
+        locale={{
+          emptyText: 'Không có dữ liệu',
+          filterEmptyText: 'Không có dữ liệu',
+          filterReset: 'Đặt lại',
+          filterConfirm: 'Xác nhận',
+          filterCheckall: 'Chọn tất cả'
+        }}
+        search={{
+          labelWidth: 'auto',
+          span: 6,
+          defaultCollapsed: false,
+          searchText: 'Tìm kiếm',
+          resetText: 'Đặt lại',
+          collapseRender: (collapsed: boolean) => (collapsed ? <UpOutlined /> : <DownOutlined />)
+        }}
+        rowKey={GlobalEnum.MAIN_KEY}
         dateFormatter='string'
         {...props}
         options={{

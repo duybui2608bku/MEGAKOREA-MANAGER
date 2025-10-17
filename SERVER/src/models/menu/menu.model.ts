@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
-import { MenuStatus } from '~/constants/enum/menu'
+import { MenuStatus, MenuType } from '~/constants/enum/menu'
 
 const menuSchema = new mongoose.Schema(
   {
@@ -52,7 +52,7 @@ const menuSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
-    hidden: {
+    hideInMenu: {
       type: Boolean,
       default: false
     },

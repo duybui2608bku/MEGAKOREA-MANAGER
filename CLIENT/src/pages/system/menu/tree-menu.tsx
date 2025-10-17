@@ -45,7 +45,7 @@ export default function Menu() {
       <Card className='h-full [&_.ant-card-body]:h-full'>
         <div className='relative h-full w-full overflow-hidden border-r-[1px] border-r-gray-200 pr-5 lg:w-4/12'>
           <div className='flex gap-3 mb-4'>
-            <Input placeholder='搜索' className='flex-1' prefix={<SearchOutlined />} />
+            <Input placeholder='s' className='flex-1' prefix={<SearchOutlined />} />
             <Radio.Group
               onChange={(e) => {
                 const value = e.target.value
@@ -56,8 +56,8 @@ export default function Menu() {
                 }
               }}
             >
-              <Radio.Button value='expand'>展开</Radio.Button>
-              <Radio.Button value='collapse'>折叠</Radio.Button>
+              <Radio.Button value='expand'>1</Radio.Button>
+              <Radio.Button value='collapse'>1</Radio.Button>
             </Radio.Group>
           </div>
           <div className='flex flex-col gap-y-1'>
@@ -78,7 +78,7 @@ export default function Menu() {
                   <span>{node.title}</span>
                   <div className='tree-actions hidden group-hover:flex items-center gap-0.5'>
                     <Tag color='processing' className='mr-0 h-fit text-xs'>
-                      菜单
+                      1
                     </Tag>
                     <div>
                       <BasicButton color='primary' variant='text' size='small' icon={<PlusCircleOutlined />} />

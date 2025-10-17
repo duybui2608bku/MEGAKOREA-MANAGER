@@ -58,6 +58,18 @@ export const createMenuValidator = validate(
           errorMessage: MENU_MESSAGES.PARENT_ID_MUST_BE_A_VALID_MONGODB_OBJECT_ID
         }
       },
+      roles: {
+        optional: true,
+        isArray: {
+          errorMessage: MENU_MESSAGES.MENU_ROLES_MUST_BE_AN_ARRAY
+        }
+      },
+      'roles.*': {
+        optional: true,
+        isString: {
+          errorMessage: MENU_MESSAGES.MENU_EACH_ROLE_MUST_BE_A_STRING
+        }
+      },
       status: {
         optional: true,
         isInt: {
@@ -76,12 +88,21 @@ export const createMenuValidator = validate(
         },
         toBoolean: true
       },
-      hidden: {
+      hideInMenu: {
         optional: true,
         isBoolean: {
           errorMessage: MENU_MESSAGES.MENU_HIDDEN_MUST_BE_A_BOOLEAN
         },
         toBoolean: true
+      },
+      title: {
+        notEmpty: {
+          errorMessage: MENU_MESSAGES.MENU_TITLE_REQUIRED
+        },
+        isString: {
+          errorMessage: MENU_MESSAGES.MENU_TITLE_MUST_BE_A_STRING
+        },
+        trim: true
       }
     },
     ['body']
@@ -156,18 +177,6 @@ export const updateMenuValidator = validate(
         optional: true,
         isString: {
           errorMessage: MENU_MESSAGES.MENU_EACH_ROLE_MUST_BE_A_STRING
-        }
-      },
-      permissions: {
-        optional: true,
-        isArray: {
-          errorMessage: MENU_MESSAGES.MENU_PERMISSIONS_MUST_BE_AN_ARRAY
-        }
-      },
-      'permissions.*': {
-        optional: true,
-        isString: {
-          errorMessage: MENU_MESSAGES.MENU_EACH_PERMISSION_MUST_BE_A_STRING
         }
       },
       status: {

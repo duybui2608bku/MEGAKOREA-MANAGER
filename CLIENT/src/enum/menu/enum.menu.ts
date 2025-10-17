@@ -9,8 +9,8 @@ export enum MenuStatus {
 }
 
 export enum MenuAction {
-  ADD = 'Thêm',
-  EDIT = 'Sửa',
-  DELETE = 'Xóa',
-  VIEW = 'Xem'
+  ADD = 'permission:menu:add',
+  EDIT = 'permission:menu:edit',
+  DELETE = 'permission:menu:delete',
+  VIEW = 'permission:menu:view'
 }

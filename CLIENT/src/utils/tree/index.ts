@@ -15,6 +15,7 @@
  * const tree = handleTree(data);
  * // Kết quả: [ { id: 1, parentId: 0, name: "A", children: [{...}, {...}] } ]
  */
+
 export function handleTree(data: any[], id?: string, parentId?: string, children?: string): any {
   if (!Array.isArray(data)) {
     console.warn('Dữ liệu đầu vào (data) phải là một mảng')

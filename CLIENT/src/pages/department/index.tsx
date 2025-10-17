@@ -1,38 +1,42 @@
-import type { MenuItemType } from '#src/api/system'
 import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { fetchDeleteMenuItem, fetchMenuList } from '#src/api/system/menu'
+import { fetchDeleteRoleItem, fetchMenuByRoleId } from '#src/api/system'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
+import { accessControlCodes, useAccess } from '#src/hooks'
 import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
+import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
+import { fetchDepartments } from '#src/api/derpartment/index.js'
+import { Detail } from '#src/pages/system/dept/components/detail'
+import { DepartmentItemType } from '#src/api/derpartment/types.js'
 
-import { Detail } from './components/detail'
-import { getConstantColumns } from './constants'
-import { ButtonEnumType, GlobalEnum } from '#src/enum/global.js'
+const Department = () => {
+  const { hasAccessByCodes } = useAccess()
 
-export default function Menu() {
+  const deleteRoleItemMutation = useMutation({
+    mutationFn: fetchDeleteRoleItem
+  })
+
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
-  const [detailData, setDetailData] = useState<Partial<MenuItemType>>({})
-  const [flatParentMenus, setFlatParentMenus] = useState<MenuItemType[]>([])
+  const [detailData, setDetailData] = useState<Partial<DepartmentItemType> & { menus?: string[] }>({})
 
   const actionRef = useRef<ActionType>(null)
 
   const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
-    await fetchDeleteMenuItem(id)
-    await action?.reload?.()
-    window.$message?.success(`${'Xóa thành công menu'}`)
+    // const responseData = await deleteRoleItemMutation.mutateAsync(id)
+    // await action?.reload?.()
+    // window.$message?.success(`Xóa thành công id = ${responseData.result}`)
   }
 
-  const columns: ProColumns<MenuItemType>[] = [
-    ...getConstantColumns(),
+  const columns: ProColumns<DepartmentItemType>[] = [
     {
       title: 'Thao tác',
       valueType: 'option',
       key: 'option',
-      width: 100,
+      width: 120,
       fixed: 'right',
       render: (text, record, _, action) => {
         return [
@@ -40,23 +44,25 @@ export default function Menu() {
             key='editable'
             type='link'
             size='small'
+            // disabled={!hasAccessByCodes(accessControlCodes.update)}
             onClick={async () => {
+              // const responseData = await fetchMenuByRoleId({ id: record._id })
               setIsOpen(true)
-              setTitle('Sửa menu')
-              setDetailData({ ...record })
+              setTitle('Sửa phòng ban')
+              // setDetailData({ ...record, menus: responseData.result })
             }}
           >
-            {'Sửa'}
+            Sửa
           </BasicButton>,
           <Popconfirm
             key='delete'
-            title={'Xác nhận xóa'}
+            title='Xác nhận xóa?'
             onConfirm={() => handleDeleteRow(record._id, action)}
-            okText={'Xác nhận'}
-            cancelText={'Hủy'}
+            okText='Xác nhận'
+            cancelText='Hủy'
           >
-            <BasicButton type='link' size='small'>
-              {'Xóa'}
+            <BasicButton type='link' size='small' disabled={!hasAccessByCodes(accessControlCodes.delete)}>
+              Xóa
             </BasicButton>
           </Popconfirm>
         ]
@@ -75,46 +81,46 @@ export default function Menu() {
 
   return (
     <BasicContent className='h-full'>
-      <BasicTable<MenuItemType>
+      <BasicTable<DepartmentItemType>
         adaptive
         columns={columns}
         actionRef={actionRef}
-        rowKey={GlobalEnum.MAIN_KEY as string}
-        pagination={false}
-        bordered
         request={async (params) => {
-          const responseData = await fetchMenuList(params)
-          const menuTree = handleTree(responseData.result.list, GlobalEnum.MAIN_KEY, 'parentId')
-          setFlatParentMenus(responseData.result.list.map((item) => ({ ...item, name: item.name })))
+          const responseData = await fetchDepartments(params)
+          console.log(responseData)
           return {
             ...responseData,
-            data: menuTree,
+            data: responseData.result.list,
             total: responseData.result.total
           }
         }}
-        headerTitle={`${'Quản lí Menu'}`}
+        headerTitle={`Phòng ban`}
         toolBarRender={() => [
           <Button
             key='add-role'
             icon={<PlusCircleOutlined />}
-            type={ButtonEnumType.PRIMARY}
+            type='primary'
+            // disabled={!hasAccessByCodes(accessControlCodes.add)}
             onClick={() => {
               setIsOpen(true)
-              setTitle('Thêm menu')
+              setTitle('Thêm phòng ban')
             }}
           >
-            {'Thêm'}
+            Thêm
           </Button>
         ]}
       />
       <Detail
         title={title}
         open={isOpen}
-        flatParentMenus={flatParentMenus}
         onCloseChange={onCloseChange}
         detailData={detailData}
         refreshTable={refreshTable}
+        // treeData={handleTree(menuItems || [])}
+        treeData={[]}
       />
     </BasicContent>
   )
 }
+
+export default Department

@@ -13,9 +13,9 @@ const accounts: Record<string, PasswordLoginFormType> = {
     password: '123456789admin',
     email: AccessControlRoles.admin
   },
-  [AccessControlRoles.common]: {
+  [AccessControlRoles.user]: {
     password: '123456789admin',
-    email: AccessControlRoles.common
+    email: AccessControlRoles.user
   }
 }
 
@@ -65,11 +65,8 @@ export default function ButtonControl() {
           >
             {'Chuyển quyền admin'}
           </Button>
-          <Button
-            type={roleButtonType(AccessControlRoles.common)}
-            onClick={() => changeAccount(AccessControlRoles.common)}
-          >
-            {'Chuyển quyền common'}
+          <Button type={roleButtonType(AccessControlRoles.user)} onClick={() => changeAccount(AccessControlRoles.user)}>
+            {'Chuyển quyền user'}
           </Button>
         </div>
       </Card>
@@ -94,11 +91,11 @@ export default function ButtonControl() {
       </Card>
       <Card title={'Quyền hiện tại'}>
         <div className='flex items-center gap-4'>
-          <AccessControl type='role' codes={[AccessControlRoles.admin, AccessControlRoles.common]}>
+          <AccessControl type='role' codes={[AccessControlRoles.admin, AccessControlRoles.user]}>
             <Typography.Text code>
               {'Quyền admin'}
               &nbsp;&&nbsp;
-              {'Quyền common'}
+              {'Quyền user'}
             </Typography.Text>
           </AccessControl>
 
@@ -106,7 +103,7 @@ export default function ButtonControl() {
             <Typography.Text code>{'Quyền admin'}</Typography.Text>
           </AccessControl>
 
-          <AccessControl type='role' codes={AccessControlRoles.common}>
+          <AccessControl type='role' codes={AccessControlRoles.user}>
             <Typography.Text code>{'Quyền common'}</Typography.Text>
           </AccessControl>
         </div>
@@ -130,15 +127,15 @@ export default function ButtonControl() {
       </Card>
       <Card title={'Quyền hiện tại'}>
         <div className='flex items-center gap-4'>
-          {hasAccessByRoles([AccessControlRoles.admin, AccessControlRoles.common]) && (
+          {hasAccessByRoles([AccessControlRoles.admin, AccessControlRoles.user]) && (
             <Typography.Text code>
               {'Quyền admin'}
               &nbsp;&&nbsp;
-              {'Quyền common'}
+              {'Quyền user'}
             </Typography.Text>
           )}
           {hasAccessByRoles([AccessControlRoles.admin]) && <Typography.Text code>{'Quyền admin'}</Typography.Text>}
-          {hasAccessByRoles(AccessControlRoles.common) && <Typography.Text code>{'Quyền common'}</Typography.Text>}
+          {hasAccessByRoles(AccessControlRoles.user) && <Typography.Text code>{'Quyền user'}</Typography.Text>}
         </div>
       </Card>
     </BasicContent>

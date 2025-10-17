@@ -6,7 +6,7 @@ import { lazy } from 'react'
 
 const User = lazy(() => import('#src/pages/system/user'))
 const UserRegister = lazy(() => import('#src/pages/system/user/register'))
-// const Dept = lazy(() => import('#src/pages/system/dept'))
+// const Derpartment = lazy(() => import('#src/pages/system/dept/index.tsx'))
 const Role = lazy(() => import('#src/pages/system/role'))
 const Menu = lazy(() => import('#src/pages/system/menu'))
 
@@ -29,19 +29,19 @@ const routes: AppRouteRecordRaw[] = [
           title: 'common.menu.user',
           roles: ['admin'],
           permissions: ['permission:button:add', 'permission:button:update', 'permission:button:delete']
-        },
-        children: [
-          {
-            path: '/system/user/register',
-            Component: UserRegister,
-            handle: {
-              icon: '123',
-              title: 'Đăng kí',
-              roles: ['admin'],
-              permissions: ['permission:button:add']
-            }
-          }
-        ]
+        }
+        // children: [
+        //   {
+        //     path: '/system/user/register',
+        //     Component: UserRegister,
+        //     handle: {
+        //       icon: '123',
+        //       title: 'Đăng kí',
+        //       roles: ['admin'],
+        //       permissions: ['permission:button:add']
+        //     }
+        //   }
+        // ]
       },
       {
         path: '/system/role',
@@ -65,7 +65,7 @@ const routes: AppRouteRecordRaw[] = [
       }
       // {
       //   path: '/system/dept',
-      //   Component: Dept,
+      //   Component: Derpartment,
       //   handle: {
       //     keepAlive: false,
       //     icon: 'ApartmentOutlined',

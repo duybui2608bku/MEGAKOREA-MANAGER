@@ -5,6 +5,6 @@ export const MENU_PATH_ROUTES = {
   CREATE: '/create',
   GET_ALL: '/get-all',
   GET_BY_ID: '/:id',
-  UPDATE: '/:id ',
-  DELETE: '/:id'
+  UPDATE: '/update/:id',
+  DELETE: '/delete/:id'
 }

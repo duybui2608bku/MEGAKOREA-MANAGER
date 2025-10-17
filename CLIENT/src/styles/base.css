@@ -54,3 +54,7 @@ button {
 .ant-table-body {
   overflow: auto !important;
 }
+
+/* .ant-table-cell-with-append {
+  display: flex;
+} */

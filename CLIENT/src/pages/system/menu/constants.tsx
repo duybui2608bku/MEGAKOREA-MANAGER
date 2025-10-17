@@ -1,25 +1,12 @@
 import type { MenuItemType } from '#src/api/system'
 import type { ProColumns } from '@ant-design/pro-components'
 
-import { getYesNoOptions } from '#src/constants'
+import { getBooleanOptions, getYesNoOptions } from '#src/constants'
 
-import { MenuStatus, MenuType } from '#src/enum/menu/enum.menu.js'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { GradientTag } from '#src/components/tag/index.js'
-import { ColorStatusEnum } from '#src/enum/global.js'
 
-export function getMenuTypeOptions() {
-  return [
-    {
-      label: 'Menu',
-      value: MenuType.MENU
-    },
-    {
-      label: 'Button',
-      value: MenuType.BUTTON
-    }
-  ]
-}
+import { ColorStatusEnum } from '#src/enum/global.js'
+import { MenuStatus } from '#src/enum/menu/enum.menu.js'
 
 export function getConstantColumns(): ProColumns<MenuItemType>[] {
   return [
@@ -38,13 +25,8 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       render: (_, record) => {
         return record.name
       },
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: 'form.required'
-          }
-        ]
+      fieldProps: {
+        placeholder: 'Nhập tên menu'
       }
     },
     {
@@ -53,49 +35,45 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
       width: 150,
       filters: true,
       onFilter: true,
-      ellipsis: true
+      ellipsis: true,
+      search: false
     },
     {
       title: 'Thứ tự',
       dataIndex: 'order',
       valueType: 'digit',
-      width: 80
+      width: 80,
+      search: false
     },
     {
       title: 'Icon',
       dataIndex: 'icon',
-      width: 130
+      width: 130,
+      search: false
     },
     {
-      disable: true,
       title: 'Trạng thái',
       dataIndex: 'status',
       valueType: 'select',
       align: 'center',
+      fieldProps: {
+        placeholder: 'Chọn trạng thái'
+      },
       width: 150,
-      render: (text, record) => {
-        return <GradientTag type={record.status === MenuStatus.ENABLE ? 'success' : 'default'}>{text}</GradientTag>
+      render: (status) => {
+        return status ? (
+          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
+        ) : (
+          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
+        )
       },
       valueEnum: {
-        1: {
+        [MenuStatus.ENABLE]: {
           text: 'Kích hoạt'
         },
-        0: {
+        [MenuStatus.DISABLE]: {
           text: 'Ngưng'
         }
-      }
-    },
-    {
-      title: 'Loại menu',
-      dataIndex: 'menuType',
-      width: 100,
-      align: 'center',
-      render: (_, record) => {
-        return record.menuType === MenuType.MENU ? (
-          <GradientTag type='info'>Menu</GradientTag>
-        ) : (
-          <GradientTag type='danger'>Button</GradientTag>
-        )
       }
     },
     {
@@ -117,52 +95,26 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
           <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
         )
       },
-      valueEnum: getYesNoOptions().reduce((acc, curr) => {
-        acc.set(curr.value, curr.label)
-        return acc
-      }, new Map())
+      search: false
     },
     {
-      title: 'Ẩn trong menu',
+      title: 'Hiển thị',
       dataIndex: 'hideInMenu',
-      valueType: 'select',
-      width: 180,
       align: 'center',
-      render: (_, record) => {
-        return record.hideInMenu ? (
+      width: 150,
+      render: (_: any, record: any) => {
+        const hide = record.hideInMenu
+        return hide ? (
           <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
         ) : (
           <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
         )
       },
-      valueEnum: getYesNoOptions().reduce((acc, curr) => {
-        acc.set(curr.value, curr.label)
-        return acc
-      }, new Map())
-    },
-    {
-      title: 'Hiển thị',
-      dataIndex: 'currentActiveMenu',
-      align: 'center',
-      width: 150,
-      render: (currentActiveMenu) => {
-        return currentActiveMenu ? (
-          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
-        ) : (
-          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
-        )
+      valueEnum: {
+        true: { text: 'Có' },
+        false: { text: 'Không' }
       }
     },
-    // {
-    //   title: 'Iframe',
-    //   dataIndex: 'iframeLink',
-    //   width: 120
-    // },
-    // {
-    //   title: 'External',
-    //   dataIndex: 'externalLink',
-    //   width: 120
-    // },
     {
       title: 'Ngày tạo',
       dataIndex: 'created_at',

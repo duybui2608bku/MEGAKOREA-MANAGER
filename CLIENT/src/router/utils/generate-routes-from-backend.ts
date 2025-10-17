@@ -11,6 +11,7 @@ const ExceptionUnknownComponent = lazy(() => import('#src/pages/exception/unknow
  * @zh 异步获取页面组件
  * @en Async load page components
  */
+
 const pageModules = import.meta.glob([
   '/src/pages/**/*.tsx',
   // Exclude exception pages from lazy loading

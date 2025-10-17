@@ -7,7 +7,10 @@ import { DrawerForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-des
 import { useMutation } from '@tanstack/react-query'
 import { Form } from 'antd'
 import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
+import { DepartmentItemType } from '#src/api/derpartment/types.js'
+import { DerpartmentStatus } from '../enum'
+import { RadioTypeEnum } from '#src/enum/global.js'
+import { StatusOptionsGlobal } from '#src/constants/option/index.js'
 
 interface DetailProps {
   treeData: TreeDataNodeWithId[]
@@ -19,7 +22,6 @@ interface DetailProps {
 }
 
 export function Detail({ title, open, onCloseChange, detailData, treeData, refreshTable }: DetailProps) {
-  const { t } = useTranslation()
   const [form] = Form.useForm<RoleItemType>()
 
   const addRoleItemMutation = useMutation({
@@ -29,19 +31,15 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
     mutationFn: fetchUpdateRoleItem
   })
 
-  const onFinish = async (values: RoleItemType) => {
-    // console.info(values);
-    /* 有 id 则为修改，否则为新增 */
-    if (detailData.id) {
-      await updateRoleItemMutation.mutateAsync(values)
-      window.$message?.success(t('common.updateSuccess'))
-    } else {
-      await addRoleItemMutation.mutateAsync(values)
-      window.$message?.success(t('common.addSuccess'))
-    }
-    /* 刷新表格 */
+  const onFinish = async (values: DepartmentItemType) => {
+    // if (detailData._id) {
+    //   await updateRoleItemMutation.mutateAsync(values)
+    //   window.$message?.success(t('common.updateSuccess'))
+    // } else {
+    //   await addRoleItemMutation.mutateAsync(values)
+    //   window.$message?.success(t('common.addSuccess'))
+    // }
     refreshTable?.()
-    // 不返回不会关闭弹框
     return true
   }
 
@@ -61,21 +59,19 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
         }
       }}
       resize={{
-        onResize() {
-          // console.log('resize!');
-        },
+        onResize() {},
         maxWidth: window.innerWidth * 0.8,
-        minWidth: 500
+        minWidth: 550
       }}
       labelCol={{ span: 6 }}
-      wrapperCol={{ span: 24 }}
+      wrapperCol={{ span: 24, offset: 2 }}
       layout='horizontal'
       form={form}
       autoFocusFirstInput
       drawerProps={{
         destroyOnHidden: true
       }}
-      onFinish={onFinish}
+      // onFinish={onFinish}
       initialValues={{
         status: 1,
         menus: []
@@ -90,8 +86,9 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
         ]}
         width='md'
         name='name'
-        label={t('system.role.name')}
-        tooltip={t('form.length', { length: 24 })}
+        label='Tên phòng ban'
+        tooltip='Tên phòng ban không được để trống'
+        placeholder='Nhập tên phòng ban'
       />
 
       <ProFormText
@@ -103,30 +100,22 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
         ]}
         width='md'
         name='code'
-        label={t('system.role.id')}
+        label='Mã phòng ban'
+        placeholder='Nhập mã phòng ban'
       />
 
       <ProFormRadio.Group
         name='status'
-        label={t('common.status')}
-        radioType='button'
-        options={[
-          {
-            label: t('common.enabled'),
-            value: 1
-          },
-          {
-            label: t('common.deactivated'),
-            value: 0
-          }
-        ]}
+        label='Trạng thái'
+        radioType={RadioTypeEnum.CHECKBOX as 'button' | 'radio' | undefined}
+        options={StatusOptionsGlobal}
       />
 
-      <ProFormTextArea allowClear width='md' name='remark' label={t('common.remark')} />
+      <ProFormTextArea placeholder='Nhập miêu tả' allowClear width='md' name='description' label='Miêu tả' />
 
-      <Form.Item name='menus' label={t('system.role.assignMenu')}>
+      {/* <Form.Item name='menus' label={t('system.role.assignMenu')}>
         <FormTreeItem treeData={treeData} />
-      </Form.Item>
+      </Form.Item> */}
     </DrawerForm>
   )
 }

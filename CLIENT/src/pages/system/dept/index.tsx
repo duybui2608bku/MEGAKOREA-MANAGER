@@ -1,33 +1,20 @@
-import type { RoleItemType } from '#src/api/system'
 import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { fetchDeleteRoleItem, fetchMenuByRoleId, fetchRoleList, fetchRoleMenu } from '#src/api/system'
+import { fetchDeleteRoleItem, fetchMenuByRoleId } from '#src/api/system'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
 import { accessControlCodes, useAccess } from '#src/hooks'
 import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 import { getConstantColumns } from './constants'
 import { fetchDepartments } from '#src/api/derpartment/index.js'
-import { MENU_QUERY_KEY } from '#src/pages/system/menu/querykey/index.js'
 import { Detail } from './components/detail'
+import { DepartmentItemType } from '#src/api/derpartment/types.js'
 
-export const Derpartment = () => {
+const Derpartment = () => {
   const { hasAccessByCodes } = useAccess()
-  const { data: menuItems } = useQuery({
-    queryKey: [MENU_QUERY_KEY.MENU_LIST],
-    queryFn: async () => {
-      const responseData = await fetchDepartments()
-      return responseData.result.list.map((item) => ({
-        ...item,
-        title: item.name,
-        key: item._id
-      }))
-    },
-    initialData: []
-  })
 
   const deleteRoleItemMutation = useMutation({
     mutationFn: fetchDeleteRoleItem
@@ -35,17 +22,17 @@ export const Derpartment = () => {
 
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
-  const [detailData, setDetailData] = useState<Partial<RoleItemType> & { menus?: string[] }>({})
+  const [detailData, setDetailData] = useState<Partial<DepartmentItemType> & { menus?: string[] }>({})
 
   const actionRef = useRef<ActionType>(null)
 
-  const handleDeleteRow = async (id: number, action?: ProCoreActionType<object>) => {
-    const responseData = await deleteRoleItemMutation.mutateAsync(id)
-    await action?.reload?.()
-    window.$message?.success(`Xóa thành công id = ${responseData.result}`)
+  const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
+    // const responseData = await deleteRoleItemMutation.mutateAsync(id)
+    // await action?.reload?.()
+    // window.$message?.success(`Xóa thành công id = ${responseData.result}`)
   }
 
-  const columns: ProColumns<RoleItemType>[] = [
+  const columns: ProColumns<DepartmentItemType>[] = [
     ...getConstantColumns(),
     {
       title: 'Thao tác',
@@ -59,12 +46,12 @@ export const Derpartment = () => {
             key='editable'
             type='link'
             size='small'
-            disabled={!hasAccessByCodes(accessControlCodes.update)}
+            // disabled={!hasAccessByCodes(accessControlCodes.update)}
             onClick={async () => {
-              const responseData = await fetchMenuByRoleId({ id: record.id })
+              // const responseData = await fetchMenuByRoleId({ id: record._id })
               setIsOpen(true)
               setTitle('Sửa phòng ban')
-              setDetailData({ ...record, menus: responseData.result })
+              // setDetailData({ ...record, menus: responseData.result })
             }}
           >
             Sửa
@@ -72,7 +59,7 @@ export const Derpartment = () => {
           <Popconfirm
             key='delete'
             title='Xác nhận xóa?'
-            onConfirm={() => handleDeleteRow(record.id, action)}
+            onConfirm={() => handleDeleteRow(record._id, action)}
             okText='Xác nhận'
             cancelText='Hủy'
           >
@@ -95,12 +82,13 @@ export const Derpartment = () => {
   }
   return (
     <BasicContent className='h-full'>
-      <BasicTable<RoleItemType>
+      <BasicTable<DepartmentItemType>
         adaptive
         columns={columns}
         actionRef={actionRef}
-        request={async () => {
-          const responseData = await fetchDepartments()
+        request={async (params) => {
+          const responseData = await fetchDepartments(params)
+          console.log(responseData)
           return {
             ...responseData,
             data: responseData.result.list,
@@ -113,7 +101,7 @@ export const Derpartment = () => {
             key='add-role'
             icon={<PlusCircleOutlined />}
             type='primary'
-            disabled={!hasAccessByCodes(accessControlCodes.add)}
+            // disabled={!hasAccessByCodes(accessControlCodes.add)}
             onClick={() => {
               setIsOpen(true)
               setTitle('Thêm phòng ban')
@@ -129,8 +117,11 @@ export const Derpartment = () => {
         onCloseChange={onCloseChange}
         detailData={detailData}
         refreshTable={refreshTable}
-        treeData={handleTree(menuItems || [])}
+        // treeData={handleTree(menuItems || [])}
+        treeData={[]}
       />
     </BasicContent>
   )
 }
+
+export default Derpartment

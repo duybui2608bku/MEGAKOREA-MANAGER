@@ -23,3 +23,7 @@ export function fetchUpdateMenuItem(data: MenuItemType) {
 export function fetchDeleteMenuItem(id: string) {
   return request.delete<ApiResponse<string>>(`${MENU_PATH.DELETE_MENU}/${id}`, { ignoreLoading: true }).json()
 }
+
+// export const fetchMenusByDepartmentId = (departmentIds: string[]) => {
+//   return request.get<ApiResponse<string[]>>(`${MENU_PATH.GET_MENUS_BY_DEPARTMENT_ID}/${departmentId}`, { ignoreLoading: true }).json()
+// }

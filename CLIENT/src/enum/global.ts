@@ -43,3 +43,8 @@ export enum ColorStatusEnum {
 export enum IconGlobal {
   SIZE = 334
 }
+
+export enum RadioTypeEnum {
+  BUTTON = 'button',
+  CHECKBOX = 'checkbox'
+}

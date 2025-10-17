@@ -12,9 +12,9 @@ const accounts: Record<string, PasswordLoginFormType> = {
     password: '123456789admin',
     email: AccessControlRoles.admin
   },
-  [AccessControlRoles.common]: {
+  [AccessControlRoles.user]: {
     password: '123456789admin',
-    email: AccessControlRoles.common
+    email: AccessControlRoles.user
   }
 }
 
@@ -125,11 +125,8 @@ export default function PageControl() {
           >
             {t('access.pageControl.switchAdmin')}
           </Button>
-          <Button
-            type={roleButtonType(AccessControlRoles.common)}
-            onClick={() => changeAccount(AccessControlRoles.common)}
-          >
-            {t('access.pageControl.switchCommon')}
+          <Button type={roleButtonType(AccessControlRoles.user)} onClick={() => changeAccount(AccessControlRoles.user)}>
+            {t('access.pageControl.switchUser')}
           </Button>
         </div>
       </Card>

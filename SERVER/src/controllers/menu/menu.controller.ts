@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
 import menuService from '~/services/menu/menu.service'
-import { CreateMenuRequestBody, UpdateMenuRequestBody } from '~/interfaces/menu/menu.interface'
+import { CreateMenuRequestBody, GetMenusQuery, UpdateMenuRequestBody } from '~/interfaces/menu/menu.interface'
 import { MENU_MESSAGES } from '~/constants/messages/menu/menu.message'
 
 export const createMenuController = async (
@@ -17,14 +17,10 @@ export const createMenuController = async (
   })
 }
 
-export const getMenusController = async (req: Request, res: Response) => {
-  const { status = '', parentId = '', roles = '' } = req.query
+export const getMenusController = async (req: Request<ParamsDictionary, any, any, GetMenusQuery>, res: Response) => {
+  const { status = '', name = '', hideInMenu = '' } = req.query
 
-  const result = await menuService.getAllMenus({
-    status: status as string,
-    parentId: parentId as string,
-    roles: roles as string
-  })
+  const result = await menuService.getAllMenus({ status, name, hideInMenu })
 
   ResponseSuccess({
     message: MENU_MESSAGES.MENU_GET_ALL_SUCCESS,

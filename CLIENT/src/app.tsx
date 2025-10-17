@@ -1,7 +1,7 @@
 import { AntdApp, JSSThemeProvider } from '#src/components'
 import { usePreferences, useScrollToHash } from '#src/hooks'
 import { AppVersionMonitor } from '#src/layout/widgets/version-monitor'
-
+import viVN from 'antd/locale/vi_VN'
 import { theme as antdTheme, ConfigProvider } from 'antd'
 import dayjs from 'dayjs'
 import 'dayjs/locale/vi'
@@ -79,6 +79,7 @@ export default function App() {
   return (
     <ConfigProvider
       input={{ autoComplete: 'off' }}
+      locale={{ ...viVN }}
       theme={{
         cssVar: true,
         hashed: false,

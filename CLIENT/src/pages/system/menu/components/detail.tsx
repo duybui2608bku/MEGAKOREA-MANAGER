@@ -5,18 +5,20 @@ import { handleTree } from '#src/utils'
 import {
   ModalForm,
   ProFormCascader,
-  ProFormDependency,
+  ProFormCheckbox,
   ProFormDigit,
   ProFormRadio,
   ProFormText
 } from '@ant-design/pro-components'
 
 import { Form } from 'antd'
-import { Fragment, useEffect } from 'react'
+import { useEffect } from 'react'
 
-import { getMenuTypeOptions } from '../constants'
 import { GlobalEnum, LayoutEnum } from '#src/enum/global.js'
-import { MenuAction, MenuStatus, MenuType } from '#src/enum/menu/enum.menu.js'
+import { MenuStatus } from '#src/enum/menu/enum.menu.js'
+
+import { getBooleanOptions, getYesNoOptions } from '#src/constants/options.js'
+import { AccessControlRolesOptions } from '#src/hooks/index.js'
 
 interface DetailProps {
   title: React.ReactNode
@@ -36,7 +38,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
     }
 
     if (detailData._id) {
-      await fetchUpdateMenuItem(values)
+      await fetchUpdateMenuItem({ ...values, _id: detailData._id as string })
       window.$message?.success('Cập nhật thành công')
     } else {
       await fetchAddMenuItem(values)
@@ -70,6 +72,8 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         formData.parentId = findPathToNode(formData.parentId, flatParentMenus)
       }
 
+      console.log(formData)
+
       form.setFieldsValue(formData)
     }
   }, [open, detailData, flatParentMenus])
@@ -98,50 +102,15 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
       }}
       onFinish={onFinish}
       initialValues={{
-        menuType: 0,
-        status: 1
+        status: MenuStatus.ENABLE
       }}
     >
-      <ProFormRadio.Group
-        fieldProps={{
-          buttonStyle: 'solid'
-        }}
-        name='menuType'
-        label={'Loại menu'}
-        radioType='button'
-        required
-        options={getMenuTypeOptions()}
-      />
-
-      <ProFormRadio.Group
-        name='name'
-        label='Hành động'
-        radioType='button'
-        labelCol={{ md: 5, xl: 6 }}
-        colProps={{ md: 24, xl: 12 }}
-        options={[
-          {
-            label: MenuAction.ADD,
-            value: MenuAction.ADD
-          },
-          {
-            label: MenuAction.EDIT,
-            value: MenuAction.EDIT
-          },
-          {
-            label: MenuAction.DELETE,
-            value: MenuAction.DELETE
-          },
-          {
-            label: MenuAction.VIEW,
-            value: MenuAction.VIEW
-          }
-        ]}
-      />
-
       <ProFormCascader
         name='parentId'
         label='Menu cha'
+        placeholder='Chọn menu cha'
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
         fieldProps={{
           showSearch: true,
           autoClearSearchValue: true,
@@ -149,151 +118,151 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
             label: 'name',
             value: GlobalEnum.MAIN_KEY as string,
             children: 'children'
-          }
+          },
+          changeOnSelect: true
         }}
         request={async () => {
           return handleTree(flatParentMenus)
         }}
       />
 
-      <ProFormDependency name={['menuType']}>
-        {({ menuType }) => {
-          if (Number(menuType) === MenuType.MENU) {
-            return (
-              <Fragment>
-                <ProFormText
-                  allowClear
-                  rules={[
-                    {
-                      required: true
-                    }
-                  ]}
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='name'
-                  label='Tên menu'
-                  tooltip={'Tên menu không được vượt quá 24 ký tự'}
-                />
+      <ProFormCheckbox.Group
+        name='roles'
+        label='Phân quyền'
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        options={AccessControlRolesOptions}
+      />
 
-                <ProFormText
-                  allowClear
-                  rules={[
-                    {
-                      required: true
-                    }
-                  ]}
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='path'
-                  label='Đường dẫn'
-                />
-
-                <ProFormDigit
-                  allowClear
-                  rules={[
-                    {
-                      required: true
-                    }
-                  ]}
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='order'
-                  label='Thứ tự'
-                />
-
-                <ProFormText
-                  allowClear
-                  rules={[
-                    {
-                      required: true
-                    }
-                  ]}
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='icon'
-                  label='Icon'
-                />
-
-                <ProFormText
-                  allowClear
-                  rules={[
-                    {
-                      required: true
-                    }
-                  ]}
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='component'
-                  label='Component'
-                />
-
-                <ProFormRadio.Group
-                  name='status'
-                  label='Trạng thái'
-                  radioType='button'
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  options={[
-                    {
-                      label: 'Kích hoạt',
-                      value: MenuStatus.ENABLE
-                    },
-                    {
-                      label: 'Ngưng',
-                      value: MenuStatus.DISABLE
-                    }
-                  ]}
-                />
-
-                <ProFormRadio.Group
-                  name='keepAlive'
-                  label='Cache'
-                  radioType='button'
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  options={[
-                    {
-                      label: 'Kích hoạt',
-                      value: MenuStatus.ENABLE
-                    },
-                    {
-                      label: 'Ngưng',
-                      value: MenuStatus.DISABLE
-                    }
-                  ]}
-                />
-
-                <ProFormRadio.Group
-                  name='hideInMenu'
-                  label='Ẩn trong menu'
-                  radioType='button'
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  options={[
-                    {
-                      label: 'Kích hoạt',
-                      value: MenuStatus.ENABLE
-                    },
-                    {
-                      label: 'Ngưng',
-                      value: MenuStatus.DISABLE
-                    }
-                  ]}
-                />
-
-                <ProFormText
-                  allowClear
-                  labelCol={{ md: 5, xl: 6 }}
-                  colProps={{ md: 24, xl: 12 }}
-                  name='currentActiveMenu'
-                  label='Menu hiển thị'
-                  tooltip='Trường này dùng để làm nổi bật menu ở sidebar'
-                />
-              </Fragment>
-            )
+      <ProFormText
+        allowClear
+        rules={[
+          {
+            required: true
           }
-        }}
-      </ProFormDependency>
+        ]}
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='title'
+        label='Tiêu đề'
+        placeholder='Nhập tiêu đề'
+      />
+      <ProFormText
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='name'
+        label='Tên menu'
+        placeholder='Nhập tên menu'
+        tooltip={'Tên menu không được vượt quá 24 ký tự'}
+      />
+
+      <ProFormText
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='path'
+        label='Đường dẫn'
+        placeholder='Nhập đường dẫn'
+      />
+
+      <ProFormDigit
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='order'
+        label='Thứ tự'
+        placeholder='Nhập thứ tự'
+      />
+
+      <ProFormText
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='icon'
+        label='Icon'
+        placeholder='Nhập icon'
+      />
+
+      <ProFormText
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='component'
+        label='Component'
+        placeholder='Nhập component'
+      />
+
+      <ProFormRadio.Group
+        name='status'
+        label='Trạng thái'
+        radioType='button'
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        options={[
+          {
+            label: 'Kích hoạt',
+            value: MenuStatus.ENABLE
+          },
+          {
+            label: 'Ngưng',
+            value: MenuStatus.DISABLE
+          }
+        ]}
+      />
+
+      <ProFormRadio.Group
+        name='keepAlive'
+        label='Cache'
+        radioType='button'
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        options={getBooleanOptions()}
+      />
+
+      <ProFormRadio.Group
+        name='hideInMenu'
+        label='Ẩn trong menu'
+        radioType='button'
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        options={getBooleanOptions()}
+      />
+
+      <ProFormText
+        allowClear
+        labelCol={{ md: 5, xl: 6 }}
+        colProps={{ md: 24, xl: 12 }}
+        name='currentActiveMenu'
+        label='Menu hiển thị'
+        placeholder='Nhập menu hiển thị'
+        tooltip='Trường này dùng để làm nổi bật menu ở sidebar'
+      />
     </ModalForm>
   )
 }
