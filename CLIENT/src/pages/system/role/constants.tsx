@@ -1,34 +1,27 @@
 import type { RoleItemType } from '#src/api/system'
 import type { ProColumns } from '@ant-design/pro-components'
-
-import { Tag } from 'antd'
+import { PermissionTag } from './components/permisionTag'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { ColorStatusEnum } from '#src/enum/global.js'
 
 export function getConstantColumns(): ProColumns<RoleItemType>[] {
   return [
     {
       dataIndex: 'index',
-      title: 'Index',
+      title: 'STT',
       valueType: 'indexBorder',
       width: 80
     },
     {
-      title: 'Name',
+      title: 'Tên chức vụ',
       dataIndex: 'name',
       disable: true,
       ellipsis: true,
-      width: 120,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: 'Required'
-          }
-        ]
-      }
+      width: 120
     },
     {
       disable: true,
-      title: 'ID',
+      title: 'Code',
       dataIndex: 'code',
       width: 120,
       filters: true,
@@ -37,39 +30,45 @@ export function getConstantColumns(): ProColumns<RoleItemType>[] {
     },
     {
       disable: true,
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       valueType: 'select',
-      width: 80,
-      render: (text, record) => {
-        return <Tag color={record.status === 1 ? 'success' : 'default'}>{text}</Tag>
-      },
-      valueEnum: {
-        1: {
-          text: 'Enabled'
-        },
-        0: {
-          text: 'Deactivated'
-        }
+      align: 'center',
+      width: 120,
+      render: (_, record) => {
+        return record.status ? (
+          <CheckOutlined style={{ color: ColorStatusEnum.SUCCESS }} />
+        ) : (
+          <CloseOutlined style={{ color: ColorStatusEnum.DANGER }} />
+        )
       }
     },
     {
-      title: 'Remark',
-      dataIndex: 'remark',
+      title: 'Mô tả',
+      dataIndex: 'description',
       search: false
     },
     {
-      title: 'Create Time',
-      dataIndex: 'createTime',
+      title: 'Quyền',
+      dataIndex: 'permissions',
+      valueType: 'select',
+      width: 120,
+      render: (_text, record) => {
+        return <PermissionTag permissions={record.permissions} />
+      }
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'created_at',
       valueType: 'date',
-      width: 100,
+      width: 120,
       search: false
     },
     {
-      title: 'Update Time',
-      dataIndex: 'updateTime',
+      title: 'Ngày cập nhật',
+      dataIndex: 'updated_at',
       valueType: 'dateTime',
-      width: 170,
+      width: 200,
       search: false
     }
   ]

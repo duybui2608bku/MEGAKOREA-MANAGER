@@ -1,5 +1,5 @@
 import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { fetchDeleteRoleItem, fetchMenuByRoleId } from '#src/api/system'
+import { fetchDeleteRoleItem } from '#src/api/system'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
 import { accessControlCodes, useAccess } from '#src/hooks'
 import { handleTree } from '#src/utils'
@@ -8,9 +8,9 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
-import { fetchDepartments } from '#src/api/derpartment/index.js'
+import { fetchDepartments } from '#src/api/system/derpartment/index.js'
 import { Detail } from '#src/pages/system/dept/components/detail'
-import { DepartmentItemType } from '#src/api/derpartment/types.js'
+import { DepartmentItemType } from '#src/api/system/derpartment/types.js'
 
 const Department = () => {
   const { hasAccessByCodes } = useAccess()

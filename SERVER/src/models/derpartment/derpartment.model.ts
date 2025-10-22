@@ -8,6 +8,10 @@ const derpartmentSchema = new mongoose.Schema(
       required: true,
       index: true
     },
+    status: {
+      type: Number,
+      default: 1
+    },
     description: {
       type: String
     },
@@ -17,6 +21,11 @@ const derpartmentSchema = new mongoose.Schema(
         ref: COLLECTION_NAME.MENU
       }
     ],
+    code: {
+      type: String,
+      unique: true,
+      index: true
+    },
     created_at: {
       type: Date,
       default: Date.now

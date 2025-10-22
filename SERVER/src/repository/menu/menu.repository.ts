@@ -1,5 +1,6 @@
 import { Menu } from '~/models'
 import { CreateMenuRequestBody, UpdateMenuRequestBody, GetMenusQuery } from '~/interfaces/menu/menu.interface'
+import { ObjectId } from 'mongoose'
 
 class MenuRepository {
   async createMenu(menuData: CreateMenuRequestBody) {
@@ -60,7 +61,7 @@ class MenuRepository {
     return await Menu.find({ parentId })
   }
 
-  async getActiveMenusForUser(userRoles: string[], userPermissions: string[]) {
+  async getActiveMenusForUser(userRoles: string[]) {
     const filter: any = { status: 1 }
     const menus = await Menu.find(filter).sort({ order: 1, created_at: 1 })
 
@@ -70,13 +71,12 @@ class MenuRepository {
         if (!hasRole) return false
       }
 
-      if (menu.permissions && menu.permissions.length > 0) {
-        const hasPermission = menu.permissions.some((permission) => userPermissions.includes(permission))
-        if (!hasPermission) return false
-      }
-
       return true
     })
+  }
+
+  async getMenusByIds(menusIds: string[]) {
+    return await Menu.find({ _id: { $in: menusIds } })
   }
 }
 

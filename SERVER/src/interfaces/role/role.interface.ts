@@ -2,14 +2,14 @@ export interface CreateRoleRequestBody {
   name: string
   code: string
   description?: string
-  permissionIds?: string[]
+  permissions?: string[]
 }
 
 export interface UpdateRoleRequestBody {
   name?: string
   code?: string
   description?: string
-  permissionIds?: string[]
+  permissions?: string[]
   status?: number
 }
 

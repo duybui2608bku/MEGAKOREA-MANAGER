@@ -5,36 +5,33 @@ class RoleRepository {
   async createRole(roleData: CreateRoleRequestBody) {
     const role = new Role({
       ...roleData,
-      permissions: roleData.permissionIds || [],
+      permissions: roleData.permissions || [],
       created_at: new Date(),
       updated_at: new Date()
     })
     return await role.save()
   }
 
+  async getTotalRoles() {
+    return await Role.countDocuments()
+  }
+
   async getAllRoles() {
-    return await Role.find().populate('permissions', 'code name description module action').sort({ created_at: -1 })
+    return await Role.find().populate('permissions', 'action').sort({ created_at: -1 })
   }
 
   async getRoleById(roleId: string) {
     return await Role.findById(roleId).populate('permissions', 'code name description module action')
   }
 
-  async getRoleByNameOrCode(name: string, code: string) {
+  async getRoleByName(name: string) {
     return await Role.findOne({
-      $or: [{ name }, { code }]
+      name
     })
   }
 
   async updateRole(roleId: string, updateData: UpdateRoleRequestBody) {
-    const updateFields: any = { ...updateData, updated_at: new Date() }
-
-    if (updateData.permissionIds) {
-      updateFields.permissions = updateData.permissionIds
-      delete updateFields.permissionIds
-    }
-
-    return await Role.findByIdAndUpdate(roleId, updateFields, { new: true }).populate(
+    return await Role.findByIdAndUpdate(roleId, { ...updateData, updated_at: new Date() }, { new: true }).populate(
       'permissions',
       'code name description module action'
     )
@@ -48,10 +45,10 @@ class RoleRepository {
     return await User.find({ roles: roleId })
   }
 
-  async assignPermissionsToRole(roleId: string, permissionIds: string[]) {
+  async assignPermissionsToRole(roleId: string, permissions: string[]) {
     return await Role.findByIdAndUpdate(
       roleId,
-      { permissions: permissionIds, updated_at: new Date() },
+      { permissions: permissions, updated_at: new Date() },
       { new: true }
     ).populate('permissions', 'code name description module action')
   }

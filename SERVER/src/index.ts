@@ -21,7 +21,6 @@ import { PERMISSION_PATH_ROUTES } from './constants/path-routes/permission/permi
 import { ROLE_PATH_ROUTES } from './constants/path-routes/roles/roles.path-routes'
 import { USER_PATH_ROUTES } from './constants/path-routes/user/user.path-routes'
 import { MENU_PATH_ROUTES } from './constants/path-routes/menu/menu.path-route'
-import { initializeMenus } from './db/init-menus'
 
 config()
 
@@ -32,13 +31,13 @@ const app = express()
 instanceMongodb.connect()
 checkOverload()
 
-setTimeout(async () => {
-  try {
-    await initializeMenus()
-  } catch (error) {
-    console.error('Failed to initialize permissions, roles, and menus:', error)
-  }
-}, 2000)
+// setTimeout(async () => {
+//   try {
+//     await initializeMenus()
+//   } catch (error) {
+//     console.error('Failed to initialize permissions, roles, and menus:', error)
+//   }
+// }, 2000)
 
 app.use(cors())
 app.use(compression())

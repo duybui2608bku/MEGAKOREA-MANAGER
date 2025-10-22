@@ -7,33 +7,33 @@ export const createRoleValidator = validate(
     {
       name: {
         notEmpty: {
-          errorMessage: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED
+          errorMessage: ROLE_MESSAGES.NAME_REQUIRED
         },
         isString: {
-          errorMessage: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED
+          errorMessage: ROLE_MESSAGES.NAME_MUST_BE_STRING
         },
         isLength: {
           options: {
             min: 1,
             max: 255
           },
-          errorMessage: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED
+          errorMessage: ROLE_MESSAGES.NAME_MUST_BE_BETWEEN_1_AND_255_CHARACTERS
         },
         trim: true
       },
       code: {
         notEmpty: {
-          errorMessage: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED
+          errorMessage: ROLE_MESSAGES.CODE_REQUIRED
         },
         isString: {
-          errorMessage: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED
+          errorMessage: ROLE_MESSAGES.CODE_MUST_BE_STRING
         },
         isLength: {
           options: {
             min: 1,
             max: 100
           },
-          errorMessage: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED
+          errorMessage: ROLE_MESSAGES.CODE_MUST_BE_BETWEEN_1_AND_100_CHARACTERS
         },
         trim: true
       },
@@ -44,16 +44,10 @@ export const createRoleValidator = validate(
         },
         trim: true
       },
-      permissionIds: {
+      permissions: {
         optional: true,
         isArray: {
-          errorMessage: ROLE_MESSAGES.PERMISSION_IDS_MUST_BE_ARRAY
-        }
-      },
-      'permissionIds.*': {
-        optional: true,
-        isMongoId: {
-          errorMessage: ROLE_MESSAGES.EACH_PERMISSION_ID_MUST_BE_VALID_MONGODB_OBJECT_ID
+          errorMessage: ROLE_MESSAGES.PERMISSIONS_MUST_BE_AN_ARRAY
         }
       }
     },
@@ -99,16 +93,10 @@ export const updateRoleValidator = validate(
         },
         trim: true
       },
-      permissionIds: {
+      permissions: {
         optional: true,
         isArray: {
           errorMessage: ROLE_MESSAGES.PERMISSION_IDS_MUST_BE_ARRAY
-        }
-      },
-      'permissionIds.*': {
-        optional: true,
-        isMongoId: {
-          errorMessage: ROLE_MESSAGES.EACH_PERMISSION_ID_MUST_BE_VALID_MONGODB_OBJECT_ID
         }
       },
       status: {
@@ -130,17 +118,12 @@ export const updateRoleValidator = validate(
 export const assignPermissionsValidator = validate(
   checkSchema(
     {
-      permissionIds: {
+      permissions: {
         isArray: {
-          errorMessage: ROLE_MESSAGES.PERMISSION_IDS_MUST_BE_ARRAY
+          errorMessage: ROLE_MESSAGES.PERMISSIONS_MUST_BE_AN_ARRAY
         },
         notEmpty: {
-          errorMessage: ROLE_MESSAGES.AT_LEAST_ONE_PERMISSION_ID_IS_REQUIRED
-        }
-      },
-      'permissionIds.*': {
-        isMongoId: {
-          errorMessage: ROLE_MESSAGES.EACH_PERMISSION_ID_MUST_BE_VALID_MONGODB_OBJECT_ID
+          errorMessage: ROLE_MESSAGES.AT_LEAST_ONE_PERMISSION_IS_REQUIRED
         }
       }
     },

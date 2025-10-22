@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchDepartments } from '#src/api/derpartment'
+import { fetchDepartments } from '#src/api/system/derpartment/index.js'
 
 import { Select } from 'antd'
 import { useEffect, useState } from 'react'

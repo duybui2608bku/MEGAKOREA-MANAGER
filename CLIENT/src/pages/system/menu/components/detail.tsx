@@ -71,9 +71,6 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
       if (formData.parentId && typeof formData.parentId === 'string') {
         formData.parentId = findPathToNode(formData.parentId, flatParentMenus)
       }
-
-      console.log(formData)
-
       form.setFieldsValue(formData)
     }
   }, [open, detailData, flatParentMenus])
@@ -206,11 +203,6 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
 
       <ProFormText
         allowClear
-        rules={[
-          {
-            required: true
-          }
-        ]}
         labelCol={{ md: 5, xl: 6 }}
         colProps={{ md: 24, xl: 12 }}
         name='component'

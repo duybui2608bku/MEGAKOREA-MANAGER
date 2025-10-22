@@ -1,12 +1,12 @@
 import type { RoleItemType } from '#src/api/system'
 import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { fetchDeleteRoleItem, fetchMenuByRoleId, fetchRoleList, fetchRoleMenu } from '#src/api/system'
+import { fetchDeleteRoleItem, fetchRoleList } from '#src/api/system'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
 import { accessControlCodes, useAccess } from '#src/hooks'
 import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 
@@ -15,32 +15,21 @@ import { getConstantColumns } from './constants'
 
 export default function Role() {
   const { hasAccessByCodes } = useAccess()
-  const { data: menuItems } = useQuery({
-    queryKey: ['role-menu'],
-    queryFn: async () => {
-      const responseData = await fetchRoleMenu()
-      return responseData?.result.map((item) => ({
-        ...item,
-        title: item.name,
-        key: item.id
-      }))
-    },
-    initialData: []
-  })
+
   const deleteRoleItemMutation = useMutation({
     mutationFn: fetchDeleteRoleItem
   })
 
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
-  const [detailData, setDetailData] = useState<Partial<RoleItemType> & { menus?: string[] }>({})
+  const [detailData, setDetailData] = useState<Partial<RoleItemType>>({})
 
   const actionRef = useRef<ActionType>(null)
 
-  const handleDeleteRow = async (id: number, action?: ProCoreActionType<object>) => {
-    const responseData = await deleteRoleItemMutation.mutateAsync(id)
+  const handleDeleteRow = async (_id: string, action?: ProCoreActionType<object>) => {
+    await deleteRoleItemMutation.mutateAsync(_id)
     await action?.reload?.()
-    window.$message?.success(`Xóa thành công id = ${responseData.result}`)
+    window.$message?.success(`Xóa thành công id`)
   }
 
   const columns: ProColumns<RoleItemType>[] = [
@@ -59,11 +48,9 @@ export default function Role() {
             size='small'
             disabled={!hasAccessByCodes(accessControlCodes.update)}
             onClick={async () => {
-              /* 请求角色菜单权限 */
-              const responseData = await fetchMenuByRoleId({ id: record.id })
               setIsOpen(true)
-              setTitle('Sửa vai trò')
-              setDetailData({ ...record, menus: responseData.result })
+              setTitle('Sửa chức vụ')
+              setDetailData({ ...record })
             }}
           >
             Sửa
@@ -71,7 +58,7 @@ export default function Role() {
           <Popconfirm
             key='delete'
             title='Xác nhận xóa?'
-            onConfirm={() => handleDeleteRow(record.id, action)}
+            onConfirm={() => handleDeleteRow(record._id, action)}
             okText='Xác nhận'
             cancelText='Hủy'
           >
@@ -96,10 +83,11 @@ export default function Role() {
     <BasicContent className='h-full'>
       <BasicTable<RoleItemType>
         adaptive
+        search={false}
         columns={columns}
         actionRef={actionRef}
+        pagination={false}
         request={async (params) => {
-          // console.log(sort, filter);
           const responseData = await fetchRoleList(params)
           return {
             ...responseData,
@@ -107,7 +95,7 @@ export default function Role() {
             total: responseData.result.total
           }
         }}
-        headerTitle={`Vai trò （Demo）`}
+        headerTitle={`Chức Vụ`}
         toolBarRender={() => [
           <Button
             key='add-role'
@@ -116,10 +104,10 @@ export default function Role() {
             disabled={!hasAccessByCodes(accessControlCodes.add)}
             onClick={() => {
               setIsOpen(true)
-              setTitle('Thêm vai trò')
+              setTitle('Thêm chức vụ')
             }}
           >
-            Thêm
+            Thêm chức vụ
           </Button>
         ]}
       />
@@ -129,7 +117,6 @@ export default function Role() {
         onCloseChange={onCloseChange}
         detailData={detailData}
         refreshTable={refreshTable}
-        treeData={handleTree(menuItems || [])}
       />
     </BasicContent>
   )

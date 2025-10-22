@@ -11,5 +11,9 @@ export const DEPARTMENT_MESSAGES = {
   NAME_REQUIRED: 'Department name is required',
   NAME_MUST_BE_STRING: 'Department name must be a string',
   NAME_LENGTH: 'Department name must be between 1 and 255 characters',
-  DESCRIPTION_MUST_BE_STRING: 'Department description must be a string'
+  DESCRIPTION_MUST_BE_STRING: 'Department description must be a string',
+  ID_REQUIRED: 'Department ID is required',
+  STATUS_INVALID_VALUE: 'Status must be 1 (active) or 0 (inactive)',
+  CODE_MUST_BE_STRING: 'Department code must be a string',
+  ASSIGNED_MENUS_MUST_BE_AN_ARRAY: 'Assigned menus must be an array'
 }

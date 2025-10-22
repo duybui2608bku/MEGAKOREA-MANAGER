@@ -23,3 +23,16 @@ export function getBooleanOptions() {
     }
   ]
 }
+
+export const getStatusOptions = () => {
+  return [
+    {
+      label: 'Kích hoạt',
+      value: 1
+    },
+    {
+      label: 'Không kích hoạt',
+      value: 0
+    }
+  ]
+}

@@ -39,3 +39,11 @@ export interface GetMenusQuery {
   current?: string
   pageSize?: string
 }
+
+export interface GetMenusByDeptIdParams {
+  id: string
+}
+
+export interface DeleteMenuParams {
+  id: string
+}

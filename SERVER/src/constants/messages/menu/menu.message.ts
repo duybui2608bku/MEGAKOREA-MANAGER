@@ -25,5 +25,7 @@ export const MENU_MESSAGES = {
   MENU_STATUS_MUST_BE_0_OR_1: 'Menu status must be 0 (inactive) or 1 (active)',
   MENU_KEEP_ALIVE_MUST_BE_A_BOOLEAN: 'Menu keep alive must be a boolean',
   MENU_HIDDEN_MUST_BE_A_BOOLEAN: 'Menu hidden must be a boolean',
-  PARENT_ID_MUST_BE_A_VALID_MONGODB_OBJECT_ID: 'Parent ID must be a valid MongoDB ObjectId'
+  PARENT_ID_MUST_BE_A_VALID_MONGODB_OBJECT_ID: 'Parent ID must be a valid MongoDB ObjectId',
+  DEPARTMENT_NOT_ASSIGNED_MENUS: 'Department not assigned any menus',
+  MENU_GET_BY_DEPT_ID_SUCCESS: 'Menus retrieved successfully by department ID'
 }

@@ -38,6 +38,10 @@ class DepartmentRepository {
   async getUsersInDepartment(departmentId: string) {
     return await User.find({ derpartment: departmentId })
   }
+
+  async getMenusIdsByDeptId(departmentId: string) {
+    return await Derpartment.findById(departmentId).select('assigned_menus')
+  }
 }
 
 const departmentRepository = new DepartmentRepository()
