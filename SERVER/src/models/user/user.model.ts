@@ -56,11 +56,6 @@ const userSchema = new mongoose.Schema(
       ref: COLLECTION_NAME.DERPARTMENT,
       default: null
     },
-    titles: {
-      type: Number,
-      enum: UserTitles,
-      default: UserTitles.OTHER
-    },
     created_at: {
       type: Date,
       default: Date.now

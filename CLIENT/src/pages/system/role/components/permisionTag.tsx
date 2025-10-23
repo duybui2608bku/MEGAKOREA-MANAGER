@@ -1,6 +1,7 @@
-import { Tag, Empty, Space, Divider } from 'antd'
+import { Tag, Space, Divider } from 'antd'
 import { EyeOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { PermissionItemType } from '#src/api/system/index.js'
+import { Fragment } from 'react/jsx-runtime'
 
 const getPermissionConfig = (action: string) => {
   switch (action) {
@@ -39,7 +40,7 @@ const getPermissionConfig = (action: string) => {
 
 export const PermissionTag = ({ permissions }: { permissions: PermissionItemType[] }) => {
   if (!permissions || permissions.length === 0) {
-    return <Empty description='No permissions' style={{ margin: 0 }} />
+    return <>-</>
   }
 
   return (
@@ -47,12 +48,12 @@ export const PermissionTag = ({ permissions }: { permissions: PermissionItemType
       {permissions.map((permission) => {
         const { icon: Icon, label, color } = getPermissionConfig(permission.action)
         return (
-          <>
+          <Fragment>
             <Tag icon={<Icon />} color={color} style={{ cursor: 'pointer', marginRight: 0 }}>
               {label}
             </Tag>
             <Divider type='vertical' key={permission._id} />
-          </>
+          </Fragment>
         )
       })}
     </Space>

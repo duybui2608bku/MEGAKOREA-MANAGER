@@ -105,13 +105,6 @@ export const registerValidator = validate(
         },
         trim: true
       },
-      titles: {
-        optional: true,
-        isInt: {
-          errorMessage: userMessages.TITLES_MUST_BE_INT
-        },
-        toInt: true
-      },
       gender: {
         optional: true,
         isInt: {
@@ -141,6 +134,7 @@ export const registerValidator = validate(
         trim: true
       },
       roles: {
+        optional: true,
         isArray: {
           errorMessage: userMessages.ROLES_MUST_BE_ARRAY
         }
@@ -386,12 +380,12 @@ export const updateProfileByAdminValidator = validate(
         },
         trim: true
       },
-      titles: {
+      roles: {
         optional: true,
-        isInt: {
-          errorMessage: userMessages.TITLES_MUST_BE_INT
+        isArray: {
+          errorMessage: userMessages.ROLES_MUST_BE_ARRAY
         },
-        toInt: true
+        trim: true
       },
       status: {
         optional: true,

@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { deleteDepartment, fetchMenuByDeptId } from '#src/api/system/derpartment/index.js'
+import { deleteDepartment } from '#src/api/system/derpartment/index.js'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
-import { accessControlCodes, AccessControlRoles, useAccess } from '#src/hooks'
+import { accessControlCodes, useAccess } from '#src/hooks'
 import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
@@ -49,7 +49,7 @@ const Derpartment = () => {
             key='editable'
             type='link'
             size='small'
-            disabled={!hasAccessByCodes(AccessControlRoles.admin)}
+            disabled={!hasAccessByCodes(accessControlCodes.update)}
             onClick={async () => {
               const responseData = await fetchMenuList({
                 current: 1,
@@ -70,7 +70,7 @@ const Derpartment = () => {
             okText='Xác nhận'
             cancelText='Hủy'
           >
-            <BasicButton type='link' size='small' disabled={!hasAccessByCodes(AccessControlRoles.admin)}>
+            <BasicButton type='link' size='small' disabled={!hasAccessByCodes(accessControlCodes.delete)}>
               Xóa
             </BasicButton>
           </Popconfirm>
@@ -109,7 +109,7 @@ const Derpartment = () => {
             key='add-role'
             icon={<PlusCircleOutlined />}
             type='primary'
-            disabled={!hasAccessByCodes(AccessControlRoles.admin)}
+            disabled={!hasAccessByCodes(accessControlCodes.add)}
             onClick={() => {
               setIsOpen(true)
               setTitle('Thêm phòng ban')
