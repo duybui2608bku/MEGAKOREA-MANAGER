@@ -1,144 +1,135 @@
-import type { RoleItemType } from "#src/api/system";
-import type { TreeDataNodeWithId } from "#src/components";
-import { fetchAddRoleItem, fetchUpdateRoleItem } from "#src/api/system";
-import { FormTreeItem } from "#src/components";
+import type { RoleItemType } from '#src/api/system'
+import { fetchAddRoleItem, fetchUpdateRoleItem } from '#src/api/system'
+import { getStatusOptions } from '#src/constants/options.js'
+import { LayoutEnum } from '#src/enum/global.js'
 
 import {
-	DrawerForm,
-	ProFormRadio,
-	ProFormText,
-	ProFormTextArea,
-} from "@ant-design/pro-components";
-import { useMutation } from "@tanstack/react-query";
-import { Form } from "antd";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+  DrawerForm,
+  ProFormCheckbox,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea
+} from '@ant-design/pro-components'
+import { useMutation } from '@tanstack/react-query'
+import { Form } from 'antd'
+import { useEffect } from 'react'
+import { getPermissionOptions, getRoleCodeOptions } from './options'
+import { RoleStatusEnum } from '../enum'
 
 interface DetailProps {
-	treeData: TreeDataNodeWithId[]
-	title: React.ReactNode
-	open: boolean
-	detailData: Partial<RoleItemType>
-	onCloseChange: () => void
-	refreshTable?: () => void
+  title: React.ReactNode
+  open: boolean
+  detailData: Partial<RoleItemType>
+  onCloseChange: () => void
+  refreshTable?: () => void
 }
 
-export function Detail({ title, open, onCloseChange, detailData, treeData, refreshTable }: DetailProps) {
-	const { t } = useTranslation();
-	const [form] = Form.useForm<RoleItemType>();
+export function Detail({ title, open, onCloseChange, detailData, refreshTable }: DetailProps) {
+  const [form] = Form.useForm<RoleItemType>()
 
-	const addRoleItemMutation = useMutation({
-		mutationFn: fetchAddRoleItem,
-	});
-	const updateRoleItemMutation = useMutation({
-		mutationFn: fetchUpdateRoleItem,
-	});
+  const addRoleItemMutation = useMutation({
+    mutationFn: fetchAddRoleItem
+  })
+  const updateRoleItemMutation = useMutation({
+    mutationFn: fetchUpdateRoleItem
+  })
 
-	const onFinish = async (values: RoleItemType) => {
-		// console.info(values);
-		/* 有 id 则为修改，否则为新增 */
-		if (detailData.id) {
-			await updateRoleItemMutation.mutateAsync(values);
-			window.$message?.success(t("common.updateSuccess"));
-		}
-		else {
-			await addRoleItemMutation.mutateAsync(values);
-			window.$message?.success(t("common.addSuccess"));
-		}
-		/* 刷新表格 */
-		refreshTable?.();
-		// 不返回不会关闭弹框
-		return true;
-	};
+  const onFinish = async (values: RoleItemType) => {
+    if (detailData._id) {
+      const dataToUpdate = {
+        ...values,
+        _id: detailData._id
+      }
+      await updateRoleItemMutation.mutateAsync(dataToUpdate)
+      window.$message?.success('Cập nhật thành công')
+    } else {
+      await addRoleItemMutation.mutateAsync(values)
+      window.$message?.success('Thêm thành công')
+    }
+    form.resetFields()
+    refreshTable?.()
+    onCloseChange()
+    return true
+  }
 
-	useEffect(() => {
-		if (open) {
-			form.setFieldsValue(detailData);
-		}
-	}, [open]);
+  useEffect(() => {
+    if (open) {
+      const formData = {
+        ...detailData,
+        permissions: Array.isArray(detailData.permissions)
+          ? detailData.permissions.map((p) => (typeof p === 'object' ? p._id : p))
+          : []
+      }
+      form.setFieldsValue(formData as any)
+    }
+  }, [open])
 
-	return (
-		<DrawerForm<RoleItemType>
-			title={title}
-			open={open}
-			onOpenChange={(visible) => {
-				if (visible === false) {
-					onCloseChange();
-				}
-			}}
-			resize={{
-				onResize() {
-					// console.log('resize!');
-				},
-				maxWidth: window.innerWidth * 0.8,
-				minWidth: 500,
-			}}
-			labelCol={{ span: 6 }}
-			wrapperCol={{ span: 24 }}
-			layout="horizontal"
-			form={form}
-			autoFocusFirstInput
-			drawerProps={{
-				destroyOnHidden: true,
-			}}
-			onFinish={onFinish}
-			initialValues={{
-				status: 1,
-				menus: [],
-			}}
-		>
+  return (
+    <DrawerForm<RoleItemType>
+      title={title}
+      open={open}
+      onOpenChange={(visible) => {
+        if (visible === false) {
+          onCloseChange()
+        }
+      }}
+      resize={{
+        maxWidth: window.innerWidth * 0.8,
+        minWidth: 500
+      }}
+      labelCol={{ span: 6 }}
+      wrapperCol={{ span: 24 }}
+      layout={LayoutEnum.HORIZONTAL}
+      form={form}
+      autoFocusFirstInput
+      drawerProps={{
+        destroyOnHidden: true
+      }}
+      onFinish={onFinish}
+      initialValues={{
+        status: RoleStatusEnum.ACTIVE
+      }}
+    >
+      <ProFormText
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        width='md'
+        name='name'
+        label='Tên chức vụ'
+      />
 
-			<ProFormText
-				allowClear
-				rules={[
-					{
-						required: true,
-					},
-				]}
-				width="md"
-				name="name"
-				label={t("system.role.name")}
-				tooltip={t("form.length", { length: 24 })}
-			/>
+      <ProFormSelect
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        width='md'
+        name='code'
+        label='Mã chức vụ'
+        options={getRoleCodeOptions()}
+      />
 
-			<ProFormText
-				allowClear
-				rules={[
-					{
-						required: true,
-					},
-				]}
-				width="md"
-				name="code"
-				label={t("system.role.id")}
-			/>
-
-			<ProFormRadio.Group
-				name="status"
-				label={t("common.status")}
-				radioType="button"
-				options={[
-					{
-						label: t("common.enabled"),
-						value: 1,
-					},
-					{
-						label: t("common.deactivated"),
-						value: 0,
-					},
-				]}
-			/>
-
-			<ProFormTextArea
-				allowClear
-				width="md"
-				name="remark"
-				label={t("common.remark")}
-			/>
-
-			<Form.Item name="menus" label={t("system.role.assignMenu")}>
-				<FormTreeItem treeData={treeData} />
-			</Form.Item>
-		</DrawerForm>
-	);
-};
+      <ProFormRadio.Group name='status' label='Trạng thái' radioType='button' options={getStatusOptions()} />
+      <ProFormCheckbox.Group
+        allowClear
+        rules={[
+          {
+            required: true
+          }
+        ]}
+        width='md'
+        name='permissions'
+        label='Quyền'
+        options={getPermissionOptions()}
+      />
+      <ProFormTextArea allowClear width='md' name='description' label='Mô tả' />
+    </DrawerForm>
+  )
+}

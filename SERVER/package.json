@@ -31,9 +31,12 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.914.0",
+    "@aws-sdk/lib-storage": "^3.914.0",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.21",
+    "@types/formidable": "^3.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.20",
     "@types/morgan": "^1.9.9",
@@ -42,11 +45,13 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.2.1",
+    "formidable": "^3.5.4",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.8.2",
     "morgan": "^1.10.0",
-    "os": "^0.1.2"
+    "os": "^0.1.2",
+    "sharp": "^0.34.4"
   }
 }

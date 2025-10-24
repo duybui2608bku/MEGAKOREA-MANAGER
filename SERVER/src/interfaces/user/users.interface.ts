@@ -16,8 +16,10 @@ export interface RegisterRequestBody {
   gender: number
   date_of_birth: Date
   address?: string
-  derpartment: string
-  titles: number
+  department?: string
+  roles?: string[]
+  avatar?: string
+  status?: number
 }
 
 export interface LoginRequestBody {

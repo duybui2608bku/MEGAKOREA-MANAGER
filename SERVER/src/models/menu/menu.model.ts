@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
-import { MenuStatus, MenuType } from '~/constants/enum/menu'
+import { MenuStatus } from '~/constants/enum/menu'
 
 const menuSchema = new mongoose.Schema(
   {

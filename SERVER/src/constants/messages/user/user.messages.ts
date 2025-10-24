@@ -51,5 +51,6 @@ export const userMessages = {
   FORGOT_PASSWORD_SUCCESS: 'Password reset instructions sent',
   RESET_PASSWORD_SUCCESS: 'Password reset successfully',
   VERIFY_EMAIL_SUCCESS: 'Email verified successfully',
-  VERIFY_OTP_SUCCESS: 'OTP verified successfully'
+  VERIFY_OTP_SUCCESS: 'OTP verified successfully',
+  ROLE_MUST_BE_STRING: 'Role must be a string'
 }

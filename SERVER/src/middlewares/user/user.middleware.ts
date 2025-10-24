@@ -98,19 +98,12 @@ export const registerValidator = validate(
           errorMessage: userMessages.PASSWORD_MUST_BE_STRONG
         }
       },
-      derpartment: {
+      department: {
         optional: true,
         isString: {
           errorMessage: userMessages.DERPARTMENT_MUST_BE_STRING
         },
         trim: true
-      },
-      titles: {
-        optional: true,
-        isInt: {
-          errorMessage: userMessages.TITLES_MUST_BE_INT
-        },
-        toInt: true
       },
       gender: {
         optional: true,
@@ -141,6 +134,7 @@ export const registerValidator = validate(
         trim: true
       },
       roles: {
+        optional: true,
         isArray: {
           errorMessage: userMessages.ROLES_MUST_BE_ARRAY
         }
@@ -379,19 +373,19 @@ export const updateProfileByAdminValidator = validate(
         },
         trim: true
       },
-      derpartment: {
+      department: {
         optional: true,
         isString: {
           errorMessage: userMessages.DERPARTMENT_MUST_BE_STRING
         },
         trim: true
       },
-      titles: {
+      roles: {
         optional: true,
-        isInt: {
-          errorMessage: userMessages.TITLES_MUST_BE_INT
+        isArray: {
+          errorMessage: userMessages.ROLES_MUST_BE_ARRAY
         },
-        toInt: true
+        trim: true
       },
       status: {
         optional: true,

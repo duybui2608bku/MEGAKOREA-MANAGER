@@ -2,7 +2,13 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
 import menuService from '~/services/menu/menu.service'
-import { CreateMenuRequestBody, GetMenusQuery, UpdateMenuRequestBody } from '~/interfaces/menu/menu.interface'
+import {
+  CreateMenuRequestBody,
+  GetMenusQuery,
+  UpdateMenuRequestBody,
+  GetMenusByDeptIdParams,
+  DeleteMenuParams
+} from '~/interfaces/menu/menu.interface'
 import { MENU_MESSAGES } from '~/constants/messages/menu/menu.message'
 
 export const createMenuController = async (
@@ -52,11 +58,22 @@ export const updateMenuController = async (
   })
 }
 
-export const deleteMenuController = async (req: Request, res: Response) => {
+export const deleteMenuController = async (req: Request<DeleteMenuParams>, res: Response) => {
   const { id } = req.params
+
   await menuService.deleteMenu(id)
   ResponseSuccess({
     message: MENU_MESSAGES.MENU_DELETED_SUCCESS,
     res
+  })
+}
+
+export const getMenusByDeptIdController = async (req: Request<GetMenusByDeptIdParams>, res: Response) => {
+  const { id } = req.params
+  const result = await menuService.getMenusByDeptId(id)
+  ResponseSuccess({
+    message: MENU_MESSAGES.MENU_GET_BY_DEPT_ID_SUCCESS,
+    res,
+    result
   })
 }

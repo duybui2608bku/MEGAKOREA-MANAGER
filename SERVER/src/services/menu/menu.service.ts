@@ -3,6 +3,7 @@ import menuRepository from '~/repository/menu/menu.repository'
 import { ErrorWithStatusCode } from '~/middlewares/error/error-response.middleware'
 import { HttpStatusCode } from '~/constants/enum/http/http-status-code.enum'
 import { MENU_MESSAGES } from '~/constants/messages/menu/menu.message'
+import departmentRepository from '~/repository/department/department.repository'
 
 class MenuService {
   private async checkMenuExists(id: string, message?: string) {
@@ -80,11 +81,11 @@ class MenuService {
   }
 
   async generateRoutesFromDB(userRoles: string[], userPermissions: string[]) {
-    const menus = await menuRepository.getActiveMenusForUser(userRoles, userPermissions)
-    return this.buildMenuTree(menus)
+    const menus = await menuRepository.getActiveMenusForUser(userRoles)
+    return this.buildMenuTree(menus, userPermissions)
   }
 
-  private buildMenuTree(menus: any[]) {
+  private buildMenuTree(menus: any[], userPermissions: string[]) {
     const menuMap = new Map()
     const rootMenus: any[] = []
     menus.forEach((menu) => {
@@ -99,7 +100,8 @@ class MenuService {
           status: menu.status,
           hideInMenu: menu.hidden,
           keepAlive: menu.keepAlive,
-          ignoreAccess: menu.ignoreAccess
+          ignoreAccess: menu.ignoreAccess,
+          permissions: userPermissions
         },
         children: []
       }
@@ -133,6 +135,27 @@ class MenuService {
     }
 
     return cleanTree(rootMenus)
+  }
+
+  async getMenusByDeptId(deptId: string) {
+    const menusIds = await departmentRepository.getMenusIdsByDeptId(deptId)
+    if (!menusIds) {
+      throw new ErrorWithStatusCode({
+        message: MENU_MESSAGES.DEPARTMENT_NOT_ASSIGNED_MENUS,
+        statusCode: HttpStatusCode.BadRequest
+      })
+    }
+
+    const menusIdsArray = menusIds.assigned_menus.map((menu) => menu.toString())
+    const menus = await menuRepository.getMenusByIds(menusIdsArray)
+
+    if (!menus) {
+      throw new ErrorWithStatusCode({
+        message: MENU_MESSAGES.MENU_NOT_FOUND,
+        statusCode: HttpStatusCode.NotFound
+      })
+    }
+    return menus
   }
 }
 

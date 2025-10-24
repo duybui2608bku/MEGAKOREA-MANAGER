@@ -7,11 +7,25 @@ export const defaultErrorHandler = (err: any, req: Request, res: Response, next:
   if (err instanceof ErrorWithStatusCode) {
     return res.status(err.statusCode).json(omit(err, 'statusCode'))
   }
-  Object.getOwnPropertyNames(err).forEach((key) => {
-    Object.defineProperty(err, key, { enumerable: true })
-  })
-  res.status(HttpStatusCode.InternalServerError).json({
-    message: err.message,
-    infoError: omit(err, 'stack')
-  })
+
+  // Extract only safe properties to avoid circular reference errors
+  const safeError: any = {
+    message: err.message || 'Internal Server Error',
+    name: err.name || 'Error'
+  }
+
+  // Add error code if available
+  if (err.code) {
+    safeError.code = err.code
+  }
+
+  // Add AWS-specific error info if available
+  if (err.$metadata) {
+    safeError.awsError = {
+      httpStatusCode: err.$metadata.httpStatusCode,
+      requestId: err.$metadata.requestId
+    }
+  }
+
+  res.status(HttpStatusCode.InternalServerError).json(safeError)
 }

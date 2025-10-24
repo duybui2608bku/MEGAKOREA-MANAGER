@@ -1,26 +1,22 @@
-import {
-  CreateRoleRequestBody,
-  UpdateRoleRequestBody,
-  AssignPermissionsRequestBody
-} from '~/interfaces/role/role.interface'
+import { CreateRoleRequestBody, UpdateRoleRequestBody } from '~/interfaces/role/role.interface'
 import roleRepository from '~/repository/role/role.repository'
 import { ErrorWithStatusCode } from '~/middlewares/error/error-response.middleware'
 import { HttpStatusCode } from '~/constants/enum/http/http-status-code.enum'
 import { ROLE_MESSAGES } from '~/constants/messages/roles/role.messagge'
 
 class RoleService {
-  private async checkRoleNameOrCodeExists(name: string | undefined, code: string | undefined) {
-    if (!name || !code) {
+  private async checkRoleNameExists(name: string | undefined) {
+    if (!name) {
       throw new ErrorWithStatusCode({
-        message: ROLE_MESSAGES.NAME_OR_CODE_REQUIRED,
+        message: ROLE_MESSAGES.NAME_REQUIRED,
         statusCode: HttpStatusCode.BadRequest
       })
     }
 
-    const existingRole = await roleRepository.getRoleByNameOrCode(name, code)
+    const existingRole = await roleRepository.getRoleByName(name)
     if (existingRole) {
       throw new ErrorWithStatusCode({
-        message: ROLE_MESSAGES.NAME_OR_CODE_ALREADY_EXISTS,
+        message: ROLE_MESSAGES.NAME_ALREADY_EXISTS,
         statusCode: HttpStatusCode.BadRequest
       })
     }
@@ -38,15 +34,18 @@ class RoleService {
   }
 
   async createRole(roleData: CreateRoleRequestBody) {
-    this.checkRoleNameOrCodeExists(roleData.name || '', roleData.code || '')
-
+    await this.checkRoleNameExists(roleData.name || '')
     const role = await roleRepository.createRole(roleData)
     return role
   }
 
   async getAllRoles() {
-    const roles = await roleRepository.getAllRoles()
-    return roles
+    const [roles, total] = await Promise.all([roleRepository.getAllRoles(), roleRepository.getTotalRoles()])
+    return {
+      list: roles,
+      total,
+      current: 0
+    }
   }
 
   async getRoleById(roleId: string) {
@@ -56,20 +55,13 @@ class RoleService {
 
   async updateRole(roleId: string, updateData: UpdateRoleRequestBody) {
     const existingRole = await this.checkRoleExists(roleId)
+    await this.checkRoleNameExists(updateData.name || '')
 
-    this.checkRoleNameOrCodeExists(updateData.name || '', updateData.code || '')
-
-    if (
-      (updateData.name && updateData.name !== existingRole.name) ||
-      (updateData.code && updateData.code !== existingRole.code)
-    ) {
-      const nameCodeConflict = await roleRepository.getRoleByNameOrCode(
-        updateData.name || existingRole.name,
-        updateData.code || existingRole.code
-      )
-      if (nameCodeConflict && nameCodeConflict._id.toString() !== roleId) {
+    if (updateData.name && updateData.name !== existingRole.name) {
+      const nameConflict = await roleRepository.getRoleByName(updateData.name || existingRole.name)
+      if (nameConflict && nameConflict._id.toString() !== roleId) {
         throw new ErrorWithStatusCode({
-          message: ROLE_MESSAGES.NAME_OR_CODE_ALREADY_EXISTS,
+          message: ROLE_MESSAGES.NAME_ALREADY_EXISTS,
           statusCode: HttpStatusCode.BadRequest
         })
       }
@@ -93,9 +85,9 @@ class RoleService {
     return { message: ROLE_MESSAGES.DELETE_SUCCESS }
   }
 
-  async assignPermissionsToRole(roleId: string, permissionsData: AssignPermissionsRequestBody) {
+  async assignPermissionsToRole(roleId: string, permissions: string[]) {
     await this.checkRoleExists(roleId)
-    const updatedRole = await roleRepository.assignPermissionsToRole(roleId, permissionsData.permissionIds)
+    const updatedRole = await roleRepository.assignPermissionsToRole(roleId, permissions)
     return updatedRole
   }
 }

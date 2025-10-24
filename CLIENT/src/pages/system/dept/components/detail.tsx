@@ -1,56 +1,66 @@
-import type { RoleItemType } from '#src/api/system'
 import type { TreeDataNodeWithId } from '#src/components'
-import { fetchAddRoleItem, fetchUpdateRoleItem } from '#src/api/system'
-import { FormTreeItem } from '#src/components'
 
+import { FormTreeItem } from '#src/components'
 import { DrawerForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { Form } from 'antd'
 import { useEffect } from 'react'
-import { DepartmentItemType } from '#src/api/derpartment/types.js'
-import { DerpartmentStatus } from '../enum'
+import { DepartmentItemType } from '#src/api/system/derpartment/types.js'
 import { RadioTypeEnum } from '#src/enum/global.js'
 import { StatusOptionsGlobal } from '#src/constants/option/index.js'
+import { createDepartment, updateDepartment } from '#src/api/system/derpartment/index.js'
 
 interface DetailProps {
   treeData: TreeDataNodeWithId[]
   title: React.ReactNode
   open: boolean
-  detailData: Partial<RoleItemType>
+  detailData: Partial<DepartmentItemType>
   onCloseChange: () => void
   refreshTable?: () => void
 }
 
 export function Detail({ title, open, onCloseChange, detailData, treeData, refreshTable }: DetailProps) {
-  const [form] = Form.useForm<RoleItemType>()
+  const [form] = Form.useForm<DepartmentItemType>()
 
-  const addRoleItemMutation = useMutation({
-    mutationFn: fetchAddRoleItem
+  const updateDepartmentMutation = useMutation({
+    mutationFn: updateDepartment
   })
-  const updateRoleItemMutation = useMutation({
-    mutationFn: fetchUpdateRoleItem
+
+  const createDepartmentMutation = useMutation({
+    mutationFn: createDepartment
   })
 
   const onFinish = async (values: DepartmentItemType) => {
-    // if (detailData._id) {
-    //   await updateRoleItemMutation.mutateAsync(values)
-    //   window.$message?.success(t('common.updateSuccess'))
-    // } else {
-    //   await addRoleItemMutation.mutateAsync(values)
-    //   window.$message?.success(t('common.addSuccess'))
-    // }
+    const assignedMenus = Array.isArray(values.assigned_menus)
+      ? values.assigned_menus
+      : (values.assigned_menus as any).checked || []
+    const dataToSend = {
+      ...values,
+      assigned_menus: assignedMenus
+    }
+    if (detailData._id) {
+      const updateData = { ...dataToSend, _id: detailData._id }
+      await updateDepartmentMutation.mutateAsync(updateData)
+      window.$message?.success('Cập nhật thành công')
+    } else {
+      await createDepartmentMutation.mutateAsync(dataToSend)
+      window.$message?.success('Thêm thành công')
+    }
     refreshTable?.()
     return true
   }
 
   useEffect(() => {
     if (open) {
-      form.setFieldsValue(detailData)
+      form.setFieldsValue({
+        ...detailData,
+        assigned_menus: detailData.assigned_menus || []
+      })
     }
-  }, [open])
+  }, [open, detailData, form])
 
   return (
-    <DrawerForm<RoleItemType>
+    <DrawerForm<DepartmentItemType>
       title={title}
       open={open}
       onOpenChange={(visible) => {
@@ -71,10 +81,10 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
       drawerProps={{
         destroyOnHidden: true
       }}
-      // onFinish={onFinish}
+      onFinish={onFinish}
       initialValues={{
         status: 1,
-        menus: []
+        assigned_menus: []
       }}
     >
       <ProFormText
@@ -91,18 +101,7 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
         placeholder='Nhập tên phòng ban'
       />
 
-      <ProFormText
-        allowClear
-        rules={[
-          {
-            required: true
-          }
-        ]}
-        width='md'
-        name='code'
-        label='Mã phòng ban'
-        placeholder='Nhập mã phòng ban'
-      />
+      <ProFormText allowClear width='md' name='code' label='Mã phòng ban' placeholder='Nhập mã phòng ban' />
 
       <ProFormRadio.Group
         name='status'
@@ -111,11 +110,20 @@ export function Detail({ title, open, onCloseChange, detailData, treeData, refre
         options={StatusOptionsGlobal}
       />
 
-      <ProFormTextArea placeholder='Nhập miêu tả' allowClear width='md' name='description' label='Miêu tả' />
+      <ProFormTextArea
+        style={{
+          height: 300
+        }}
+        placeholder='Nhập miêu tả'
+        allowClear
+        width='md'
+        name='description'
+        label='Miêu tả'
+      />
 
-      {/* <Form.Item name='menus' label={t('system.role.assignMenu')}>
-        <FormTreeItem treeData={treeData} />
-      </Form.Item> */}
+      <Form.Item name='assigned_menus' label='Phân quyền'>
+        <FormTreeItem value={detailData.assigned_menus} treeData={treeData} />
+      </Form.Item>
     </DrawerForm>
   )
 }

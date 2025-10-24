@@ -16,7 +16,11 @@ import {
   SubnodeOutlined,
   TeamOutlined,
   UserOutlined,
-  FacebookFilled
+  FacebookFilled,
+  UserAddOutlined,
+  UserDeleteOutlined,
+  EditOutlined,
+  CrownOutlined
 } from '@ant-design/icons'
 import { EmbeddedIcon, ExternalIcon, OutsidePageIcon, ProfileCardIcon } from './local-icons'
 import { RiAccountCircleLine, RiReactjsLine, RiUserSettingsLine } from './ri'
@@ -49,5 +53,9 @@ export const menuIcons: Record<string, any> = {
   ProfileCardIcon,
   RiUserSettingsLine,
   CopyrightOutlined,
-  FacebookFilled
+  FacebookFilled,
+  UserAddOutlined,
+  UserDeleteOutlined,
+  EditOutlined,
+  CrownOutlined
 }

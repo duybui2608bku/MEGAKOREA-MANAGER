@@ -30,6 +30,7 @@ adminActionsUserRouters.use(accessTokenValidator, isAdminValidator)
 adminActionsUserRouters.post(ADMIN_PATH_ROUTES.REGISTER, registerValidator, wrapRequestHandler(registerController))
 
 adminActionsUserRouters.get(ADMIN_PATH_ROUTES.GET_ALL_USERS, wrapRequestHandler(getAllUsersController))
+
 adminActionsUserRouters.get(ADMIN_PATH_ROUTES.GET_USER_BY_ID, wrapRequestHandler(getUserByIdController))
 
 adminActionsUserRouters.patch(

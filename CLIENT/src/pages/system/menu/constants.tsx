@@ -1,8 +1,5 @@
 import type { MenuItemType } from '#src/api/system'
 import type { ProColumns } from '@ant-design/pro-components'
-
-import { getBooleanOptions, getYesNoOptions } from '#src/constants'
-
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 import { ColorStatusEnum } from '#src/enum/global.js'

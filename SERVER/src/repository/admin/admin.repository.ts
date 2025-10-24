@@ -12,10 +12,7 @@ class AdminRepository {
   async getAllUsers(query: GetAllUsersQuery) {
     const { page, limit, search, department, status } = query
     const skip = (page - 1) * limit
-
-    // Build filter object
     const filter: any = {}
-
     if (search) {
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -45,10 +42,7 @@ class AdminRepository {
 
   async getTotalUsersCount(query: GetAllUsersQuery) {
     const { search, department, status } = query
-
-    // Build filter object (same as getAllUsers)
     const filter: any = {}
-
     if (search) {
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -64,7 +58,6 @@ class AdminRepository {
     if (status) {
       filter.status = parseInt(status)
     }
-
     return await User.countDocuments(filter)
   }
 

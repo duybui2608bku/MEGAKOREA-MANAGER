@@ -62,15 +62,15 @@ export const deleteRoleController = async (req: Request, res: Response) => {
   })
 }
 
-export const assignPermissionsToRoleController = async (
-  req: Request<ParamsDictionary, any, AssignPermissionsRequestBody>,
-  res: Response
-) => {
-  const { id } = req.params
-  const result = await roleService.assignPermissionsToRole(id, req.body)
-  ResponseSuccess({
-    message: ROLE_MESSAGES.ASSIGN_PERMISSIONS_SUCCESS,
-    res,
-    result
-  })
-}
+// export const assignPermissionsToRoleController = async (
+//   req: Request<ParamsDictionary, any, AssignPermissionsRequestBody>,
+//   res: Response
+// ) => {
+//   const { id } = req.params
+//   const result = await roleService.assignPermissionsToRole(id, req.body)
+//   ResponseSuccess({
+//     message: ROLE_MESSAGES.ASSIGN_PERMISSIONS_SUCCESS,
+//     res,
+//     result
+//   })
+// }

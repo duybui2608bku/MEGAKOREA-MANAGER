@@ -1,6 +1,6 @@
 import type { ProColumns } from '@ant-design/pro-components'
 import { DerpartmentStatus } from './enum'
-import { DepartmentItemType } from '#src/api/derpartment/types.js'
+import { DepartmentItemType } from '#src/api/system/derpartment/types.js'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { ColorStatusEnum } from '#src/enum/global.js'
 

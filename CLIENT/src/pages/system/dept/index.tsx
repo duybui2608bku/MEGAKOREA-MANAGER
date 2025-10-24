@@ -1,5 +1,5 @@
 import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { fetchDeleteRoleItem, fetchMenuByRoleId } from '#src/api/system'
+import { deleteDepartment } from '#src/api/system/derpartment/index.js'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
 import { accessControlCodes, useAccess } from '#src/hooks'
 import { handleTree } from '#src/utils'
@@ -9,27 +9,30 @@ import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 import { getConstantColumns } from './constants'
-import { fetchDepartments } from '#src/api/derpartment/index.js'
+import { fetchDepartments } from '#src/api/system/derpartment/index.js'
 import { Detail } from './components/detail'
-import { DepartmentItemType } from '#src/api/derpartment/types.js'
+import { DepartmentItemType } from '#src/api/system/derpartment/types.js'
+import { GlobalEnum } from '#src/enum/global.js'
+import { fetchMenuList, MenuItemType } from '#src/api/system/index.js'
 
 const Derpartment = () => {
   const { hasAccessByCodes } = useAccess()
 
-  const deleteRoleItemMutation = useMutation({
-    mutationFn: fetchDeleteRoleItem
+  const deleteDepartmentMutation = useMutation({
+    mutationFn: deleteDepartment
   })
 
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
-  const [detailData, setDetailData] = useState<Partial<DepartmentItemType> & { menus?: string[] }>({})
+  const [detailData, setDetailData] = useState<Partial<DepartmentItemType>>({})
+  const [menuTree, setMenuTree] = useState<MenuItemType[]>([])
 
   const actionRef = useRef<ActionType>(null)
 
   const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
-    // const responseData = await deleteRoleItemMutation.mutateAsync(id)
-    // await action?.reload?.()
-    // window.$message?.success(`Xóa thành công id = ${responseData.result}`)
+    await deleteDepartmentMutation.mutateAsync(id)
+    window.$message?.success(`Xóa thành công`)
+    await action?.reload?.()
   }
 
   const columns: ProColumns<DepartmentItemType>[] = [
@@ -46,12 +49,16 @@ const Derpartment = () => {
             key='editable'
             type='link'
             size='small'
-            // disabled={!hasAccessByCodes(accessControlCodes.update)}
+            disabled={!hasAccessByCodes(accessControlCodes.update)}
             onClick={async () => {
-              // const responseData = await fetchMenuByRoleId({ id: record._id })
+              const responseData = await fetchMenuList({
+                current: 1,
+                pageSize: 1000
+              })
               setIsOpen(true)
               setTitle('Sửa phòng ban')
-              // setDetailData({ ...record, menus: responseData.result })
+              setMenuTree(responseData.result.list)
+              setDetailData({ ...record })
             }}
           >
             Sửa
@@ -80,15 +87,16 @@ const Derpartment = () => {
   const refreshTable = () => {
     actionRef.current?.reload()
   }
+
   return (
     <BasicContent className='h-full'>
       <BasicTable<DepartmentItemType>
         adaptive
+        pagination={false}
         columns={columns}
         actionRef={actionRef}
         request={async (params) => {
           const responseData = await fetchDepartments(params)
-          console.log(responseData)
           return {
             ...responseData,
             data: responseData.result.list,
@@ -101,7 +109,7 @@ const Derpartment = () => {
             key='add-role'
             icon={<PlusCircleOutlined />}
             type='primary'
-            // disabled={!hasAccessByCodes(accessControlCodes.add)}
+            disabled={!hasAccessByCodes(accessControlCodes.add)}
             onClick={() => {
               setIsOpen(true)
               setTitle('Thêm phòng ban')
@@ -117,8 +125,7 @@ const Derpartment = () => {
         onCloseChange={onCloseChange}
         detailData={detailData}
         refreshTable={refreshTable}
-        // treeData={handleTree(menuItems || [])}
-        treeData={[]}
+        treeData={handleTree(menuTree, GlobalEnum.MAIN_KEY, 'parentId')}
       />
     </BasicContent>
   )

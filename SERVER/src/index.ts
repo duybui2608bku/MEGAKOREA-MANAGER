@@ -21,7 +21,11 @@ import { PERMISSION_PATH_ROUTES } from './constants/path-routes/permission/permi
 import { ROLE_PATH_ROUTES } from './constants/path-routes/roles/roles.path-routes'
 import { USER_PATH_ROUTES } from './constants/path-routes/user/user.path-routes'
 import { MENU_PATH_ROUTES } from './constants/path-routes/menu/menu.path-route'
-import { initializeMenus } from './db/init-menus'
+import mediaRouters from './routes/media'
+import { MEDIA_PATH_ROUTES } from './constants/path-routes/media'
+import { HR_PATH_ROUTES } from './routes/workspace/hr/path'
+import { WORKSPACE_PATH } from './routes/workspace/path'
+import hrRoutes from './routes/workspace/hr'
 
 config()
 
@@ -32,13 +36,13 @@ const app = express()
 instanceMongodb.connect()
 checkOverload()
 
-setTimeout(async () => {
-  try {
-    await initializeMenus()
-  } catch (error) {
-    console.error('Failed to initialize permissions, roles, and menus:', error)
-  }
-}, 2000)
+// setTimeout(async () => {
+//   try {
+//     await initializeMenus()
+//   } catch (error) {
+//     console.error('Failed to initialize permissions, roles, and menus:', error)
+//   }
+// }, 2000)
 
 app.use(cors())
 app.use(compression())
@@ -53,6 +57,8 @@ app.use(PERMISSION_PATH_ROUTES.ROOT, permissionRouters)
 app.use(DEPARTMENT_PATH_ROUTES.ROOT, departmentRouters)
 app.use(ROLE_PATH_ROUTES.ROOT, roleRouters)
 app.use(MENU_PATH_ROUTES.ROOT, menuRouters)
+app.use(MEDIA_PATH_ROUTES.ROOT, mediaRouters)
+app.use(`${WORKSPACE_PATH.ROOT}${HR_PATH_ROUTES.ROOT}`, hrRoutes)
 
 app.use(defaultErrorHandler)
 

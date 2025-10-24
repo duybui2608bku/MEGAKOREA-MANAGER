@@ -1,4 +1,6 @@
 import { AppRouteRecordRaw } from '#src/router/types.js'
+import { RoleItemType } from '../system'
+import { DepartmentItemType } from '../system/derpartment/types'
 
 export interface AuthType {
   access_token: string
@@ -16,9 +18,9 @@ export interface UserInfoType {
   date_of_birth: Date
   address: string
   status: number
+  // roles: Partial<RoleItemType>
   roles: any[]
-  derpartment: string
-  titles: number
+  department: Partial<DepartmentItemType>
   menus?: AppRouteRecordRaw[]
 }
 

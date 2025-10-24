@@ -6,13 +6,11 @@ const roleSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
       index: true
     },
     code: {
       type: String,
       required: true,
-      unique: true,
       index: true
     },
     description: {
@@ -40,8 +38,6 @@ const roleSchema = new mongoose.Schema(
   },
   { collection: COLLECTION_NAME.ROLE }
 )
-
-console.log(COLLECTION_NAME.ROLE)
 
 const Role = mongoose.model(COLLECTION_NAME.ROLE as string, roleSchema)
 export default Role

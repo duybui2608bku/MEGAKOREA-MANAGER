@@ -2,7 +2,13 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
 import departmentService from '~/services/department/department.service'
-import { CreateDepartmentRequestBody, UpdateDepartmentRequestBody } from '~/interfaces/department/department.interface'
+import {
+  CreateDepartmentRequestBody
+  // DeleteDepartmentParams,
+  // GetDepartmentByIdParams,
+  // UpdateDepartmentParams,
+  // UpdateDepartmentRequestBody
+} from '~/interfaces/department/department.interface'
 import { DEPARTMENT_MESSAGES } from '~/constants/messages/derpartment/derpartment.message'
 
 export const createDepartmentController = async (
@@ -36,10 +42,7 @@ export const getDepartmentByIdController = async (req: Request, res: Response) =
   })
 }
 
-export const updateDepartmentController = async (
-  req: Request<ParamsDictionary, any, UpdateDepartmentRequestBody>,
-  res: Response
-) => {
+export const updateDepartmentController = async (req: Request, res: Response) => {
   const { id } = req.params
   const result = await departmentService.updateDepartment(id, req.body)
   ResponseSuccess({
@@ -51,6 +54,7 @@ export const updateDepartmentController = async (
 
 export const deleteDepartmentController = async (req: Request, res: Response) => {
   const { id } = req.params
+
   await departmentService.deleteDepartment(id)
   ResponseSuccess({
     message: DEPARTMENT_MESSAGES.DELETE_SUCCESS,
