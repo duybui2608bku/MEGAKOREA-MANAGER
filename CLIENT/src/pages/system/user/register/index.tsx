@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Form, Input, Button, DatePicker, Radio, message, Card, Row, Col, Divider, Space, Checkbox } from 'antd'
 
 import OptionsDerpartment from '../../dept/hook/OptionsDerpartment'
@@ -7,6 +6,8 @@ import UploadComponent from '#src/pages/upload/index.js'
 import { GenderOptions } from '#src/constants/option/index.js'
 import { RegisterFormType } from '#src/api/system/auth/type.js'
 import { fetchRegister } from '#src/api/system/auth/index.js'
+import { useMutation } from '@tanstack/react-query'
+import { queryClient } from '#src/components/index.js'
 
 const placeholders = {
   email: 'Nhập email',
@@ -22,38 +23,41 @@ const placeholders = {
 
 const UserRegister = () => {
   const [form] = Form.useForm()
-  const [loading, setLoading] = useState(false)
 
-  const onFinish = async (values: RegisterFormType) => {
-    setLoading(true)
-    try {
-      const formData = {
-        email: values.email,
-        name: values.name,
-        phone: values.phone,
-        password: values.password,
-        gender: values.gender,
-        date_of_birth: values.date_of_birth,
-        address: values.address || undefined,
-        avatar: values.avatar || undefined,
-        department: values.department,
-        roles: [values.roles]
-      }
-
-      await fetchRegister(formData as any)
+  const { mutate: registerMutate, isPending: isCreating } = useMutation({
+    mutationFn: (data: RegisterFormType) => fetchRegister(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] })
       message.success('Đăng ký tài khoản thành công!')
       form.resetFields()
-    } catch (error) {
-      message.error((error as Error).message)
-    } finally {
-      setLoading(false)
+    },
+    onError: (error: any) => {
+      message.error(error.message)
+    },
+    retry: 0
+  })
+
+  const onFinish = async (values: RegisterFormType) => {
+    const formData = {
+      email: values.email,
+      name: values.name,
+      phone: values.phone,
+      password: values.password,
+      gender: values.gender,
+      date_of_birth: values.date_of_birth,
+      address: values.address || undefined,
+      avatar: values.avatar || undefined,
+      department: values.department,
+      roles: values.roles
     }
+
+    registerMutate(formData)
   }
 
   return (
-    <div style={{ padding: '20px 20px', background: '#f5f5f5', minHeight: '100vh' }}>
+    <div style={{ padding: '20px 20px', background: '#f5f5f5' }}>
       <Row justify='center'>
-        <Col xs={24} sm={24} md={22} lg={20} xl={18}>
+        <Col span={24}>
           <Card title='Đăng Ký Tài Khoản' style={{ boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)' }}>
             <Form form={form} layout='vertical' onFinish={onFinish} autoComplete='off'>
               <Row gutter={[16, 0]}>
@@ -152,15 +156,12 @@ const UserRegister = () => {
               <Divider />
 
               <Row gutter={[16, 0]}>
-                <Col xs={24} sm={24} md={24}>
+                <Col xs={24} sm={24} md={8}>
                   <Form.Item label='Địa Chỉ (Tùy Chọn)' name='address'>
                     <Input.TextArea rows={1} placeholder={placeholders.address} />
                   </Form.Item>
                 </Col>
-              </Row>
-
-              <Row gutter={[16, 0]}>
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={24} md={8}>
                   <Form.Item
                     label='Phòng Ban'
                     name='department'
@@ -169,7 +170,7 @@ const UserRegister = () => {
                     <OptionsDerpartment placeholder={placeholders.department} />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={24} md={8}>
                   <Form.Item
                     label='Vai Trò'
                     name='roles'
@@ -194,7 +195,7 @@ const UserRegister = () => {
 
               <Form.Item>
                 <Space size='middle' style={{ width: '100%' }}>
-                  <Button style={{ width: '100%' }} type='primary' htmlType='submit' loading={loading}>
+                  <Button style={{ width: '100%' }} type='primary' htmlType='submit' loading={isCreating}>
                     Đăng Ký
                   </Button>
                 </Space>

@@ -5,12 +5,13 @@ import { BasicButton, BasicContent, BasicTable } from '#src/components'
 import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Popconfirm } from 'antd'
+import { Button, message, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 
 import { Detail } from './components/detail'
 import { getConstantColumns } from './constants'
 import { ButtonEnumType, GlobalEnum } from '#src/enum/global.js'
+import { useMutation } from '@tanstack/react-query'
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false)
@@ -20,10 +21,19 @@ export default function Menu() {
 
   const actionRef = useRef<ActionType>(null)
 
-  const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
-    await fetchDeleteMenuItem(id)
-    await action?.reload?.()
-    window.$message?.success(`${'Xóa thành công menu'}`)
+  const { mutate: deleteMutate, isPending: isDeleting } = useMutation({
+    mutationFn: (id: string) => fetchDeleteMenuItem(id),
+    onSuccess: () => {
+      message.success('Xóa menu thành công!')
+    },
+    onError: (error: any) => {
+      message.error('Xóa menu thất bại! ' + error.message)
+    },
+    retry: 0
+  })
+
+  const handleDeleteRow = async (id: string) => {
+    deleteMutate(id)
   }
 
   const columns: ProColumns<MenuItemType>[] = [
@@ -51,11 +61,11 @@ export default function Menu() {
           <Popconfirm
             key='delete'
             title={'Xác nhận xóa'}
-            onConfirm={() => handleDeleteRow(record._id, action)}
+            onConfirm={() => handleDeleteRow(record._id)}
             okText={'Xác nhận'}
             cancelText={'Hủy'}
           >
-            <BasicButton type='link' size='small'>
+            <BasicButton type='link' size='small' loading={isDeleting}>
               {'Xóa'}
             </BasicButton>
           </Popconfirm>
