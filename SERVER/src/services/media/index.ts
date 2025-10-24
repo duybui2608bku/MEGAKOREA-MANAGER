@@ -113,10 +113,10 @@ class MediasService {
             filepath: tempFilePath,
             contenType: contentType
           })
-          console.log('s3Result', s3Result)
+
           return {
             name: file.originalFilename as string,
-            url: `https://megakorea.s3-hcm-r1.s3cloud.vn/${newFullFileName}`,
+            url: (s3Result as CompleteMultipartUploadCommandOutput).Location as string,
             type: contentType.startsWith('video/') ? MediaType.Video : MediaType.File
           }
         } finally {

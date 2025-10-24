@@ -6,7 +6,7 @@ export interface RegisterFormType {
   gender: number
   date_of_birth: Date
   address?: string
-  derpartment: string
+  department: string
   roles: string[]
   avatar?: string
 }

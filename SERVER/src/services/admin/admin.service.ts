@@ -14,7 +14,6 @@ import { userMessages } from '~/constants/messages/user/user.messages'
 class AdminService {
   async updateProfileByAdmin(updateProfileByAdminData: UpdateProfileByAdminRequestBody) {
     const isUpdatePassword = updateProfileByAdminData.password && updateProfileByAdminData.password.trim() !== ''
-
     if (isUpdatePassword) {
       const hashedPassword = hashPassword(updateProfileByAdminData.password as string)
       updateProfileByAdminData.password = hashedPassword

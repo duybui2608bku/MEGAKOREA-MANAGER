@@ -98,7 +98,7 @@ export const registerValidator = validate(
           errorMessage: userMessages.PASSWORD_MUST_BE_STRONG
         }
       },
-      derpartment: {
+      department: {
         optional: true,
         isString: {
           errorMessage: userMessages.DERPARTMENT_MUST_BE_STRING
@@ -373,7 +373,7 @@ export const updateProfileByAdminValidator = validate(
         },
         trim: true
       },
-      derpartment: {
+      department: {
         optional: true,
         isString: {
           errorMessage: userMessages.DERPARTMENT_MUST_BE_STRING

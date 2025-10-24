@@ -14,8 +14,8 @@ const initialState = {
   address: '',
   status: 0,
   roles: [],
-  derpartment: '',
-  titles: 0
+  department: {},
+  menus: []
 }
 
 type UserState = UserInfoType

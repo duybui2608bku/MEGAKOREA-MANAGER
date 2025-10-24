@@ -23,18 +23,11 @@ export const updateProfileByAdminController = async (
 }
 
 export const getAllUsersController = async (req: Request, res: Response) => {
-  const { page = 1, limit = 10, search = '', department = '', status = '' } = req.query
-  const result = await adminServices.getAllUsers({
-    page: Number(page),
-    limit: Number(limit),
-    search: search as string,
-    department: department as string,
-    status: status as string
-  })
+  // const result = await adminServices.getAllUsers(req.query)
   ResponseSuccess({
-    message: 'Users retrieved successfully',
-    res,
-    result
+    message: '',
+    res
+    // result
   })
 }
 

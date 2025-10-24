@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
         required: true
       }
     ],
-    derpartment: {
+    department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: COLLECTION_NAME.DERPARTMENT,
       default: null
