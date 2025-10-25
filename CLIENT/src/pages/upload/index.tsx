@@ -91,7 +91,6 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
       }
 
       const data = response.result[0].url
-
       const previewUrl = await createPreviewUrl(file)
 
       const newFile: UploadedFile = {
@@ -134,28 +133,28 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
         accept={config.accept}
         disabled={uploading}
         style={{
-          marginBottom: '16px',
-          padding: latestFile ? '12px' : '20px',
-          minHeight: latestFile ? 'auto' : '180px'
+          marginBottom: '8px',
+          padding: latestFile ? '8px' : '12px',
+          minHeight: latestFile ? 'auto' : '140px'
         }}
       >
         {uploading ? (
-          <div style={{ padding: '40px 0' }}>
+          <div style={{ padding: '24px 0' }}>
             <Spin size='large' />
-            <p style={{ fontSize: '14px', color: '#666', marginTop: '16px' }}>Đang tải lên...</p>
+            <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>Đang tải lên...</p>
           </div>
         ) : latestFile ? (
           <div style={{ position: 'relative' }}>
             <div
               style={{
                 position: 'absolute',
-                top: '8px',
-                right: '8px',
+                top: '4px',
+                right: '4px',
                 zIndex: 10,
                 background: 'rgba(0,0,0,0.6)',
                 borderRadius: '50%',
-                width: '32px',
-                height: '32px',
+                width: '24px',
+                height: '24px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -166,7 +165,7 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
                 handleRemove(latestFile.uid)
               }}
             >
-              <DeleteOutlined style={{ color: '#fff', fontSize: '16px' }} />
+              <DeleteOutlined style={{ color: '#fff', fontSize: '12px' }} />
             </div>
 
             {latestFile.type === 'image' && (
@@ -176,22 +175,22 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
                   alt={latestFile.name}
                   style={{
                     width: '100%',
-                    maxHeight: '200px',
+                    maxHeight: '160px',
                     objectFit: 'contain',
                     borderRadius: '4px'
                   }}
                 />
                 <div
                   style={{
-                    marginTop: '12px',
+                    marginTop: '6px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px'
+                    gap: '4px'
                   }}
                 >
-                  <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '14px' }} />
-                  <span style={{ fontSize: '12px', color: '#666' }}>{latestFile.name}</span>
+                  <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '12px' }} />
+                  <span style={{ fontSize: '11px', color: '#666' }}>{latestFile.name}</span>
                 </div>
               </div>
             )}
@@ -202,22 +201,22 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
                   src={latestFile.url}
                   style={{
                     width: '100%',
-                    maxHeight: '400px',
+                    maxHeight: '160px',
                     borderRadius: '4px'
                   }}
                   controls
                 />
                 <div
                   style={{
-                    marginTop: '12px',
+                    marginTop: '6px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px'
+                    gap: '4px'
                   }}
                 >
-                  <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '14px' }} />
-                  <span style={{ fontSize: '12px', color: '#666' }}>{latestFile.name}</span>
+                  <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '12px' }} />
+                  <span style={{ fontSize: '11px', color: '#666' }}>{latestFile.name}</span>
                 </div>
               </div>
             )}
@@ -226,19 +225,19 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
               <div>
                 <div
                   style={{
-                    padding: '40px',
+                    padding: '24px',
                     textAlign: 'center',
                     backgroundColor: '#fafafa',
                     borderRadius: '4px'
                   }}
                 >
-                  <div style={{ fontSize: '48px', marginBottom: '12px' }}>📄</div>
+                  <div style={{ fontSize: '36px', marginBottom: '8px' }}>📄</div>
                   <div
                     style={{
-                      fontSize: '13px',
+                      fontSize: '12px',
                       color: '#262626',
                       fontWeight: '500',
-                      marginBottom: '4px'
+                      marginBottom: '2px'
                     }}
                   >
                     {latestFile.name}
@@ -248,9 +247,9 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '6px',
+                      gap: '4px',
                       color: '#52c41a',
-                      fontSize: '12px'
+                      fontSize: '11px'
                     }}
                   >
                     <CheckCircleOutlined />
@@ -262,12 +261,12 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ type = 'image', maxSi
           </div>
         ) : (
           <Fragment>
-            <p style={{ fontSize: '48px', color: '#1890ff' }}>
+            <p style={{ fontSize: '36px', color: '#1890ff', marginBottom: '4px' }}>
               <InboxOutlined />
             </p>
-            <p style={{ fontSize: '16px', marginBottom: '4px' }}>Kéo thả {config.label} vào đây</p>
-            <p style={{ fontSize: '12px', color: '#999' }}>hoặc click để chọn file</p>
-            <p style={{ fontSize: '11px', color: '#999', marginTop: '8px' }}>
+            <p style={{ fontSize: '14px', marginBottom: '2px' }}>Kéo thả {config.label} vào đây</p>
+            <p style={{ fontSize: '11px', color: '#999' }}>hoặc click để chọn file</p>
+            <p style={{ fontSize: '10px', color: '#999', marginTop: '4px' }}>
               Giới hạn: {maxSize}MB | Định dạng: {config.formats.map((f) => f.split('/')[1]).join(', ')}
             </p>
           </Fragment>

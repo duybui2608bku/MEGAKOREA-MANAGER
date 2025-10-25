@@ -1,6 +1,6 @@
 import { ProColumns } from '#node_modules/@ant-design/pro-components/es'
-import { Avatar, Space, Typography } from '#node_modules/antd/es'
 import { UserInfoType } from '#src/api/user/types.js'
+import { Avatar, Space } from 'antd'
 
 export const getConstantColumns = (): ProColumns<UserInfoType>[] => {
   return [
@@ -8,19 +8,30 @@ export const getConstantColumns = (): ProColumns<UserInfoType>[] => {
       dataIndex: 'index',
       title: 'STT',
       valueType: 'indexBorder',
-      width: 80
+      width: 80,
+      align: 'center'
     },
     {
       title: 'Tên nhân viên',
       dataIndex: 'name',
       ellipsis: true,
+      width: 120,
+      render: (_, record) => {
+        console.log(record)
+
+        return (
+          <Space>
+            <Avatar src={record.avatar} />
+            <span>{record.name}</span>
+          </Space>
+        )
+      }
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      ellipsis: true,
       width: 120
-      // render: (_, record) => (
-      //   <Space align='center'>
-      //     <Avatar size={24} src={record.avatar} />
-      //     <Typography.Text strong>{record.name}</Typography.Text>
-      //   </Space>
-      // )
     },
     {
       title: 'Email',
@@ -48,13 +59,6 @@ export const getConstantColumns = (): ProColumns<UserInfoType>[] => {
       dataIndex: 'created_at',
       valueType: 'date',
       width: 120,
-      search: false
-    },
-    {
-      title: 'Ngày cập nhật',
-      dataIndex: 'updated_at',
-      valueType: 'dateTime',
-      width: 200,
       search: false
     }
   ]
