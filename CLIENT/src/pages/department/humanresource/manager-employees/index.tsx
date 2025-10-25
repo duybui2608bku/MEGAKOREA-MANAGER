@@ -5,7 +5,7 @@ import { BasicButton, BasicContent, BasicTable } from '#src/components'
 import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Popconfirm } from 'antd'
+import { Button, message, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 
 // import { Detail } from './components/detail'
@@ -14,6 +14,7 @@ import { ButtonEnumType, GlobalEnum } from '#src/enum/global.js'
 import { UserInfoType } from '#src/api/user/types.js'
 import { getConstantColumns } from './constants'
 import { fetchAllEmployees } from '#src/api/workspace/hr/index.js'
+import { useMutation } from '@tanstack/react-query'
 
 export default function ManagerEmployees() {
   const [isOpen, setIsOpen] = useState(false)
@@ -22,10 +23,19 @@ export default function ManagerEmployees() {
 
   const actionRef = useRef<ActionType>(null)
 
+  const { mutate: deleteEmployeeMutate, isPending: isDeleting } = useMutation({
+    mutationFn: fetchDeleteMenuItem,
+    onSuccess: () => {
+      message.success('Xóa nhân viên thành công')
+    },
+    onError: () => {
+      message.error('Xóa nhân viên thất bại')
+    }
+  })
+
   const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
-    await fetchDeleteMenuItem(id)
+    deleteEmployeeMutate(id)
     await action?.reload?.()
-    window.$message?.success(`${'Xóa thành công menu'}`)
   }
 
   const columns: ProColumns<UserInfoType>[] = [
@@ -57,7 +67,7 @@ export default function ManagerEmployees() {
             okText={'Xác nhận'}
             cancelText={'Hủy'}
           >
-            <BasicButton type='link' size='small'>
+            <BasicButton type='link' size='small' loading={isDeleting}>
               {'Xóa'}
             </BasicButton>
           </Popconfirm>
@@ -84,8 +94,8 @@ export default function ManagerEmployees() {
         rowKey={GlobalEnum.MAIN_KEY as string}
         pagination={false}
         bordered
-        request={async (params) => {
-          const responseData = await fetchAllEmployees(params)
+        request={async (requestParams) => {
+          const responseData = await fetchAllEmployees(requestParams)
           return {
             ...responseData,
             data: responseData.result.list,

@@ -6,7 +6,7 @@ import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Popconfirm } from 'antd'
+import { Button, message, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 import { getConstantColumns } from './constants'
 import { fetchDepartments } from '#src/api/system/derpartment/index.js'
@@ -18,10 +18,6 @@ import { fetchMenuList, MenuItemType } from '#src/api/system/index.js'
 const Derpartment = () => {
   const { hasAccessByCodes } = useAccess()
 
-  const deleteDepartmentMutation = useMutation({
-    mutationFn: deleteDepartment
-  })
-
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [detailData, setDetailData] = useState<Partial<DepartmentItemType>>({})
@@ -29,9 +25,19 @@ const Derpartment = () => {
 
   const actionRef = useRef<ActionType>(null)
 
+  const { mutate: deleteDepartmentMutation, isPending: isDeleting } = useMutation({
+    mutationFn: (id: string) => deleteDepartment(id),
+    onSuccess: () => {
+      message.success(`Xóa phòng ban thành công`)
+    },
+    onError: (error: any) => {
+      message.error(`Xóa phòng ban thất bại! ${error.message}`)
+    },
+    retry: 0
+  })
+
   const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
-    await deleteDepartmentMutation.mutateAsync(id)
-    window.$message?.success(`Xóa thành công`)
+    deleteDepartmentMutation(id)
     await action?.reload?.()
   }
 
@@ -70,7 +76,12 @@ const Derpartment = () => {
             okText='Xác nhận'
             cancelText='Hủy'
           >
-            <BasicButton type='link' size='small' disabled={!hasAccessByCodes(accessControlCodes.delete)}>
+            <BasicButton
+              type='link'
+              size='small'
+              loading={isDeleting}
+              disabled={!hasAccessByCodes(accessControlCodes.delete)}
+            >
               Xóa
             </BasicButton>
           </Popconfirm>
