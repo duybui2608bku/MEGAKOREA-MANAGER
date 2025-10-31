@@ -48,3 +48,19 @@ export enum RadioTypeEnum {
   BUTTON = 'button',
   CHECKBOX = 'checkbox'
 }
+
+export enum TimeZoneType {
+  UTCPlus7 = 7,
+  GMTMinus7 = -7
+}
+
+export enum StaleTimeEnum {
+  THREE_MINUTES = 3 * 60 * 1000,
+  FOUR_MINUTES = 4 * 60 * 1000,
+  FIVE_MINUTES = 5 * 60 * 1000,
+  SIX_MINUTES = 6 * 60 * 1000,
+  SEVEN_MINUTES = 7 * 60 * 1000,
+  EIGHT_MINUTES = 8 * 60 * 1000,
+  NINE_MINUTES = 9 * 60 * 1000,
+  TEN_MINUTES = 10 * 60 * 1000
+}

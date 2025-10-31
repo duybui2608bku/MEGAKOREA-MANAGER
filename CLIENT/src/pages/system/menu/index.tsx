@@ -32,8 +32,9 @@ export default function Menu() {
     retry: 0
   })
 
-  const handleDeleteRow = async (id: string) => {
+  const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
     deleteMutate(id)
+    await action?.reload?.()
   }
 
   const columns: ProColumns<MenuItemType>[] = [
@@ -61,7 +62,7 @@ export default function Menu() {
           <Popconfirm
             key='delete'
             title={'Xác nhận xóa'}
-            onConfirm={() => handleDeleteRow(record._id)}
+            onConfirm={() => handleDeleteRow(record._id, action)}
             okText={'Xác nhận'}
             cancelText={'Hủy'}
           >

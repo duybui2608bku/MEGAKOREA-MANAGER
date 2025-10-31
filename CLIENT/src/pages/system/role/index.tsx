@@ -7,7 +7,7 @@ import { handleTree } from '#src/utils'
 
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Popconfirm } from 'antd'
+import { Button, message, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 
 import { Detail } from './components/detail'
@@ -16,8 +16,15 @@ import { getConstantColumns } from './constants'
 export default function Role() {
   const { hasAccessByCodes } = useAccess()
 
-  const deleteRoleItemMutation = useMutation({
-    mutationFn: fetchDeleteRoleItem
+  const { mutate: deleteRoleItemMutation, isPending } = useMutation({
+    mutationFn: (id: string) => fetchDeleteRoleItem(id),
+    onSuccess: () => {
+      message.success(`Xóa thành công id`)
+    },
+    onError: (error: any) => {
+      message.error(`Xóa thất bại! ${error.message}`)
+    },
+    retry: 0
   })
 
   const [isOpen, setIsOpen] = useState(false)
@@ -27,9 +34,8 @@ export default function Role() {
   const actionRef = useRef<ActionType>(null)
 
   const handleDeleteRow = async (_id: string, action?: ProCoreActionType<object>) => {
-    await deleteRoleItemMutation.mutateAsync(_id)
+    deleteRoleItemMutation(_id)
     await action?.reload?.()
-    window.$message?.success(`Xóa thành công id`)
   }
 
   const columns: ProColumns<RoleItemType>[] = [
@@ -62,7 +68,12 @@ export default function Role() {
             okText='Xác nhận'
             cancelText='Hủy'
           >
-            <BasicButton type='link' size='small' disabled={!hasAccessByCodes(accessControlCodes.delete)}>
+            <BasicButton
+              type='link'
+              size='small'
+              loading={isPending}
+              disabled={!hasAccessByCodes(accessControlCodes.delete)}
+            >
               Xóa
             </BasicButton>
           </Popconfirm>
