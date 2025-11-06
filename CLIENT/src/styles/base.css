@@ -1,6 +1,7 @@
 /* 不使用 tailwind.css 的 preflight，使用 antd 的 reset 样式，防止和 antd 的样式冲突 */
 @import 'antd/dist/reset.css';
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet');
+
 #root {
   height: 100vh;
 }
@@ -51,16 +52,29 @@ button {
 /*
 解决 antd 表格高度未超出，不显示滚动条
 */
+
 .ant-table-body {
   overflow: auto !important;
 }
 
-/* .ant-table-cell-with-append {
-  display: flex;
-} */
-
 .ant-table-cell-with-append {
+  min-height: 50px !important;
   display: flex !important;
+  flex-direction: row;
+  /* align-items: center !important; */
+  /* text-align: end !important; */
+}
+
+.center-element {
+  display: flex !important;
+  justify-content: center !important;
   align-items: center !important;
-  text-align: end !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.text-align-center {
+  text-align: center !important;
 }

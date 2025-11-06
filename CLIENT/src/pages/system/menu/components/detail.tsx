@@ -216,6 +216,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         radioType='button'
         labelCol={{ md: 5, xl: 6 }}
         colProps={{ md: 24, xl: 12 }}
+        initialValue={MenuStatus.ENABLE}
         options={[
           {
             label: 'Kích hoạt',
@@ -234,6 +235,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         radioType='button'
         labelCol={{ md: 5, xl: 6 }}
         colProps={{ md: 24, xl: 12 }}
+        initialValue={true}
         options={getBooleanOptions()}
       />
 
@@ -243,6 +245,7 @@ export function Detail({ title, open, flatParentMenus, onCloseChange, detailData
         radioType='button'
         labelCol={{ md: 5, xl: 6 }}
         colProps={{ md: 24, xl: 12 }}
+        initialValue={false}
         options={getBooleanOptions()}
       />
 

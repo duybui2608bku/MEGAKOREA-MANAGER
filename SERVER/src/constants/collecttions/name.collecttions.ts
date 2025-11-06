@@ -9,4 +9,10 @@ const COLLECTION_NAME = {
   MENU: process.env.MENU_COLLECTION_NAME
 }
 
-export default COLLECTION_NAME
+const WORKSPACE_COLLECTION_NAME = {
+  facebookAds: {
+    posted_of_pages: process.env.FACEBOOK_ADS_POSTED_OF_PAGES_COLLECTION_NAME
+  }
+}
+
+export { COLLECTION_NAME, WORKSPACE_COLLECTION_NAME }

@@ -1,7 +1,8 @@
 export enum GlobalEnum {
   PAGE_SIZE = 20,
   CURRENT = 1,
-  MAIN_KEY = '_id'
+  MAIN_KEY = '_id',
+  ICON_SIZE = 20
 }
 
 export enum ButtonEnumType {
@@ -63,4 +64,10 @@ export enum StaleTimeEnum {
   EIGHT_MINUTES = 8 * 60 * 1000,
   NINE_MINUTES = 9 * 60 * 1000,
   TEN_MINUTES = 10 * 60 * 1000
+}
+
+export enum CssGlobal {
+  CENTER_ELEMENT = 'center-element',
+  CUSOR_POINTER = 'cursor-pointer',
+  TEXT_ALIGN_CENTER = 'text-align-center'
 }

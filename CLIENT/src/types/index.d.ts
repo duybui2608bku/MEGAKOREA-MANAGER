@@ -2,11 +2,19 @@
  * 接口返回数据格式
  * data: 接口返回数据
  */
+
 interface ApiResponse<T> {
   code: number
   result: T
   message: string
   success: boolean
+}
+
+interface ApiWebhooksResponse<T> {
+  code?: number
+  message?: string
+  success?: boolean
+  result?: T
 }
 
 /**

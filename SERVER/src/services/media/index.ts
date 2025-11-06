@@ -11,6 +11,7 @@ import { handleUploadDocument, handleUploadImage, handleUploadVideo } from './ut
 import { getNameFromFullName } from './util'
 import { uploadFileToS3 } from '~/utils/util/s3'
 import { Media, MediaType } from '~/interfaces/media'
+import mime from 'mime-types'
 
 config()
 class MediasService {
@@ -45,13 +46,13 @@ class MediasService {
         const newFullFileName = `${newName}.jpg`
         const newPath = path.resolve(PATH_UPLOAD.UPLOAD_IMAGE_DIR, newFullFileName)
         const tempFilePath = file.filepath
-
+        const fileMimeType = mime.lookup(file.newFilename) || 'application/octet-stream'
         try {
           await sharp(file.filepath).jpeg().toFile(newPath)
           const s3Result = await uploadFileToS3({
             filename: newFullFileName,
             filepath: newPath,
-            contenType: 'image/jpeg/jfif/jp2/jpx/pjpeg/png/webp'
+            contenType: fileMimeType
           })
           return {
             name: file.originalFilename as string,
@@ -98,7 +99,6 @@ class MediasService {
 
   async UploadVideo(req: Request) {
     const file = await handleUploadVideo(req)
-
     const results: Media[] = await Promise.all(
       file.map(async (file) => {
         const ext = path.extname(file.newFilename).toLowerCase()

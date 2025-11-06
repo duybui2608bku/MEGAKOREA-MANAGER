@@ -23,9 +23,11 @@ import { USER_PATH_ROUTES } from './constants/path-routes/user/user.path-routes'
 import { MENU_PATH_ROUTES } from './constants/path-routes/menu/menu.path-route'
 import mediaRouters from './routes/media'
 import { MEDIA_PATH_ROUTES } from './constants/path-routes/media'
-import { HR_PATH_ROUTES } from './routes/workspace/hr/path'
 import { WORKSPACE_PATH } from './routes/workspace/path'
 import hrRoutes from './routes/workspace/hr'
+import facebookadsRoutes from './routes/workspace/facebookads'
+import { WORKSPACE_HR_PATH_ROUTES } from './routes/workspace/hr/path'
+import { FACEBOOKADS_PATH_ROUTES } from './routes/workspace/facebookads/path'
 
 config()
 
@@ -58,7 +60,8 @@ app.use(DEPARTMENT_PATH_ROUTES.ROOT, departmentRouters)
 app.use(ROLE_PATH_ROUTES.ROOT, roleRouters)
 app.use(MENU_PATH_ROUTES.ROOT, menuRouters)
 app.use(MEDIA_PATH_ROUTES.ROOT, mediaRouters)
-app.use(`${WORKSPACE_PATH.ROOT}${HR_PATH_ROUTES.ROOT}`, hrRoutes)
+app.use(`${WORKSPACE_PATH.ROOT}${WORKSPACE_HR_PATH_ROUTES.ROOT}`, hrRoutes)
+app.use(`${WORKSPACE_PATH.ROOT}${FACEBOOKADS_PATH_ROUTES.ROOT}`, facebookadsRoutes)
 
 app.use(defaultErrorHandler)
 

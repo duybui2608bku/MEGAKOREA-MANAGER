@@ -11,20 +11,20 @@ export const branchCustoms = {
   MEGA: 'Megakorea'
 }
 
-export const branchQueries = [
-  'Quảng Trị',
-  'Quảng Bình',
-  'Huế',
-  'Đà Nẵng',
-  'Cà Mau',
-  'Nha Trang',
-  'Phan Thiết',
-  'Buôn Ma Thuột',
-  'Medicare NT',
-  'Megakorea'
-]
+export const branchMega = {
+  QT: 'Quảng Trị',
+  DH: 'Quảng Bình',
+  HUE: 'Huế',
+  DN: 'Đà Nẵng',
+  CM: 'Cà Mau',
+  NT: 'Nha Trang',
+  PT: 'Phan Thiết',
+  BMT: 'Buôn Ma Thuột',
+  MDC: 'Medicare NT',
+  MEGA: 'Megakorea'
+}
 
-export const serviceCustoms = {
+export const serviceMega = {
   MS: 'Meso',
   LASER: 'Laser',
   TT: 'Tắm trắng',
@@ -66,6 +66,19 @@ export const serviceCustoms = {
   BQD: 'Cắt bao quy đầu',
   TH: 'Thu gọn cô bé',
   MM: 'Mao mạch'
+}
+
+export const serviceMegaMain = {
+  NAM: 'Nám',
+  MAY: 'Mày',
+  MOI: 'Môi',
+  GB: 'Giảm béo',
+  HN: 'Hôi nách',
+  NC: 'Nâng cung',
+  XN: 'Xóa nhăn',
+  TRT: 'Trị thâm',
+  CSD: 'Chăm sóc da',
+  TL: 'Triệt lông'
 }
 
 export const timeArrayYesterDay = [

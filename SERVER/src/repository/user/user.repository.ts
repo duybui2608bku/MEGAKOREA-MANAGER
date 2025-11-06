@@ -1,4 +1,4 @@
-import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
+import { COLLECTION_NAME } from '~/constants/collecttions/name.collecttions'
 import { RegisterRequestBody, UpdateMyProfileRequestBody } from '~/interfaces/user/users.interface'
 import { hashPassword } from '~/jwt/crypro'
 import User from '~/models/user/user.model'

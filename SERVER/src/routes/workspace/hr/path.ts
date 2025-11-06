@@ -1,4 +1,4 @@
-export const HR_PATH_ROUTES = {
+export const WORKSPACE_HR_PATH_ROUTES = {
   ROOT: '/hr',
   GET_ALL_EMPLOYEES: '/employees',
   GET_USER_BY_ID: '/users/:id',

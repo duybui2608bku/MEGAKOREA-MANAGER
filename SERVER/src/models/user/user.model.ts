@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
-import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
-import { UserGender, UserRole, UserStatus, UserTitles } from '~/constants/enum/user/user.enum'
+import { COLLECTION_NAME } from '~/constants/collecttions/name.collecttions'
+
+import { UserGender, UserStatus } from '~/constants/enum/user/user.enum'
 
 const userSchema = new mongoose.Schema(
   {

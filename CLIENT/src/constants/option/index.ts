@@ -1,7 +1,19 @@
 import { UserGender } from '#src/enum/user.js'
+import { serviceMegaMain } from '../constants'
 
 const STATUS_ACTIVE = 1
 const STATUS_INACTIVE = 0
+
+export const YesNoOptions = [
+  {
+    label: 'Có',
+    value: 1
+  },
+  {
+    label: 'Không',
+    value: 0
+  }
+]
 
 export const StatusOptionsGlobal = [
   {
@@ -26,5 +38,25 @@ export const GenderOptions = [
   {
     label: 'Khác',
     value: UserGender.OTHER
+  }
+]
+
+export const serviceMegaMainOptions = Object.values(serviceMegaMain).map((service) => ({
+  label: service,
+  value: service
+}))
+
+export const methodContentOptions = [
+  {
+    label: 'AIDA',
+    value: 'AIDA'
+  },
+  {
+    label: 'PAS',
+    value: 'PAS'
+  },
+  {
+    label: 'ACCA',
+    value: 'ACCA'
   }
 ]

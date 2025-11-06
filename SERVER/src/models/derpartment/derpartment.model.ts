@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import COLLECTION_NAME from '~/constants/collecttions/name.collecttions'
+import { COLLECTION_NAME } from '~/constants/collecttions/name.collecttions'
 
 const derpartmentSchema = new mongoose.Schema(
   {
