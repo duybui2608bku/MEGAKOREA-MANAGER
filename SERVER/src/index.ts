@@ -28,6 +28,8 @@ import hrRoutes from './routes/workspace/hr'
 import facebookadsRoutes from './routes/workspace/facebookads'
 import { WORKSPACE_HR_PATH_ROUTES } from './routes/workspace/hr/path'
 import { FACEBOOKADS_PATH_ROUTES } from './routes/workspace/facebookads/path'
+import leaveRequestRoutes from './routes/request/leave'
+import { LEAVE_REQUEST_PATH_ROUTES } from './constants/path-routes/leave/leave.path-routes'
 
 config()
 
@@ -62,6 +64,7 @@ app.use(MENU_PATH_ROUTES.ROOT, menuRouters)
 app.use(MEDIA_PATH_ROUTES.ROOT, mediaRouters)
 app.use(`${WORKSPACE_PATH.ROOT}${WORKSPACE_HR_PATH_ROUTES.ROOT}`, hrRoutes)
 app.use(`${WORKSPACE_PATH.ROOT}${FACEBOOKADS_PATH_ROUTES.ROOT}`, facebookadsRoutes)
+app.use(LEAVE_REQUEST_PATH_ROUTES.ROOT, leaveRequestRoutes)
 
 app.use(defaultErrorHandler)
 
