@@ -28,7 +28,7 @@ export function PASSWORD_RULES() {
       message: 'Mật khẩu là bắt buộc'
     },
     {
-      pattern: /^(?=.*\d)(?=.*[a-z])[\w~!@#$%^&*+.\-]{6,16}$/i,
+      pattern: /^(?=.*\d)[A-Za-z\d~!@#$%^&*()_+\-={}[\]|:;"'<>,.?/]{6,16}$/,
       message: 'Mật khẩu phải có ít nhất 6 ký tự và 1 chữ số'
     }
   ]

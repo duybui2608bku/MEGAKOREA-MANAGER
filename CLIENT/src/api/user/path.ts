@@ -3,5 +3,8 @@ export const USER_PATH = {
   LOGOUT: 'user/logout',
   REFRESH_TOKEN: 'user/refresh-token',
   USER_INFO: 'user/profile',
-  GET_ASYNC_ROUTES: 'user/get-async-routes'
+  UPDATE_MY_PROFILE: 'user/update-my-profile',
+  CHANGE_PASSWORD: 'user/change-password',
+  GET_ASYNC_ROUTES: 'user/get-async-routes',
+  FORGOT_PASSWORD: 'user/forgot-password'
 }

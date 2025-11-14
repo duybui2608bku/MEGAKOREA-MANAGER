@@ -71,3 +71,9 @@ export enum CssGlobal {
   CUSOR_POINTER = 'cursor-pointer',
   TEXT_ALIGN_CENTER = 'text-align-center'
 }
+
+export enum UploadTypeEnum {
+  IMAGE = 'image',
+  VIDEO = 'video',
+  DOCUMENT = 'document'
+}

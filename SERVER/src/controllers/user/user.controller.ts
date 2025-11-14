@@ -8,9 +8,7 @@ import {
   UpdateMyProfileRequestBody,
   RefreshTokenRequestBody,
   ForgotPasswordRequestBody,
-  ResetPasswordRequestBody,
-  VerifyEmailRequestBody,
-  VerifyOtpRequestBody
+  ResetPasswordRequestBody
 } from '~/interfaces/user/users.interface'
 import { ResponseSuccess } from '~/middlewares/handler/handler.middlewares'
 import usersService from '~/services/user/user.service'
@@ -109,25 +107,5 @@ export const resetPasswordController = async (
   ResponseSuccess({
     message: userMessages.RESET_PASSWORD_SUCCESS,
     res
-  })
-}
-
-export const verifyEmailController = async (
-  req: Request<ParamsDictionary, any, VerifyEmailRequestBody>,
-  res: Response
-) => {
-  await usersService.verifyEmail(req.body)
-  ResponseSuccess({
-    message: userMessages.VERIFY_EMAIL_SUCCESS,
-    res
-  })
-}
-
-export const verifyOtpController = async (req: Request<ParamsDictionary, any, VerifyOtpRequestBody>, res: Response) => {
-  const result = await usersService.verifyOtp(req.body)
-  ResponseSuccess({
-    message: userMessages.VERIFY_OTP_SUCCESS,
-    res,
-    result
   })
 }

@@ -83,12 +83,5 @@ export const getPostColumns = (): ProColumns<PostType>[] => {
       },
       render: (_, record) => dayjs(record.created_at).format('DD/MM/YYYY HH:mm')
     }
-    // {
-    //   title: 'Cập nhật',
-    //   dataIndex: 'updated_at',
-    //   width: 140,
-    //   search: false,
-    //   render: (_, record) => dayjs(record.updated_at).format('DD/MM/YYYY HH:mm')
-    // }
   ]
 }

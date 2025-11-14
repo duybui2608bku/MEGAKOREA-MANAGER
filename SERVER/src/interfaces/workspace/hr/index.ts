@@ -15,8 +15,11 @@ export interface UpdateEmployeeProfileRequestBody {
 export interface GetAllEmployeesQuery {
   current?: string
   pageSize?: string
-  search?: string
+  name?: string
+  email?: string
+  phone?: string
   department?: string
   roles?: string
   status?: string
+  created_at?: string
 }

@@ -1,6 +1,6 @@
 import type { PasswordLoginFormType } from '#src/pages/login/components/password-login'
 import type { AppRouteRecordRaw } from '#src/router/types'
-import type { AuthType, UserInfoType } from './types'
+import type { AuthType, UserInfoType, UpdateMyProfileRequestBody } from './types'
 import { request } from '#src/utils'
 import { USER_PATH } from './path'
 
@@ -29,4 +29,12 @@ export interface RefreshTokenResult {
 
 export function fetchRefreshToken(data: { readonly refresh_token: string }) {
   return request.post(USER_PATH.REFRESH_TOKEN, { json: data }).json<ApiResponse<RefreshTokenResult>>()
+}
+
+export function fetchUpdateMyProfile(data: UpdateMyProfileRequestBody) {
+  return request.patch(USER_PATH.UPDATE_MY_PROFILE, { json: data }).json<ApiResponse<UserInfoType>>()
+}
+
+export function fetchForgotPassword(data: { readonly email: string }) {
+  return request.post(USER_PATH.FORGOT_PASSWORD, { json: data }).json<ApiResponse<any>>()
 }

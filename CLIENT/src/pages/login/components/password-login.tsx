@@ -1,10 +1,12 @@
+import { BasicButton } from '#src/components/basic-button/index.js'
 import { PASSWORD_RULES, EMAIL_RULES } from '#src/constants'
 import { useAuthStore } from '#src/store'
 
 import { Button, Form, Input, message, Space } from 'antd'
-import { Fragment, useState } from 'react'
+import { Fragment, useContext, useState } from 'react'
 
 import { useNavigate, useSearchParams } from 'react-router'
+import { FormModeContext } from '../form-mode-context'
 
 const FORM_INITIAL_VALUES = {
   email: 'dev@megakorea.vn',
@@ -21,6 +23,7 @@ export function PasswordLogin() {
 
   const navigate = useNavigate()
   const login = useAuthStore((state) => state.login)
+  const { setFormMode } = useContext(FormModeContext)
 
   const handleFinish = async (values: PasswordLoginFormType) => {
     setLoading(true)
@@ -72,6 +75,11 @@ export function PasswordLogin() {
         <Button block type='primary' htmlType='submit' loading={loading}>
           Đăng nhập
         </Button>
+        <div className='mt-3 text-right'>
+          <BasicButton type='link' onPointerDown={() => setFormMode('forgotPassword')}>
+            Quên mật khẩu?
+          </BasicButton>
+        </div>
       </Form>
     </Fragment>
   )

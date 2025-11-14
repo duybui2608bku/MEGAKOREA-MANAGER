@@ -11,7 +11,8 @@ const COLLECTION_NAME = {
 
 const WORKSPACE_COLLECTION_NAME = {
   facebookAds: {
-    posted_of_pages: process.env.FACEBOOK_ADS_POSTED_OF_PAGES_COLLECTION_NAME
+    posted_of_pages: process.env.FACEBOOK_ADS_POSTED_OF_PAGES_COLLECTION_NAME,
+    content_ads: process.env.FACEBOOK_ADS_CONTENT_TEXT_ADS_COLLECTION_NAME
   }
 }
 

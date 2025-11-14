@@ -93,7 +93,6 @@ export const ListPostedOfPage = () => {
         actionRef={actionRef}
         request={async (params) => {
           const response = await fetchGetAllPosts(params as GetAllPostsQuery)
-
           return {
             data: response.result.list,
             total: response.result.total,
@@ -107,22 +106,6 @@ export const ListPostedOfPage = () => {
           showQuickJumper: true,
           showTotal: (total) => `Tổng ${total} bài viết`
         }}
-        // search={{
-        //   labelWidth: 'auto',
-        //   defaultCollapsed: false,
-        //   optionRender: (_, formProps, dom) => [
-        //     ...dom,
-        //     <Button
-        //       key='reset'
-        //       onClick={() => {
-        //         formProps?.form?.resetFields()
-        //         formProps?.form?.submit()
-        //       }}
-        //     >
-        //       Làm mới
-        //     </Button>
-        //   ]
-        // }}
         headerTitle='Danh sách bài viết đã đăng'
         toolBarRender={() => [
           <Button key='add' icon={<PlusCircleOutlined />} type='primary' onClick={handleAddNew}>

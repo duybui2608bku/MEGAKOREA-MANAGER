@@ -4,7 +4,7 @@ export interface RegisterFormType {
   phone: string
   password: string
   gender: number
-  date_of_birth: Date
+  date_of_birth?: Date
   address?: string
   department: string
   roles: string[]

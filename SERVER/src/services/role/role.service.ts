@@ -55,7 +55,6 @@ class RoleService {
 
   async updateRole(roleId: string, updateData: UpdateRoleRequestBody) {
     const existingRole = await this.checkRoleExists(roleId)
-    await this.checkRoleNameExists(updateData.name || '')
 
     if (updateData.name && updateData.name !== existingRole.name) {
       const nameConflict = await roleRepository.getRoleByName(updateData.name || existingRole.name)

@@ -7,7 +7,7 @@ import { Fragment, useMemo, useState } from 'react'
 import { RiGeminiFill } from 'react-icons/ri'
 import { methodContentOptions, serviceMegaMainOptions, YesNoOptions } from '#src/constants/option/index.js'
 import PreviewPost from '../components/previewPost'
-import UploadComponent from '#src/pages/upload/index.js'
+import UploadComponent from '#src/pages/components/upload/index.js'
 
 interface ContentAI {
   method: string

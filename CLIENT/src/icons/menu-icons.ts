@@ -22,7 +22,10 @@ import {
   EditOutlined,
   CrownOutlined,
   FlagOutlined,
-  ToolOutlined
+  ToolOutlined,
+  PlusOutlined,
+  PlusCircleOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons'
 import { EmbeddedIcon, ExternalIcon, OutsidePageIcon, ProfileCardIcon } from './local-icons'
 import { RiAccountCircleLine, RiReactjsLine, RiUserSettingsLine } from './ri'
@@ -58,5 +61,8 @@ export const menuIcons: Record<string, any> = {
   EditOutlined,
   CrownOutlined,
   FlagOutlined,
-  ToolOutlined
+  ToolOutlined,
+  PlusOutlined,
+  PlusCircleOutlined,
+  AppstoreOutlined
 }

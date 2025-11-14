@@ -1,41 +1,39 @@
-import type { MenuItemType } from '#src/api/system'
-import type { ActionType, ProColumns, ProCoreActionType } from '@ant-design/pro-components'
-import { fetchDeleteMenuItem, fetchMenuList } from '#src/api/system/menu'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { BasicButton, BasicContent, BasicTable } from '#src/components'
-import { handleTree } from '#src/utils'
 
-import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, message, Popconfirm } from 'antd'
+import { message, Popconfirm } from 'antd'
 import { useRef, useState } from 'react'
 
-// import { Detail } from './components/detail'
+import { Detail } from './components/detail'
 
 import { ButtonEnumType, GlobalEnum } from '#src/enum/global.js'
 import { UserInfoType } from '#src/api/user/types.js'
 import { getConstantColumns } from './constants'
-import { fetchAllEmployees } from '#src/api/workspace/hr/index.js'
+import { fetchAllEmployees, fetchDeleteEmployee } from '#src/api/workspace/hr/index.js'
 import { useMutation } from '@tanstack/react-query'
+import { PlusCircleOutlined } from '@ant-design/icons'
+import AddEmployeeModal from './components/add-employee'
 
 export default function ManagerEmployees() {
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [detailData, setDetailData] = useState<Partial<UserInfoType>>({})
-
+  const [isAddEmployeeOpen, setIsAddEmployeeOpen] = useState(false)
   const actionRef = useRef<ActionType>(null)
 
   const { mutate: deleteEmployeeMutate, isPending: isDeleting } = useMutation({
-    mutationFn: fetchDeleteMenuItem,
+    mutationFn: fetchDeleteEmployee,
     onSuccess: () => {
       message.success('Xóa nhân viên thành công')
+      actionRef.current?.reload()
     },
     onError: () => {
       message.error('Xóa nhân viên thất bại')
     }
   })
 
-  const handleDeleteRow = async (id: string, action?: ProCoreActionType<object>) => {
+  const handleDeleteRow = async (id: string) => {
     deleteEmployeeMutate(id)
-    await action?.reload?.()
   }
 
   const columns: ProColumns<UserInfoType>[] = [
@@ -52,9 +50,10 @@ export default function ManagerEmployees() {
             key='editable'
             type='link'
             size='small'
+            // disabled={!hasAccessByRoles(AccessControlRoles.admin )}
             onClick={async () => {
               setIsOpen(true)
-              setTitle('Sửa menu')
+              setTitle('Sửa nhân viên')
               setDetailData({ ...record })
             }}
           >
@@ -62,8 +61,9 @@ export default function ManagerEmployees() {
           </BasicButton>,
           <Popconfirm
             key='delete'
+            // disabled={!hasAccessByRoles(AccessControlRoles.admin)}
             title={'Xác nhận xóa'}
-            onConfirm={() => handleDeleteRow(record._id, action)}
+            onConfirm={() => handleDeleteRow(record._id)}
             okText={'Xác nhận'}
             cancelText={'Hủy'}
           >
@@ -89,6 +89,18 @@ export default function ManagerEmployees() {
     <BasicContent className='h-full'>
       <BasicTable<UserInfoType>
         adaptive
+        toolBarRender={() => [
+          <BasicButton
+            key='add-role'
+            icon={<PlusCircleOutlined />}
+            type={ButtonEnumType.PRIMARY}
+            onClick={() => {
+              setIsAddEmployeeOpen(true)
+            }}
+          >
+            {'Thêm'}
+          </BasicButton>
+        ]}
         columns={columns}
         actionRef={actionRef}
         rowKey={GlobalEnum.MAIN_KEY as string}
@@ -103,28 +115,15 @@ export default function ManagerEmployees() {
           }
         }}
         headerTitle={`${'Quản lí nhân viên'}`}
-        toolBarRender={() => [
-          <Button
-            key='add-role'
-            icon={<PlusCircleOutlined />}
-            type={ButtonEnumType.PRIMARY}
-            onClick={() => {
-              setIsOpen(true)
-              setTitle('Thêm nhân viên')
-            }}
-          >
-            {'Thêm'}
-          </Button>
-        ]}
       />
-      {/* <Detail
+      <Detail
         title={title}
         open={isOpen}
-        flatParentMenus={flatParentMenus}
         onCloseChange={onCloseChange}
         detailData={detailData}
         refreshTable={refreshTable}
-      /> */}
+      />
+      <AddEmployeeModal open={isAddEmployeeOpen} onOpenChange={setIsAddEmployeeOpen} />
     </BasicContent>
   )
 }

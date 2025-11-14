@@ -20,7 +20,7 @@ class UserRepository {
 
   async checkUserByEmail(email: string) {
     const user = await User.findOne({ email })
-    return !!user
+    return user
   }
 
   async getUserById(user_id: string) {

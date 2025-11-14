@@ -11,6 +11,7 @@ interface OptionsRoleProps {
   style?: React.CSSProperties
   placeholder?: string
   disabled?: boolean
+  multiple?: boolean
 }
 
 const ERROR_OPTIONS = [
@@ -20,7 +21,14 @@ const ERROR_OPTIONS = [
   }
 ]
 
-const OptionsRole = ({ value, onChange, style, placeholder = 'Chọn vai trò', disabled }: OptionsRoleProps) => {
+const OptionsRole = ({
+  value,
+  onChange,
+  style,
+  placeholder = 'Chọn vai trò',
+  disabled,
+  multiple = false
+}: OptionsRoleProps) => {
   const [rolesOptions, setRolesOptions] = useState<{ label: string; value: string }[]>([])
 
   const { data, isLoading, error } = useQuery({
@@ -53,6 +61,7 @@ const OptionsRole = ({ value, onChange, style, placeholder = 'Chọn vai trò', 
       options={rolesOptions || ERROR_OPTIONS}
       status={error ? 'error' : undefined}
       value={value}
+      mode={multiple ? 'multiple' : undefined}
       showSearch
       allowClear
       onChange={onChange}

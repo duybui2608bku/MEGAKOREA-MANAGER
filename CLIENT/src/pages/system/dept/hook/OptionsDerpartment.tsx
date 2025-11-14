@@ -11,6 +11,7 @@ interface OptionsDerpartmentProps {
   style?: React.CSSProperties
   placeholder?: string
   disabled?: boolean
+  multiple?: boolean
 }
 
 const ERROR_OPTIONS = [
@@ -25,7 +26,8 @@ const OptionsDerpartment = ({
   onChange,
   style,
   placeholder = 'Chọn phòng ban',
-  disabled
+  disabled,
+  multiple = false
 }: OptionsDerpartmentProps) => {
   const [departmentsOptions, setDepartmentsOptions] = useState<{ label: string; value: string }[]>([])
 
@@ -59,6 +61,7 @@ const OptionsDerpartment = ({
       options={departmentsOptions || ERROR_OPTIONS}
       status={error ? 'error' : undefined}
       value={value}
+      mode={multiple ? 'multiple' : undefined}
       showSearch
       allowClear
       onChange={onChange}

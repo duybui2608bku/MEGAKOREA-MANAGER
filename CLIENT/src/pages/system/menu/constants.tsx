@@ -76,7 +76,7 @@ export function getConstantColumns(): ProColumns<MenuItemType>[] {
     {
       title: 'Đường dẫn component',
       dataIndex: 'component',
-      width: 200,
+      // width: 550,
       search: false
     },
     {

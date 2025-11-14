@@ -5,15 +5,10 @@ import {
   getRoleByIdController,
   updateRoleController,
   deleteRoleController
-  // assignPermissionsToRoleController
 } from '~/controllers/role/role.controller'
 import { wrapRequestHandler } from '~/middlewares/handler/handler.middlewares'
 import { accessTokenValidator } from '~/middlewares/user/user.middleware'
-import {
-  createRoleValidator,
-  updateRoleValidator
-  // assignPermissionsValidator
-} from '~/middlewares/role/role.middleware'
+import { createRoleValidator, updateRoleValidator } from '~/middlewares/role/role.middleware'
 import { isAdminValidator } from '~/middlewares/utils/utils.middlewares'
 import { ROLE_PATH_ROUTES } from '~/constants/path-routes/roles/roles.path-routes'
 

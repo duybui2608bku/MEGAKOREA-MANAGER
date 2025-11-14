@@ -17,8 +17,6 @@ export function UserMenu({ ...restProps }: ButtonProps) {
   const avatar = useUserStore((state) => state.avatar)
   const logout = useAuthStore((state) => state.logout)
 
-  console.log(avatar)
-
   const onClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === 'logout') {
       await logout()

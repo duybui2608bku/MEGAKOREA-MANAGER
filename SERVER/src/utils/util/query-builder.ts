@@ -6,6 +6,43 @@ export const escapeRegex = (str: string): string => {
 }
 
 /**
+ * Build query filter
+ * @param fields - Object mapping field names to values
+ * @param options - Configuration for array and integer fields
+ */
+
+export const buildQueryFilter = <T = any>(
+  fields: Record<string, any>,
+  options: {
+    arr?: string[]
+    int?: string[]
+  } = {}
+): Partial<T> => {
+  const { arr = [], int = [] } = options
+  const filter: any = {}
+
+  Object.entries(fields).forEach(([field, value]) => {
+    if (value === undefined || value === null || value === '') return
+
+    if (int.includes(field)) {
+      const parsed = Array.isArray(value) ? value.map((v) => parseInt(v, 10)) : parseInt(value, 10)
+      value = parsed
+    }
+
+    if (arr.includes(field)) {
+      const values = Array.isArray(value) ? value : [value]
+      if (values.length > 0) {
+        filter[field] = { $in: values }
+      }
+    } else {
+      filter[field] = value
+    }
+  })
+
+  return filter
+}
+
+/**
  * Build regex search filter for multiple fields
  * @param fields - Object mapping field names to search values
  * @param options - Configuration for decoding and case sensitivity

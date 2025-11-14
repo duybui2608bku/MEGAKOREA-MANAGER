@@ -26,8 +26,7 @@ const FacebookAdsToolsPage = () => {
     <Tabs
       items={items}
       style={{
-        padding: 20,
-        background: 'white'
+        padding: 20
       }}
     />
   )

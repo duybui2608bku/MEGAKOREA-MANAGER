@@ -29,3 +29,12 @@ export interface AuthListProps {
   name: string
   auth: string[]
 }
+
+export interface UpdateMyProfileRequestBody {
+  name?: string
+  phone?: string
+  date_of_birth?: Date
+  address?: string
+  avatar?: string
+  gender?: number
+}

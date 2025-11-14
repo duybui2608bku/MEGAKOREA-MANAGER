@@ -20,6 +20,9 @@ import { userMessages } from '~/constants/messages/user/user.messages'
 import { HttpStatusCode } from '~/constants/enum/http/http-status-code.enum'
 import _ from 'lodash'
 import { algorithm } from '~/constants/global/global.contants'
+import sendMail from '~/utils/util/mail'
+import generateRandomPassword from '~/utils/util/utils'
+import NewPasswordTemplate from '~/utils/util/template-forgot-password'
 config()
 
 class UsersService {
@@ -144,7 +147,7 @@ class UsersService {
         statusCode: HttpStatusCode.NotFound
       })
     }
-    const forbiddenFields = ['email', 'phone', 'password', 'role', 'derpartment', 'titles', 'status']
+    const forbiddenFields = ['email', 'password', 'role', 'derpartment', 'titles', 'status']
     const newDataUpdate = _.omit(updateData, forbiddenFields)
     const updatedUser = await userRepository.updateUserProfile(user_id, newDataUpdate)
     return updatedUser
@@ -199,17 +202,16 @@ class UsersService {
         statusCode: HttpStatusCode.NotFound
       })
     }
+    const newPassword = generateRandomPassword()
+    await userRepository.updateUserPassword(user._id.toString() as string, newPassword)
 
-    // Generate reset token (in real implementation, you'd send this via email)
-    const resetToken = signToken({
-      payload: { user_id: (user as any)._id.toString(), token_type: TokenType.AccessToken },
-      priveKey: process.env.JWT_SECRET_ACCESSTOKEN as string,
-      options: { expiresIn: '15m', algorithm }
+    await sendMail({
+      email,
+      html: NewPasswordTemplate({ email, newPassword })
     })
 
     return {
-      message: 'Password reset token generated',
-      reset_token: resetToken // In production, this would be sent via email
+      message: userMessages.FORGOT_PASSWORD_SUCCESS
     }
   }
 
@@ -231,54 +233,6 @@ class UsersService {
 
     await userRepository.updateUserPassword(decoded_token.user_id, new_password)
     return { message: 'Password reset successfully' }
-  }
-
-  async verifyEmail(verifyEmailData: VerifyEmailRequestBody) {
-    const { email, verification_code } = verifyEmailData
-
-    // In a real implementation, you'd verify the code against stored verification codes
-    const user = await userRepository.checkUserByEmail(email)
-    if (!user) {
-      throw new ErrorWithStatusCode({
-        message: userMessages.USER_NOT_FOUND,
-        statusCode: HttpStatusCode.NotFound
-      })
-    }
-
-    // Mock verification - in production, verify against stored codes
-    if (verification_code !== '123456') {
-      throw new ErrorWithStatusCode({
-        message: 'Invalid verification code',
-        statusCode: HttpStatusCode.BadRequest
-      })
-    }
-
-    return { message: 'Email verified successfully' }
-  }
-
-  async verifyOtp(verifyOtpData: VerifyOtpRequestBody) {
-    const { phone, otp_code } = verifyOtpData
-
-    const user = await userRepository.checkUserByPhone(phone)
-    if (!user) {
-      throw new ErrorWithStatusCode({
-        message: userMessages.USER_NOT_FOUND,
-        statusCode: HttpStatusCode.NotFound
-      })
-    }
-
-    // Mock OTP verification - in production, verify against stored OTP codes
-    if (otp_code !== '123456') {
-      throw new ErrorWithStatusCode({
-        message: 'Invalid OTP code',
-        statusCode: HttpStatusCode.BadRequest
-      })
-    }
-
-    return {
-      message: 'OTP verified successfully',
-      verified: true
-    }
   }
 }
 

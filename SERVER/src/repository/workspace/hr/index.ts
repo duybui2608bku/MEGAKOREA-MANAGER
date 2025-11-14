@@ -2,6 +2,7 @@ import { GetAllEmployeesQuery, UpdateEmployeeProfileRequestBody } from '~/interf
 import { User } from '~/models'
 import { POPULATE_USER, PROTECTED_USER } from './config'
 import { generatePagination } from '~/utils/pagination/pagination.util'
+import { buildDateFilter, buildQueryFilter, buildSearchFilter, combineFilters } from '~/utils/util/query-builder'
 
 class HrRepository {
   private async getTotalEmployeesCount(filter: any) {
@@ -12,33 +13,22 @@ class HrRepository {
     return await User.findByIdAndUpdate(updateEmployeeProfileData._id, updateEmployeeProfileData, {
       new: true
     })
+      .populate(POPULATE_USER.role.key, POPULATE_USER.role.value)
+      .populate(POPULATE_USER.department.key, POPULATE_USER.department.value)
+      .select(PROTECTED_USER)
   }
 
   async getAllEmployees(query: GetAllEmployeesQuery) {
-    const { current, pageSize, search, department, roles, status } = query
+    const { current, pageSize, name, email, phone, department, roles, status, created_at } = query
 
     const { skip, limit, page } = generatePagination(current, pageSize)
 
-    const filter: any = {}
-    if (search) {
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { phone: { $regex: search, $options: 'i' } }
-      ]
-    }
+    const queryFilter = buildQueryFilter({ department, roles, status }, { arr: ['roles'], int: ['status'] })
 
-    if (department) {
-      filter.department = department
-    }
+    const searchfilter = buildSearchFilter({ name, email, phone }, { decode: ['name', 'email', 'phone'] })
+    const dateFilter = buildDateFilter('created_at', created_at)
 
-    if (roles) {
-      filter.roles = roles
-    }
-
-    if (status) {
-      filter.status = parseInt(status)
-    }
+    const filter = combineFilters(queryFilter, searchfilter, dateFilter)
 
     const [users, total] = await Promise.all([
       User.find(filter)
@@ -60,6 +50,7 @@ class HrRepository {
 
   async getTotalUsersCount(query: any) {
     const { search, department, status } = query
+
     const filter: any = {}
     if (search) {
       filter.$or = [

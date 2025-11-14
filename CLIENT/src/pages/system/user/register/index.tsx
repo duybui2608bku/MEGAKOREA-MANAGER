@@ -1,8 +1,8 @@
-import { Form, Input, Button, DatePicker, Radio, message, Card, Row, Col, Divider, Space, Checkbox } from 'antd'
+import { Form, Input, Button, DatePicker, Radio, message, Card, Row, Col, Divider, Space } from 'antd'
 
 import OptionsDerpartment from '../../dept/hook/OptionsDerpartment'
 import OptionsRole from '../../role/hook/optionsRole'
-import UploadComponent from '#src/pages/upload/index.js'
+import UploadComponent from '#src/pages/components/upload/index.js'
 import { GenderOptions } from '#src/constants/option/index.js'
 import { RegisterFormType } from '#src/api/system/auth/type.js'
 import { fetchRegister } from '#src/api/system/auth/index.js'

@@ -2,17 +2,13 @@ import { Router } from 'express'
 import { USER_PATH_ROUTES } from '~/constants/path-routes/user/user.path-routes'
 
 import {
-  registerController,
   loginController,
   logoutController,
   getProfileController,
   updateMyProfileController,
   changePasswordController,
   refreshTokenController,
-  forgotPasswordController,
-  resetPasswordController,
-  verifyEmailController,
-  verifyOtpController
+  forgotPasswordController
 } from '~/controllers/user/user.controller'
 import routeController from '~/controllers/route/route.controller'
 import { wrapRequestHandler } from '~/middlewares/handler/handler.middlewares'
@@ -22,10 +18,7 @@ import {
   changePasswordValidator,
   updateMyProfileValidator,
   refreshTokenValidator,
-  forgotPasswordValidator,
-  resetPasswordValidator,
-  verifyEmailValidator,
-  verifyOtpValidator
+  forgotPasswordValidator
 } from '~/middlewares/user/user.middleware'
 import { isExistUserValidator } from '~/middlewares/utils/utils.middlewares'
 
@@ -40,7 +33,6 @@ userRouters.post(
   forgotPasswordValidator,
   wrapRequestHandler(forgotPasswordController)
 )
-userRouters.post(USER_PATH_ROUTES.RESET_PASSWORD, resetPasswordValidator, wrapRequestHandler(resetPasswordController))
 
 userRouters.put(
   USER_PATH_ROUTES.CHANGE_PASSWORD,
@@ -48,9 +40,6 @@ userRouters.put(
   changePasswordValidator,
   wrapRequestHandler(changePasswordController)
 )
-
-userRouters.post(USER_PATH_ROUTES.VERIFY_EMAIL, verifyEmailValidator, wrapRequestHandler(verifyEmailController))
-userRouters.post(USER_PATH_ROUTES.VERIFY_OTP, verifyOtpValidator, wrapRequestHandler(verifyOtpController))
 
 userRouters.get(USER_PATH_ROUTES.PROFILE, accessTokenValidator, wrapRequestHandler(getProfileController))
 

@@ -41,6 +41,7 @@
     "@types/lodash": "^4.17.20",
     "@types/mime-types": "^3.0.1",
     "@types/morgan": "^1.9.9",
+    "@types/nodemailer": "^7.0.3",
     "compression": "^1.7.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -53,6 +54,7 @@
     "mime-types": "^3.0.1",
     "mongoose": "^8.8.2",
     "morgan": "^1.10.0",
+    "nodemailer": "^7.0.10",
     "os": "^0.1.2",
     "sharp": "^0.34.4"
   }
